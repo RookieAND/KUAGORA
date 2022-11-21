@@ -3,11 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { createConnection } from 'typeorm';
 
-import swaggerRouter from './routes/swagger';
+import docsRouter from './routes/docs';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/typeormconfig';
@@ -45,7 +43,7 @@ app.use(
 );
 
 // Router List
-app.use('/swagger', swaggerRouter);
+app.use('/api-docs', docsRouter);
 
 app.get('/', (_, res) => {
   res.status(200).send('KUAGORA Server has been Enabled.');

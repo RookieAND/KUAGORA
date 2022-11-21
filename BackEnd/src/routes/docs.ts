@@ -2,7 +2,7 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
-const swaggerRouter = express.Router();
+const docsRouter = express.Router();
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -11,6 +11,10 @@ const swaggerOptions = {
       title: 'KUAGORA-Server',
       version: '1.0.0',
       description: 'REST API with Express',
+      license: {
+        name: 'MIT',
+        url: 'https://choosealicense.com/licenses/mit/',
+      },
     },
     servers: [
       { url: 'http://localhost:4000', description: '개발 서버' },
@@ -21,7 +25,7 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-swaggerRouter.use('/', swaggerUi.serve);
-swaggerRouter.get('/', swaggerUi.setup(swaggerSpec, { explorer: true }));
+docsRouter.use('/', swaggerUi.serve);
+docsRouter.get('/', swaggerUi.setup(swaggerSpec, { explorer: true }));
 
-export default swaggerRouter;
+export default docsRouter;
