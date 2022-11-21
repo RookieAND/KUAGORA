@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import helmet from 'helmet';
+import hpp from 'hpp';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createConnection } from 'typeorm';
@@ -22,6 +24,13 @@ createConnection(typeOrmConfig[NOW_CONFIG.mode]).then(() => {
 });
 
 const app = express();
+
+// Security (배포 환경에서만 적용)
+if (isProd) {
+  app.use(helmet());
+  app.use(hpp());
+  app.set('trust proxy', true);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
