@@ -3,8 +3,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createConnection } from 'typeorm';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
+import typeOrmConfig from '@/database/config/typeormconfig';
 
 dotenv.config();
 
@@ -12,7 +14,12 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
-const CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
+const NOW_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
+
+// DB Connection
+createConnection(typeOrmConfig[NOW_CONFIG.mode]).then(() => {
+  console.log('Successfully connected to DB.');
+});
 
 const app = express();
 
@@ -29,6 +36,6 @@ app.get('/', (_, res) => {
   res.status(200).send('Web Dalmuti Server has been Enabled.');
 });
 
-app.listen(CONFIG.port, () => {
-  console.log(`server is running on ${CONFIG.port}`);
+app.listen(NOW_CONFIG.port, () => {
+  console.log(`server is running on ${NOW_CONFIG.port}`);
 });

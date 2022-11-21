@@ -5,12 +5,12 @@ import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 
 dotenv.config();
 
-interface ormconfigType {
+interface ormConfigType {
   dev: ConnectionOptions;
   prod: ConnectionOptions;
 }
 
-const ormconfig: ormconfigType = {
+const typeOrmConfig: ormConfigType = {
   dev: {
     type: 'mysql',
     host: process.env.DEV_DB_HOST,
@@ -49,4 +49,4 @@ const ormconfig: ormconfigType = {
   },
 };
 
-export default ormconfig;
+export default typeOrmConfig;
