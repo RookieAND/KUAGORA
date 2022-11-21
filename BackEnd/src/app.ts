@@ -15,9 +15,6 @@ import errorHandler from '@/errors/errorHandler';
 
 dotenv.config();
 
-// ES Module 에는 __dirname 변수가 없기에 이를 만들어야 함.
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const isProd: boolean = process.env.NODE_ENV === 'production';
 const NOW_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
 

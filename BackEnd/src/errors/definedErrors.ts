@@ -66,7 +66,7 @@ class InternalServerError extends Error {
     this.name = 'ServerError';
     this.message = message;
   }
-  statusCode = 401;
+  statusCode = 500;
 }
 
 export {
