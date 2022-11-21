@@ -9,6 +9,7 @@ import { createConnection } from 'typeorm';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/typeormconfig';
+import errorHandler from '@/errors/errorHandler';
 
 dotenv.config();
 
@@ -32,18 +33,24 @@ if (isProd) {
   app.set('trust proxy', true);
 }
 
+// Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS Setting
 app.use(
   cors({
-    origin: true,
+    origin: isProd ? PROD_CONFIG.baseURL : true,
     credentials: true,
   }),
 );
 
 app.get('/', (_, res) => {
-  res.status(200).send('Web Dalmuti Server has been Enabled.');
+  res.status(200).send('KUAGORA Server has been Enabled.');
 });
+
+// Error Handler
+app.use(errorHandler);
 
 app.listen(NOW_CONFIG.port, () => {
   console.log(`server is running on ${NOW_CONFIG.port}`);
