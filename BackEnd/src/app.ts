@@ -7,6 +7,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createConnection } from 'typeorm';
 
+import swaggerRouter from './routes/swagger';
+
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/typeormconfig';
 import errorHandler from '@/errors/errorHandler';
@@ -44,6 +46,9 @@ app.use(
     credentials: true,
   }),
 );
+
+// Router List
+app.use('/swagger', swaggerRouter);
 
 app.get('/', (_, res) => {
   res.status(200).send('KUAGORA Server has been Enabled.');
