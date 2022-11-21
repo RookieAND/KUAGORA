@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "typeRoots": ["./src/types/index.d.ts", "./node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@/database/*": ["src/database/*"],
+      "@/routes/*": ["src/routes/*"],
+      "@/auth/*": ["src/auth/*"],
+      "@/constants/*": ["src/constants/*"],
+      "@/utils/*": ["src/utils/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

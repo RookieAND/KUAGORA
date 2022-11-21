@@ -1,0 +1,15 @@
+{
+  "name": "kuagora",
+  "version": "1.0.0",
+  "description": "KUAROGA Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon BackEnd/server.ts ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RookieAND",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
