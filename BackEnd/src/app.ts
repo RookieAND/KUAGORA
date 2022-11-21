@@ -8,16 +8,16 @@ import { createConnection } from 'typeorm';
 import docsRouter from './routes/docs';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
-import typeOrmConfig from '@/database/config/typeormconfig';
+import typeOrmConfig from '@/database/config/ormconfig';
 import errorHandler from '@/errors/errorHandler';
 
 dotenv.config();
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
-const NOW_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
+const CURRENT_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
 
 // DB Connection
-createConnection(typeOrmConfig[NOW_CONFIG.mode]).then(() => {
+createConnection(typeOrmConfig[CURRENT_CONFIG.mode]).then(() => {
   console.log('Successfully connected to DB.');
 });
 
@@ -52,6 +52,6 @@ app.get('/', (_, res) => {
 // Error Handler
 app.use(errorHandler);
 
-app.listen(NOW_CONFIG.port, () => {
-  console.log(`server is running on ${NOW_CONFIG.port}`);
+app.listen(CURRENT_CONFIG.port, () => {
+  console.log(`server is running on ${CURRENT_CONFIG.port}`);
 });

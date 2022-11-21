@@ -10,6 +10,9 @@ interface ormConfigType {
   prod: ConnectionOptions;
 }
 
+/**
+ * 개발 환경과 배포 환경에 따라 config 옵션을 다르게 설정.
+ */
 const typeOrmConfig: ormConfigType = {
   dev: {
     type: 'mysql',
