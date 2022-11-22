@@ -6,12 +6,9 @@
   },
   "extends": [
     "airbnb",
-    "airbnb-typescript",
     "airbnb/hooks",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "prettier",
+    "plugin:@next/next/recommended"
   ],
   "root": true,
   "parser": "@typescript-eslint/parser",
@@ -19,7 +16,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": "lastest",
+    "ecmaVersion": 2018,
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
@@ -56,7 +53,7 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".tsx"]
+        "extensions": [".ts", ".tsx"]
       }
     ],
     "react/jsx-one-expression-per-line": "off",
@@ -75,7 +72,9 @@
   },
   "settings": {
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+        "directory": "./tsconfig.json"
+      }
     },
     "react": {
       "version": "detect"
