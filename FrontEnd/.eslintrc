@@ -7,7 +7,7 @@
   "extends": [
     "airbnb",
     "airbnb/hooks",
-    "prettier",
+    "plugin:prettier/recommended",
     "plugin:@next/next/recommended"
   ],
   "root": true,
