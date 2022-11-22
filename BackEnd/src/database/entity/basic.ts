@@ -4,7 +4,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-abstract class BasePostEntity {
+abstract class BasicEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -15,4 +15,4 @@ abstract class BasePostEntity {
   updatedAt!: Date;
 }
 
-export default BasePostEntity;
+export default BasicEntity;
