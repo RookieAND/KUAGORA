@@ -1,4 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Length } from 'class-validator';
 
 import BasicEntity from './basic';
 import Like from './like';
@@ -6,7 +7,8 @@ import User from './user';
 
 @Entity()
 class Question extends BasicEntity {
-  @Column('varchar', { length: 255 })
+  @Length(1, 50)
+  @Column('varchar', { length: 50 })
   title!: string;
 
   @Column('text')
