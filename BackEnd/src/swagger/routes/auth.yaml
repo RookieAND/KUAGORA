@@ -12,10 +12,10 @@ paths:
         - name: loginType
           in: path
           required: true
-          description: 소셜로그인 타입
+          description: 소셜 로그인 타입
           schema:
             type: string
-            enum: [google-web, google-mobile, apple-web, apple-mobile, kakao]
+            enum: [google, kakao, discord]
       security:
         - social-login-token: []
       responses:
