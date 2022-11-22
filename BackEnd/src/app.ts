@@ -1,34 +1,57 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import { createConnection } from 'typeorm';
+
+import docsRouter from './routes/docs';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
+import typeOrmConfig from '@/database/config/ormconfig';
+import errorHandler from '@/errors/errorHandler';
 
 dotenv.config();
 
-// ES Module 에는 __dirname 변수가 없기에 이를 만들어야 함.
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const isProd: boolean = process.env.NODE_ENV === 'production';
-const CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
+const CURRENT_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
+
+// DB Connection
+createConnection(typeOrmConfig[CURRENT_CONFIG.mode]).then(() => {
+  console.log('Successfully connected to DB.');
+});
 
 const app = express();
 
+// Security (배포 환경에서만 적용)
+if (isProd) {
+  app.use(helmet());
+  app.use(hpp());
+  app.set('trust proxy', true);
+}
+
+// Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS Setting
 app.use(
   cors({
-    origin: true,
+    origin: isProd ? PROD_CONFIG.baseURL : true,
     credentials: true,
   }),
 );
 
+// Router List
+app.use('/api-docs', docsRouter);
+
 app.get('/', (_, res) => {
-  res.status(200).send('Web Dalmuti Server has been Enabled.');
+  res.status(200).send('KUAGORA Server has been Enabled.');
 });
 
-app.listen(CONFIG.port, () => {
-  console.log(`server is running on ${CONFIG.port}`);
+// Error Handler
+app.use(errorHandler);
+
+app.listen(CURRENT_CONFIG.port, () => {
+  console.log(`server is running on ${CURRENT_CONFIG.port}`);
 });

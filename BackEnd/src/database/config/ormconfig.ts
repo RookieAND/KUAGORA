@@ -5,12 +5,15 @@ import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 
 dotenv.config();
 
-interface ormconfigType {
+interface ormConfigType {
   dev: ConnectionOptions;
   prod: ConnectionOptions;
 }
 
-const ormconfig: ormconfigType = {
+/**
+ * 개발 환경과 배포 환경에 따라 config 옵션을 다르게 설정.
+ */
+const typeOrmConfig: ormConfigType = {
   dev: {
     type: 'mysql',
     host: process.env.DEV_DB_HOST,
@@ -49,4 +52,4 @@ const ormconfig: ormconfigType = {
   },
 };
 
-export default ormconfig;
+export default typeOrmConfig;

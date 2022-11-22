@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
+    "module": "CommonJS",
+    "target": "ES5",
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./src/types/index.d.ts", "./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "@/database/*": ["src/database/*"],
-      "@/routes/*": ["src/routes/*"],
       "@/auth/*": ["src/auth/*"],
       "@/constants/*": ["src/constants/*"],
+      "@/database/*": ["src/database/*"],
+      "@/errors/*": ["src/errors/*"],
+      "@/routes/*": ["src/routes/*"],
       "@/utils/*": ["src/utils/*"]
     }
   },

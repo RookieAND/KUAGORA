@@ -1,0 +1,61 @@
+tags:
+  - name: Auth
+    description: 로그인 관련 API
+
+paths:
+  /auth/login/{loginType}:
+    post:
+      summary: 소셜 로그인 후 받은 토큰 전송
+      tags:
+        - Auth
+      parameters:
+        - name: loginType
+          in: path
+          required: true
+          description: 소셜 로그인 타입
+          schema:
+            type: string
+            enum: [google, kakao, discord]
+      security:
+        - social-login-token: []
+      responses:
+        '200':
+          description: 로그인 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: 유저에게 발급된 jwt
+        '400':
+          description: 잘못된 요청 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 인증 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 권한 미달 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 존재하지 않는 요청 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
