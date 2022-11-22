@@ -18,7 +18,7 @@ class Question extends BasicEntity {
   // [Relation] Question : User = N : 1
   @ManyToOne(() => User, (user) => user.questions)
   @JoinColumn({
-    name: 'user_id',
+    name: 'user_uuid',
   })
   user!: User;
 

@@ -16,7 +16,7 @@ class Like extends BasicEntity {
   // [Relation] Like : User = N : 1
   @ManyToOne(() => User, (user) => user.likes)
   @JoinColumn({
-    name: 'user_id',
+    name: 'user_uuid',
   })
   user!: User;
 }
