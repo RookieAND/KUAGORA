@@ -7,8 +7,7 @@ import {
 } from '@/errors/definedErrors';
 import { wrapAsync } from '@/utils/wrapAsync';
 import { createJWT } from '@/auth/jwt';
-import User from '@/database/entity/user';
-import { verifyKakao } from '@/auth/platform/kakao';
+import { verifyKakao } from '@/auth/platform/verifyKakao';
 
 const authRouter = express.Router();
 
@@ -23,11 +22,13 @@ authRouter.post(
           userData = await verifyKakao(accessToken);
           break;
         default:
+          // 미지원 소셜 플랫폼으로 로그인을 시도할 경우, 400 Bad Request 에러 발생
           throw new BadRequestError(
             '지원하지 않는 소셜 플랫폼으로 로그인을 시도했습니다.',
           );
       }
     } else {
+      // 엑세스 토큰이 없을 경우, 401 Unauthorization 에러 발생.
       throw new UnauthorizedError(
         '요청의 헤더에 삽입된 JWT 가 유효하지 않습니다.',
       );
