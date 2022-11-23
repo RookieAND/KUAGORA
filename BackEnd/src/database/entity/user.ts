@@ -11,7 +11,7 @@ import Question from './question';
 import Comment from './comment';
 import Like from './like';
 
-type SocialPlatform = 'naver' | 'kakao' | 'google';
+export type SocialPlatform = 'naver' | 'kakao' | 'google';
 
 @Entity()
 class User {

@@ -5,7 +5,8 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import { createConnection } from 'typeorm';
 
-import docsRouter from './routes/docs';
+import docsRouter from '@/routes/docs';
+import authRouter from '@/routes/auth';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/ormconfig';
@@ -44,6 +45,7 @@ app.use(
 
 // Router List
 app.use('/api-docs', docsRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (_, res) => {
   res.status(200).send('KUAGORA Server has been Enabled.');
