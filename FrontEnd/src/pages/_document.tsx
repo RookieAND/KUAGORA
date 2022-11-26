@@ -42,13 +42,7 @@ class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="description" content="" />
-          <meta name="keywords" content="" />
           <meta name="theme-color" content="#00917C" />
-          <meta property="og:title" content="" />
-          <meta property="og:image" content="" />
-          <meta property="og:description" content="" />
-          <meta property="og:url" content="//" />
           <title>건국의 지식 집합소, KUAGORA</title>
         </Head>
         <body>
