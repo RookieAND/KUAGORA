@@ -33,9 +33,9 @@ const fontSize = {
   sm: "14px",
   base: "16px",
   lg: "18px",
-  xl: "22px",
-  xxl: "28px",
-  title: "36px"
+  xl: "24px",
+  xxl: "32px",
+  title: "48px"
 };
 
 const fonts = {
