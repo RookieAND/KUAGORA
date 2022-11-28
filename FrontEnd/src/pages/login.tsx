@@ -2,25 +2,17 @@ import Script from "next/script";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 
-import styled from "styled-components";
-import { authStateAtom } from "../stores/auth";
-
-import LoginBox from "../components/Login/LoginBox";
+import { accessTokenSelector, IAccessToken } from "../stores/auth";
+import LoginTemplate from "@/components/template/LoginTemplate";
 
 const Login = () => {
   const router = useRouter();
-  const authState = useRecoilValue(authStateAtom);
-
-  const Wrapper = styled.div`
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `;
+  const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
+  const isLogin = accessToken != null;
 
   // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
-  if (authState) {
-    router.back();
+  if (isLogin) {
+    () => router.back();
   }
 
   return (
@@ -30,9 +22,7 @@ const Login = () => {
         src="https://developers.kakao.com/sdk/js/kakao.min.js"
         strategy="beforeInteractive"
       />
-      <Wrapper>
-        <LoginBox />
-      </Wrapper>
+      <LoginTemplate />
     </>
   );
 };
