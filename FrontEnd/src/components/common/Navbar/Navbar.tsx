@@ -1,23 +1,37 @@
+import { useRouter } from "next/router";
+
 import * as style from "@/components/common/Navbar/Navbar.style";
-import NavItem from "@/components/common/Navbar/NavItem";
-import NavItemIcons from "@/components/common/Navbar/NavItem";
+import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
+import { PATH_INFO } from "@/constants/url";
 
-import LogoSvg from "@/assets/icons/Logo.svg";
-import Main from "@/assets/icons/Main.svg";
-import Setting from "@/assets/icons/Setting.svg";
-import EditSquare from "@/assets/icons/EditSquare.svg";
+export interface NavbarProps {
+  isLogin: boolean;
+  currentPath: string;
+}
 
-const Navbar = () => {
+const Navbar = ({ isLogin, currentPath }: NavbarProps) => {
+  const navList = Object.keys(PATH_INFO) as [NavItemKey];
+  const router = useRouter();
+
+  // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수 ignoreIcon
+  const ignoreIcon = (navType: NavItemKey) =>
+    (isLogin && navType == "login") || (!isLogin && navType == "profile");
+
   return (
     <style.Wrapper>
       <style.Navigation>
-        <style.Logo>
-          <LogoSvg />
-        </style.Logo>
+        <style.Logo onClick={() => router.push("/")} />
         <style.NavItemList>
-          <NavItem icon={"main"} isFocused={true} />
-          <NavItem icon={"setting"} isFocused={true} />
-          <NavItem icon={"write"} isFocused={true} />
+          {navList.map(
+            navType =>
+              !ignoreIcon(navType) && (
+                <NavItem
+                  icon={navType}
+                  path={PATH_INFO[navType]}
+                  isFocused={currentPath == PATH_INFO[navType]}
+                />
+              )
+          )}
         </style.NavItemList>
       </style.Navigation>
     </style.Wrapper>

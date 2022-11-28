@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import LogoSvg from "@/assets/icons/Logo.svg";
 
 export const Wrapper = styled.div`
   ${({ theme }) => {
@@ -31,12 +32,10 @@ export const Navigation = styled.ul`
   gap: 16px;
 `;
 
-export const Logo = styled.li`
+export const Logo = styled(LogoSvg)`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      height: 48px;
-
       color: ${colors.mono.black};
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
@@ -46,7 +45,7 @@ export const Logo = styled.li`
 `;
 
 export const NavItemList = styled.ul`
-  width: 200px;
+  width: 144px;
   height: 32px;
 
   display: flex;
@@ -55,10 +54,5 @@ export const NavItemList = styled.ul`
 
   list-style: none;
   padding: 0px;
-  gap: 24px;
-`;
-
-export const NavItem = styled.li`
-  width: 24px;
-  height: 24px;
+  column-gap: 24px;
 `;

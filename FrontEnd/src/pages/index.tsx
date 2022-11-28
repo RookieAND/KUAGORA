@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
-import Navbar from "@/components/common/Navbar/Navbar";
+import MainTemplate from "@/components/template/MainTemplate";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Navbar />
+      <MainTemplate />
     </>
   );
 };
