@@ -1,7 +1,12 @@
 import type { NextPage } from "next";
+import Navbar from "@/components/common/Navbar/Navbar";
 
 const Home: NextPage = () => {
-  return <h5>My first Next.js BoilerPlate</h5>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 };
 
 export default Home;
