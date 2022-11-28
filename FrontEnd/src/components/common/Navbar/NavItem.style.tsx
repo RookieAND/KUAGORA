@@ -1,10 +1,7 @@
 import styled, { css } from "styled-components";
+import { NavItemProps } from "./NavItem";
 
-interface StyledNavItemProps {
-  isFocused: boolean;
-}
-
-export const Wrapper = styled.li<StyledNavItemProps>`
+export const Wrapper = styled.li<Partial<NavItemProps>>`
   ${({ theme, isFocused }) => {
     return css`
       width: 24px;

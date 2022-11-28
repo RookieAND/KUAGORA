@@ -13,6 +13,9 @@ export const Wrapper = styled.div`
       align-items: center;
       padding: 32px 64px;
 
+      position: sticky;
+      top: 0px;
+
       background-color: ${colors.mono.white};
     `;
   }}

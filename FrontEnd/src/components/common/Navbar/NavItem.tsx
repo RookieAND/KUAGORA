@@ -1,12 +1,10 @@
 import * as style from "@/components/common/Navbar/NavItem.style";
+import { useRouter } from "next/router";
 
 import MainSvg from "@/assets/icons/Main.svg";
 import EditSquareSvg from "@/assets/icons/EditSquare.svg";
 import ProfileSvg from "@/assets/icons/Profile.svg";
 import LoginSvg from "@/assets/icons/Login.svg";
-
-import { useRouter } from "next/router";
-import React from "react";
 
 export type NavItemKey = keyof typeof NavItemIcons;
 
