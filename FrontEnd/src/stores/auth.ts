@@ -1,8 +1,10 @@
 import { atom, AtomEffect, selector } from "recoil";
 
-export interface IAuthState {
+export interface IAccessTokenAtom {
   token: string | null;
 }
+
+export type IAccessToken = string | null;
 
 /**
  * 로컬 스토리지에 저장된 토큰을 즉시 Atom에 업데이트하는 함수.
@@ -24,10 +26,18 @@ function localStorageEffect<T>(key: string): AtomEffect<T> {
   };
 }
 
-export const authStateAtom = atom<IAuthState>({
-  key: "user/auth",
+export const accessTokenAtom = atom<IAccessTokenAtom>({
+  key: "user/access_token",
   default: {
     token: null
   },
-  effects: [localStorageEffect<IAuthState>("token")]
+  effects: [localStorageEffect<IAccessTokenAtom>("token")]
+});
+
+export const accessTokenSelector = selector<string | null>({
+  key: "user/get_access_token",
+  get: async ({ get }) => {
+    const accessToken = get(accessTokenAtom);
+    return accessToken?.token;
+  }
 });
