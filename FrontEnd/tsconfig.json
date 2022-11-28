@@ -23,6 +23,7 @@
       "@/constants/*": ["src/constants/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/pages/*": ["src/pages/*"],
+      "@/stores/*": ["src/stores/*"],
       "@/utils/*": ["src/utils/*"]
     },
     "incremental": true
