@@ -2,6 +2,7 @@ import { useRecoilValue } from "recoil";
 import { useRouter } from "next/router";
 
 import Navbar from "@/components/common/Navbar";
+import HeadLine from "../main/Home/HeadLine";
 import { accessTokenSelector, IAccessToken } from "@/stores/auth";
 
 const MainTemplate = () => {
@@ -11,7 +12,12 @@ const MainTemplate = () => {
   const isLogin = accessToken != null;
   const currentPath = router.pathname;
 
-  return <Navbar isLogin={isLogin} currentPath={currentPath} />;
+  return (
+    <>
+      <Navbar isLogin={isLogin} currentPath={currentPath} />
+      <HeadLine />
+    </>
+  );
 };
 
 export default MainTemplate;
