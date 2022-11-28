@@ -1,9 +1,11 @@
 import { useRecoilValue } from "recoil";
 import { useRouter } from "next/router";
 
-import Navbar from "@/components/common/Navbar";
-import HeadLine from "../main/Home/HeadLine";
 import { accessTokenSelector, IAccessToken } from "@/stores/auth";
+
+import Navbar from "@/components/common/Navbar";
+import HeadLine from "@/components/main/Home/HeadLine";
+import Information from "@/components/main/Home/Information";
 
 const MainTemplate = () => {
   const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
@@ -16,6 +18,7 @@ const MainTemplate = () => {
     <>
       <Navbar isLogin={isLogin} currentPath={currentPath} />
       <HeadLine />
+      <Information />
     </>
   );
 };
