@@ -14,7 +14,11 @@ const colors = {
     gray5: "#9E9E9E",
     gray6: "#757575",
     gray7: "#616161",
-    gray8: "#424242",
+    gray8: "#424242"
+  },
+  black: {
+    opacity30: "#1D1D1D33",
+    opacity60: "#1D1D1D66",
     black: "#1D1D1D"
   },
   main: {
@@ -34,10 +38,10 @@ const fontWeight = {
 const fontSize = {
   sm: "14px",
   base: "16px",
-  lg: "18px",
-  xl: "24px",
-  xxl: "32px",
-  title: "48px"
+  lg: "24px",
+  xl: "32px",
+  xxl: "48px",
+  title: "96px"
 };
 
 const fonts = {
