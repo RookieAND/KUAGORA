@@ -9,15 +9,35 @@ export const Wrapper = styled.div`
     align-items: center;
 `;
 
+export const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 48px 0px;
+`;
+
 export const Title = styled.h5`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      padding: 48px 0px;
       margin: 0px auto;
 
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
+      color: ${colors.main.normal};
+    `;
+  }}
+`;
+
+export const SubTitle = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      margin: 0px auto;
+
+      font-weight: ${fonts.weight.light};
+      font-size: ${fonts.size.lg};
       color: ${colors.main.normal};
     `;
   }}

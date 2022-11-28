@@ -12,7 +12,7 @@ export const Wrapper = styled.div<StyledHeadlineWrapperProps>`
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      padding: 160px 0px 160px 112px;
+      padding: 260px 80px;
       gap: 48px;
 
       width: 100%;
@@ -31,8 +31,7 @@ export const TextBox = styled.div`
   align-items: flex-start;
   gap: 4px;
 
-  width: 90%;
-  height: 149px;
+  margin: auto;
 `;
 
 export const MainText = styled.h5`
@@ -49,6 +48,7 @@ export const MainText = styled.h5`
       color: ${colors.mono.white};
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
+      text-align: center;
     `;
   }}
 `;
@@ -57,14 +57,40 @@ export const SubText = styled.p`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      width: 1328px;
-      margin: 0px;
+      margin: auto;
       padding: 0px;
 
-      font-weight: ${fonts.weight.normal};
+      font-weight: ${fonts.weight.light};
       font-size: ${fonts.size.lg};
+      text-align: center;
 
       color: ${colors.mono.white};
+    `;
+  }}
+`;
+
+export const SubmitButton = styled.button`
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      padding: 16px 16px;
+      margin: auto;
+      gap: 8px;
+
+      width: 192px;
+      height: 64px;
+
+      color: ${colors.mono.white};
+      background-color: ${colors.main.pressed};
+      border-radius: 32px;
+
+      text-align: center;
+      font-size: ${fonts.size.base};
     `;
   }}
 `;
