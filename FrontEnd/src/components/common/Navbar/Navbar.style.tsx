@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 32px 96px;
+      padding: 32px 64px;
 
       background-color: ${colors.mono.white};
     `;
@@ -46,7 +46,7 @@ export const Logo = styled(LogoSvg)`
 
 export const NavItemList = styled.ul`
   width: 144px;
-  height: 32px;
+  height: 24px;
 
   display: flex;
   flex-direction: row;
@@ -54,5 +54,5 @@ export const NavItemList = styled.ul`
 
   list-style: none;
   padding: 0px;
-  column-gap: 24px;
+  column-gap: 32px;
 `;

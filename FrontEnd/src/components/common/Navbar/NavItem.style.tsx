@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { NavItemProps } from "./NavItem";
 
 interface StyledNavItemProps {
   isFocused: boolean;
