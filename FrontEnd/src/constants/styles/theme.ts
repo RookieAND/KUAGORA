@@ -18,6 +18,8 @@ const colors = {
     black: "#1D1D1D"
   },
   main: {
+    opacity30: "#036B2933",
+    opacity60: "#036B2966",
     normal: "#036B29",
     pressed: "#044E1F"
   }
