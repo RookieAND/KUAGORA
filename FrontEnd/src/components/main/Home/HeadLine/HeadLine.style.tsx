@@ -6,8 +6,7 @@ interface StyledHeadlineWrapperProps {
 }
 
 export const Wrapper = styled.div<StyledHeadlineWrapperProps>`
-  ${({ theme, image }) => {
-    const { colors } = theme;
+  ${({ image }) => {
     return css`
       display: flex;
       flex-direction: column;
