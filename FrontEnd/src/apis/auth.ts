@@ -1,6 +1,6 @@
 import { postAsync, APIResult } from "./API";
 
-export type socialPlatform = "google" | "kakao" | "naver";
+export type SocialPlatform = "google" | "kakao" | "naver";
 
 interface loginResultType {
   token: string;
@@ -11,7 +11,7 @@ interface loginResultType {
  * @param token JWT 액세스 토큰
  */
 export async function loginAsync(
-  social: socialPlatform,
+  social: SocialPlatform,
   token: string
 ): APIResult<loginResultType> {
   const result = await postAsync<loginResultType, any>(

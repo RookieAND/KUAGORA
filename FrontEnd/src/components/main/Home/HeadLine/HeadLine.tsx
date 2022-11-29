@@ -10,6 +10,7 @@ const Headline = () => {
           겹겹이 쌓인 질문 속에서 해답을 찾아보세요.
         </style.SubText>
       </style.TextBox>
+      <style.SubmitButton>지금 질문하기</style.SubmitButton>
     </style.Wrapper>
   );
 };

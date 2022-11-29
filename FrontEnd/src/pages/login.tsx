@@ -2,8 +2,8 @@ import Script from "next/script";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 
-import { accessTokenSelector, IAccessToken } from "../stores/auth";
-import LoginTemplate from "@/components/template/LoginTemplate";
+import { accessTokenSelector, IAccessToken } from "@/stores/auth";
+import LoginTemplate from "~/src/components/template/LoginTemplate/LoginTemplate";
 
 const Login = () => {
   const router = useRouter();

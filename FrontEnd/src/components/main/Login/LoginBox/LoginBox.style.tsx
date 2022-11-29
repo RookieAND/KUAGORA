@@ -1,12 +1,18 @@
 import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
-    width: 100%,
-    height: 864px;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      width: 50%;
+      padding: 96px 128px;
+
+      display: flex;
+      flex-direction: column;
+
+      border: 32px solid ${colors.main.opacity30};
+    `;
+  }}
 `;
 
 export const TitleBox = styled.div`
@@ -21,7 +27,7 @@ export const Title = styled.h5`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      margin: 0px auto;
+      margin: 0px auto 4px auto;
 
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
@@ -37,8 +43,17 @@ export const SubTitle = styled.p`
       margin: 0px auto;
 
       font-weight: ${fonts.weight.light};
-      font-size: ${fonts.size.lg};
+      font-size: ${fonts.size.base};
       color: ${colors.main.normal};
     `;
   }}
+`;
+
+export const ButtonBox = styled.div`
+  height: 196px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 `;
