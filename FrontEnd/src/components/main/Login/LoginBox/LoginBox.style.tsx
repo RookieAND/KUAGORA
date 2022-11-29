@@ -43,7 +43,7 @@ export const SubTitle = styled.p`
       margin: 0px auto;
 
       font-weight: ${fonts.weight.light};
-      font-size: ${fonts.size.lg};
+      font-size: ${fonts.size.base};
       color: ${colors.main.normal};
     `;
   }}

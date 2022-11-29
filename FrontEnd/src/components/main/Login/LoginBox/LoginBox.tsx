@@ -5,8 +5,10 @@ const LoginBox = () => {
   return (
     <styles.Wrapper>
       <styles.TitleBox>
-        <styles.Title>Login</styles.Title>
-        <styles.SubTitle>소셜 플랫폼으로 로그인을 진행하세요.</styles.SubTitle>
+        <styles.Title>Join Our Service</styles.Title>
+        <styles.SubTitle>
+          하단의 소셜 플랫폼 계정으로 로그인을 진행하세요.
+        </styles.SubTitle>
       </styles.TitleBox>
       <styles.ButtonBox>
         <SocialButton social={"google"} />
