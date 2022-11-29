@@ -82,7 +82,7 @@ export const SubmitButton = styled.button`
       margin: auto;
       gap: 8px;
 
-      width: 192px;
+      width: 256px;
       height: 64px;
 
       color: ${colors.mono.white};
@@ -90,7 +90,8 @@ export const SubmitButton = styled.button`
       border-radius: 32px;
 
       text-align: center;
-      font-size: ${fonts.size.base};
+      font-size: 20px;
+      font-weight: ${fonts.weight.bold};
     `;
   }}
 `;

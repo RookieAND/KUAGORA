@@ -14,7 +14,7 @@ export const TitleBox = styled.div`
   flex-direction: column;
   align-items: center;
 
-  padding: 48px 0px;
+  padding: 64px 0px;
 `;
 
 export const Title = styled.h5`
@@ -25,7 +25,7 @@ export const Title = styled.h5`
 
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
-      color: ${colors.main.normal};
+      color: ${colors.main.pressed};
     `;
   }}
 `;

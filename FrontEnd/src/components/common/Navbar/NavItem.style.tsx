@@ -9,7 +9,7 @@ export const Wrapper = styled.li<Partial<NavItemProps>>`
 
       svg {
         fill: ${isFocused
-          ? theme.colors.main.opacity30
+          ? theme.colors.main.opacity60
           : theme.colors.mono.white};
       }
     `;
