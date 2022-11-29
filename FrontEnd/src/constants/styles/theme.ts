@@ -22,15 +22,16 @@ const colors = {
     black: "#1D1D1D"
   },
   main: {
-    opacity30: "#036B2933",
-    opacity60: "#036B2966",
-    normal: "#036B29",
-    pressed: "#044E1F"
+    opacity30: "#1D817E33",
+    opacity60: "#1D817E66",
+    light: "#50C8CC",
+    normal: "#1D817E",
+    pressed: "#005A62"
   }
 };
 
 const fontWeight = {
-  light: 100,
+  light: 200,
   normal: 400,
   bold: 700
 };
