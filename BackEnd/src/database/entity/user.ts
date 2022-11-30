@@ -5,11 +5,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { Length, IsEmail } from 'class-validator';
+
 import Question from './question';
 import Comment from './comment';
 import Like from './like';
 
-type SocialPlatform = 'naver' | 'kakao' | 'google';
+export type SocialPlatform = 'naver' | 'kakao' | 'google';
 
 @Entity()
 class User {
@@ -25,9 +27,11 @@ class User {
   })
   social!: SocialPlatform;
 
-  @Column('varchar', { length: 20 })
+  @Length(1, 20)
+  @Column('varchar')
   nickname!: string;
 
+  @IsEmail()
   @Column('varchar', { length: 255 })
   email!: string;
 
