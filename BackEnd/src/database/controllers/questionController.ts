@@ -85,6 +85,8 @@ export const getComments = async (
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
+
+  return commentDatas;
 };
 
 /**
