@@ -1,6 +1,8 @@
 import { getRepository } from 'typeorm';
 import Question from '@/database/entity/question';
 import Comment from '@/database/entity/comment';
+import User from '../entity/user';
+import { BadRequestError } from '@/errors/definedErrors';
 
 /**
  * 질문글의 id를 통해 정보를 로드하는 함수 getQuestionById
@@ -83,4 +85,61 @@ export const getComments = async (
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
+};
+
+/**
+ *
+ * @param questionId 댓글을 추가하려는 질문글의 ID
+ * @param uuid 댓글을 추가하려는 유저의 UUID
+ * @param content 추가하려는 댓글의 내용
+ */
+export const addComment = async (
+  questionId: number,
+  uuid: string,
+  content: string,
+) => {
+  const user = new User();
+  user.uuid = uuid;
+
+  const question = new Question();
+  question.id = questionId;
+
+  const comment = new Comment();
+  comment.content = content;
+  comment.user = user;
+  comment.question = question;
+
+  await getRepository(Comment)
+    .createQueryBuilder()
+    .insert()
+    .into('comment')
+    .values(comment)
+    .updateEntity(false)
+    .execute();
+};
+
+/**
+ * 특정 질문글에 달린 댓글을 제거하는 함수
+ * @param questionId 댓글이 달린 질문글의 ID
+ * @param uuid 댓글을 작성한 유저의 uuid
+ * @param commentId 삭제하려는 댓글의 ID
+ */
+export const removeComment = async (
+  questionId: number,
+  uuid: string,
+  commentId: number,
+) => {
+  const removeCommentResult = await getRepository(Comment)
+    .createQueryBuilder()
+    .softDelete()
+    .where('comment.id =: commentId', { commentId })
+    .andWhere('comment.question_id =: questionId', { questionId })
+    .andWhere('comment.user_uuid =: uuid', { uuid })
+    .execute();
+
+  if (removeCommentResult.affected != -1) {
+    throw new BadRequestError(
+      '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
+    );
+  }
 };
