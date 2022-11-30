@@ -1,7 +1,9 @@
+import questionRouter from '@/routes/question';
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
-import BasicEntity from './basic';
-import User from './user';
+import BasicEntity from '@/database/entity/basic';
+import Question from '@/database/entity/question';
+import User from '@/database/entity/user';
 
 @Entity()
 class Comment extends BasicEntity {
@@ -14,6 +16,12 @@ class Comment extends BasicEntity {
     name: 'user_uuid',
   })
   user!: User;
+
+  @ManyToOne(() => Question, (question) => question.comments)
+  @JoinColumn({
+    name: 'question_id',
+  })
+  question!: Question;
 }
 
 export default Comment;
