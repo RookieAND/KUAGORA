@@ -1,10 +1,11 @@
 import { useRouter } from "next/router";
+import { NextPage } from "next";
 import { useRecoilValue } from "recoil";
 
 import { accessTokenSelector, IAccessToken } from "@/stores/auth";
 import LoginTemplate from "~/src/components/template/LoginTemplate/LoginTemplate";
 
-const Login = () => {
+const Login: NextPage = () => {
   const router = useRouter();
   const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
   const isLogin = accessToken != null;
