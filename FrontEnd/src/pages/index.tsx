@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
+import MainTemplate from "@/components/template/MainTemplate";
 
 const Home: NextPage = () => {
-  return <h5>My first Next.js BoilerPlate</h5>;
+  return <MainTemplate />;
 };
 
 export default Home;
