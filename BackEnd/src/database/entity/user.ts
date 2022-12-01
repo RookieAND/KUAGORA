@@ -22,7 +22,6 @@ class User {
   registerAt!: Date;
 
   @Column('enum', {
-    name: 'social_platform',
     enum: ['naver', 'kakao', 'google'],
   })
   social!: SocialPlatform;
