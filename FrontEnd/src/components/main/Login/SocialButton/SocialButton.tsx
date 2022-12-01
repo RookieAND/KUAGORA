@@ -1,6 +1,9 @@
-import * as styles from "./SocialButton.style";
-import { SocialPlatform } from "@/apis/auth";
+import Link from "next/link";
 
+import { SocialPlatform } from "@/apis/OAuth2/auth";
+import { SOCIAL_LOGIN_URL } from "@/apis/OAuth2/social";
+
+import * as styles from "./SocialButton.style";
 import KakaoLogoSvg from "@/assets/icons/KakaoLogo.svg";
 import GoogleLogoSvg from "@/assets/icons/GoogleLogo.svg";
 import NaverLogoSvg from "@/assets/icons/NaverLogo.svg";
@@ -44,7 +47,7 @@ const SocialButton = ({ social }: SocialButtonProps) => {
     <styles.Wrapper backgroundColor={buttonStyle[social].backgroundColor}>
       <styles.Icon>{buttonStyle[social].logo}</styles.Icon>
       <styles.Text textColor={buttonStyle[social].textColor}>
-        {buttonStyle[social].text}
+        <Link href={SOCIAL_LOGIN_URL[social]}>{buttonStyle[social].text}</Link>
       </styles.Text>
     </styles.Wrapper>
   );
