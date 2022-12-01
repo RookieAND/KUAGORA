@@ -1,16 +1,19 @@
 import { useRouter } from "next/router";
+import { NextPage } from "next";
 import { useRecoilValue } from "recoil";
 
-import { accessTokenSelector, IAccessToken } from "@/stores/auth";
-import LoginTemplate from "~/src/components/template/LoginTemplate/LoginTemplate";
+import { accessTokenSelector } from "@/stores/auth";
+import { SocialPlatform } from "@/apis/OAuth2/auth";
+import LoginTemplate from "@/components/template/LoginTemplate/LoginTemplate";
 
-const SocialLogin = () => {
+const SocialLogin: NextPage = () => {
   const router = useRouter();
-  const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
-  const isLogin = accessToken != null;
+  const socialType = router.query.social as SocialPlatform;
+  const code = router.query.code;
 
   // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
-  if (isLogin) {
+  const accessToken = useRecoilValue(accessTokenSelector);
+  if (accessToken != null) {
     () => router.back();
   }
 
