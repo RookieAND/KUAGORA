@@ -11,9 +11,9 @@ const LoginBox = () => {
         </styles.SubTitle>
       </styles.TitleBox>
       <styles.ButtonBox>
-        <SocialButton social={"google"} />
-        <SocialButton social={"kakao"} />
-        <SocialButton social={"naver"} />
+        <SocialButton social="kakao" />
+        <SocialButton social="naver" />
+        <SocialButton social="google" />
       </styles.ButtonBox>
     </styles.Wrapper>
   );

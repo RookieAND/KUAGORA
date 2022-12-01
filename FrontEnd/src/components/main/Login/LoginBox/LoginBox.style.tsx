@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
   ${({ theme }) => {
-    const { colors, fonts } = theme;
+    const { colors } = theme;
     return css`
       width: 50%;
       padding: 96px 128px;
