@@ -4,14 +4,13 @@ import { useRecoilState } from "recoil";
 
 import { accessTokenAtom } from "@/stores/auth";
 import { postAsync } from "@/apis/API";
-import { SocialPlatform } from "@/apis/OAuth2/auth";
+import { SocialPlatform } from "@/apis/auth";
 import LoginTemplate from "@/components/template/LoginTemplate/LoginTemplate";
 
 const SocialLogin: NextPage = () => {
   const router = useRouter();
   const code = router.query.code;
   const social = router.query.social;
-
 
   // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
   const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom);

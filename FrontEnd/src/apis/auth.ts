@@ -1,4 +1,4 @@
-import { postAsync, APIResult } from "../API";
+import { postAsync, APIResult } from "./API";
 
 export type SocialPlatform = "google" | "kakao" | "naver";
 
@@ -26,3 +26,29 @@ export async function loginAsync(
 
   return result;
 }
+
+interface loginAsyncProps {
+  code: string;
+}
+
+interface loginAsyncResult {
+  token: string;
+}
+
+export const verifyLoginAsync = async (
+  social: SocialPlatform,
+  code: string
+) => {
+  const resData = await postAsync<loginAsyncResult, loginAsyncProps>(
+    `/auth/verify/${social}`,
+    {
+      code
+    }
+  );
+
+  if (resData.isSuccess) {
+    const { token } = resData.result;
+    return token;
+  }
+  return null;
+};
