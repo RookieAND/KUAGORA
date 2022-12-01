@@ -13,7 +13,7 @@ export const getUserByEmail = async (email: string, social: SocialPlatform) => {
   userData = await getRepository(User)
     .createQueryBuilder('user')
     .where('user.email = :email', { email })
-    .andWhere('user.socialPlatform = :social', { social })
+    .andWhere('user.social = :social', { social })
     .getOne();
   return userData;
 };
