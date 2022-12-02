@@ -7,19 +7,25 @@ import {
 } from '@/errors/definedErrors';
 import { wrapAsync } from '@/utils/wrapAsync';
 import { createJWT } from '@/auth/jwt';
-import { verifyKakao } from '@/auth/platform';
+import { verifyKakao, verifyNaver, verifyGoogle } from '@/auth/platform';
 
 const authRouter = express.Router();
 
 authRouter.post(
-  'verify/:social',
+  '/verify/:social',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const code = req.params.token;
+    const code = req.body.code;
     let userData;
     if (code) {
       switch (req.params.social) {
         case 'kakao':
           userData = await verifyKakao(code);
+          break;
+        case 'naver':
+          userData = await verifyNaver(code);
+          break;
+        case 'google':
+          userData = await verifyGoogle(code);
           break;
         default:
           // 미지원 소셜 플랫폼으로 로그인을 시도할 경우, 400 Bad Request 에러 발생
@@ -35,6 +41,7 @@ authRouter.post(
     }
 
     if (userData) {
+      console.log('토큰 발행 완료');
       const token = createJWT(userData);
       return res.status(200).json({ token });
     }
