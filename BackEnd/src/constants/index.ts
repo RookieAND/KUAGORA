@@ -7,6 +7,12 @@ export const DEV_CONFIG = {
     port: '3306',
     database: 'kuagora-dev',
   },
+  redis: {
+    host: process.env.DEV_REDIS_HOST,
+    password: process.env.DEV_REDIS_PASSWORD,
+    username: process.env.DEV_REDIS_USERNAME,
+    port: '14828',
+  },
 } as const;
 
 export const PROD_CONFIG = {
@@ -17,5 +23,11 @@ export const PROD_CONFIG = {
   db: {
     port: '3306',
     database: 'kuagora',
+  },
+  redis: {
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+    username: process.env.REDIS_USERNAME,
+    port: '14828',
   },
 } as const;
