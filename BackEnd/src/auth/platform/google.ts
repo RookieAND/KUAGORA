@@ -15,34 +15,38 @@ const CURRENT_CONFIG =
  * @param code 클라이언트에서 로그인 인증 후 받은 승인 코드
  * @returns 카카오 측으로부터 인계 받은 토큰, 없을 시 null 리턴
  */
-export const verifyKakao = async (code: string) => {
+export const verifyGoogle = async (code: string) => {
   let resData;
   try {
     const response = await axios.post(
-      `https://kauth.kakao.com/oauth/token`,
+      `https://oauth2.googleapis.com/token`,
       {
         grant_type: 'authorization_code',
-        client_id: process.env.KAKAO_CLIENT_ID,
-        redirect_url: `${CURRENT_CONFIG['socialAuthURL']}/kakao`,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_url: `${CURRENT_CONFIG['socialAuthURL']}/google`,
         code,
       },
       {
         headers: {
-          'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          'Content-type': 'application/x-www-form-urlencoded',
         },
       },
     );
     resData = response.data;
+    console.log(resData);
   } catch (err) {
+    console.log(err);
+    console.log(err);
     throw new InternalServerError(
-      '카카오 측에서 토큰을 발급받는 과정에서 문제가 발생했습니다.',
+      '구글 측에서 토큰을 발급받는 과정에서 문제가 발생했습니다.',
     );
   }
 
   if (resData) {
     // 인계받은 토큰을 통해 유저 정보를 받아오는 함수 실행.
     const token = resData.access_token;
-    const userData = await getUserInfoFromKakao(token);
+    const userData = await getUserInfoFromGoogle(token);
     if (userData) {
       return userData;
     }
@@ -58,27 +62,28 @@ export const verifyKakao = async (code: string) => {
  * @param token 카카오 측에서 전달받은 엑세스 토큰
  * @returns 유저의 이메일, 이름, 로그인 타입이 담긴 객체
  */
-const getUserInfoFromKakao = async (token: string) => {
+const getUserInfoFromGoogle = async (token: string) => {
   let resData;
   try {
-    const response = await axios.get(`https://kapi.kakao.com/v2/user/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     resData = response.data;
   } catch (err) {
-    throw new UnauthorizedError(
-      '카카오 측에서 발급한 토큰이 유효하지 않습니다.',
-    );
+    throw new UnauthorizedError('구글 측에서 발급한 토큰이 유효하지 않습니다.');
   }
 
-  // 카카오 측에서 인계받은 데이터가 있는지를 체크하고 없다면 null 반환.
+  //구글 측에서 인계받은 데이터가 있는지를 체크하고 없다면 null 반환.
   if (resData) {
-    const socialPlatform = 'kakao';
-    const { email } = resData.kakao_account;
-    const { nickname } = resData.kakao_account.profile;
+    const socialPlatform = 'google';
+    const email = resData.email;
+    const nickname = resData.name;
 
     // 인계받은 데이터를 통해 유저 정보를 로드, 없을 경우 회원가입 진행.
     let userData = await getUserByEmail(email, socialPlatform);
