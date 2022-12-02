@@ -7,19 +7,25 @@ import {
 } from '@/errors/definedErrors';
 import { wrapAsync } from '@/utils/wrapAsync';
 import { createJWT } from '@/auth/jwt';
-import { verifyKakao } from '@/auth/platform/verifyKakao';
+import { verifyKakao, verifyNaver, verifyGoogle } from '@/auth/platform';
 
 const authRouter = express.Router();
 
 authRouter.post(
-  'login/:social',
+  '/verify/:social',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const accessToken = req.headers.authorization;
+    const code = req.body.code;
     let userData;
-    if (accessToken) {
+    if (code) {
       switch (req.params.social) {
         case 'kakao':
-          userData = await verifyKakao(accessToken);
+          userData = await verifyKakao(code);
+          break;
+        case 'naver':
+          userData = await verifyNaver(code);
+          break;
+        case 'google':
+          userData = await verifyGoogle(code);
           break;
         default:
           // 미지원 소셜 플랫폼으로 로그인을 시도할 경우, 400 Bad Request 에러 발생
@@ -30,19 +36,26 @@ authRouter.post(
     } else {
       // 엑세스 토큰이 없을 경우, 401 Unauthorization 에러 발생.
       throw new UnauthorizedError(
-        '요청의 헤더에 삽입된 JWT 가 유효하지 않습니다.',
+        '요청의 파라미터에 포함된 인증 코드가 없습니다.',
       );
     }
 
     if (userData) {
       const token = createJWT(userData);
-      return res.status(200).json({ token });
+      return res.status(200).json({ token, userData });
     }
 
     // 정상적으로 로그인이 진행되지 않을 경우, 500 Internal Error 발생.
     throw new InternalServerError(
       '소셜 로그인 처리 과정에서 에러가 발생했습니다.',
     );
+  }),
+);
+
+authRouter.get(
+  `/logout`,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    
   }),
 );
 
