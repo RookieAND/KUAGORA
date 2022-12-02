@@ -1,39 +1,40 @@
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
-import { useSetRecoilState } from "recoil";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 
-import { accessTokenAtom, IAccessTokenAtom } from "@/stores/auth";
+import { setUserDataAtom, getAccessTokenAtom } from "@/stores/actions";
 import { verifyLoginAsync } from "@/apis/auth";
 import { SocialPlatform } from "@/apis/auth";
-import LoginTemplate from "@/components/template/LoginTemplate/LoginTemplate";
+import MainTemplate from "@/components/template/MainTemplate";
 
-const SocialLogin = ({ token }: IAccessTokenAtom) => {
+const SocialLogin = () => {
   const router = useRouter();
-  // const setAccessToken = useSetRecoilState(accessTokenAtom);
+  const [, setUserData] = useAtom(setUserDataAtom);
+  const [, setAccessToken] = useAtom(getAccessTokenAtom);
 
   useEffect(() => {
-    if (!router.isReady) {
-      router.reload();
-      return;
-    }
+    const verifySocialLogin = async () => {
+      const code = router.query.code as string;
+      const social = router.query.social as SocialPlatform;
+      const result = await verifyLoginAsync(social, code);
+      if (result) {
+        setAccessToken(result.token);
+        setUserData(result.userData);
+        router.push("/");
+      }
+    };
 
-    if (token != null) {
-      console.log(token);
-      // setAccessToken({ token });
-      router.push("/");
-      return;
-    }
+    verifySocialLogin();
   }, [router]);
 
-  return <LoginTemplate />;
+  return <MainTemplate />;
 };
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const code = context.query.code as string;
-  const social = context.query.social as SocialPlatform;
-  const token = await verifyLoginAsync(social, code);
-  return { props: { token: token } };
-};
+// export const getServerSideProps: GetServerSideProps = async context => {
+//   const code = context.query.code as string;
+//   const social = context.query.social as SocialPlatform;
+//   const token = await verifyLoginAsync(social, code);
+//   return { props: { token: token } };
+// };
 
 export default SocialLogin;

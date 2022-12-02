@@ -1,5 +1,5 @@
 import { postAsync, APIResult } from "./API";
-import { IAccessToken } from "@/stores/auth";
+import { IAccessToken, IUserData } from "@/stores/atoms";
 
 export type SocialPlatform = "google" | "kakao" | "naver";
 
@@ -11,7 +11,8 @@ interface verifyAsyncProps {
   code: string;
 }
 
-interface verifyAsyncResult {
+export interface verifyAsyncResult {
+  userData: IUserData;
   token: IAccessToken;
 }
 
@@ -45,7 +46,7 @@ export async function loginAsync(
 export const verifyLoginAsync = async (
   social: SocialPlatform,
   code: string
-): Promise<IAccessToken | null> => {
+): Promise<verifyAsyncResult | null> => {
   const resData = await postAsync<verifyAsyncResult, verifyAsyncProps>(
     `/auth/verify/${social}`,
     {
@@ -54,8 +55,8 @@ export const verifyLoginAsync = async (
   );
 
   if (resData.isSuccess) {
-    const { token } = resData.result;
-    return token;
+    const { token, userData } = resData.result;
+    return { token, userData };
   }
   return null;
 };
