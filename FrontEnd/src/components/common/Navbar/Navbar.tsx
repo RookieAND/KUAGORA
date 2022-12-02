@@ -22,17 +22,14 @@ const Navbar = ({ isLogin, currentPath }: NavbarProps) => {
       <style.Navigation>
         <style.Logo onClick={() => router.push("/")} />
         <style.NavItemList>
-          {navList.map(
-            navType =>
-              !ignoreIcon(navType) && (
-                <NavItem
-                  icon={navType}
-                  path={PATH_INFO[navType]}
-                  isFocused={currentPath == PATH_INFO[navType]}
-                  key={navType}
-                />
-              )
-          )}
+          {navList.map(navType => (
+            <NavItem
+              icon={navType}
+              path={PATH_INFO[navType]}
+              isFocused={currentPath == PATH_INFO[navType]}
+              key={navType}
+            />
+          ))}
         </style.NavItemList>
       </style.Navigation>
     </style.Wrapper>
