@@ -8,7 +8,7 @@
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./src/types/index.d.ts", "./node_modules/@types"],
     "baseUrl": ".",
     "paths": {
       "@/auth/*": ["src/auth/*"],
