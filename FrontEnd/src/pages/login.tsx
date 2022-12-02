@@ -13,7 +13,7 @@ const Login: NextPage = () => {
 
   // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
   if (isLogin) {
-    () => router.back();
+    router.back();
   }
 
   return (

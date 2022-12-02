@@ -1,24 +1,39 @@
 import { useRouter } from "next/router";
-import { NextPage } from "next";
-import { useRecoilState } from "recoil";
+import { GetServerSideProps } from "next";
+import { useSetRecoilState } from "recoil";
+import { useEffect } from "react";
 
-import { accessTokenAtom } from "@/stores/auth";
-import { postAsync } from "@/apis/API";
+import { accessTokenAtom, IAccessTokenAtom } from "@/stores/auth";
+import { verifyLoginAsync } from "@/apis/auth";
 import { SocialPlatform } from "@/apis/auth";
 import LoginTemplate from "@/components/template/LoginTemplate/LoginTemplate";
 
-const SocialLogin: NextPage = () => {
+const SocialLogin = ({ token }: IAccessTokenAtom) => {
   const router = useRouter();
-  const code = router.query.code;
-  const social = router.query.social;
+  // const setAccessToken = useSetRecoilState(accessTokenAtom);
 
-  // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
-  const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom);
-  if (accessToken != null) {
-    () => router.back();
-  }
+  useEffect(() => {
+    if (!router.isReady) {
+      router.reload();
+      return;
+    }
+
+    if (token != null) {
+      console.log(token);
+      // setAccessToken({ token });
+      router.push("/");
+      return;
+    }
+  }, [router]);
 
   return <LoginTemplate />;
+};
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const code = context.query.code as string;
+  const social = context.query.social as SocialPlatform;
+  const token = await verifyLoginAsync(social, code);
+  return { props: { token: token } };
 };
 
 export default SocialLogin;
