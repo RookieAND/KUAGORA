@@ -29,6 +29,7 @@ const Navbar = ({ isLogin, currentPath }: NavbarProps) => {
                   icon={navType}
                   path={PATH_INFO[navType]}
                   isFocused={currentPath == PATH_INFO[navType]}
+                  key={navType}
                 />
               )
           )}
