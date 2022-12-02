@@ -13,7 +13,7 @@ dotenv.config();
  * @returns User 데이터로 생성된 JWT
  */
 export const createJWT = (user: User) => {
-  const token = jwt.sign(user, process.env.JWT_SECRET_KEY!);
+  const token = jwt.sign({ ...user }, process.env.JWT_SECRET_KEY!);
   return token;
 };
 
@@ -31,6 +31,6 @@ export const verifyJWT = async (token: string) => {
     ) as User;
     return decoded_token.uuid;
   } catch (err) {
-    throw new UnauthorizedError('유효하지 않은 JWT 입니다.')
+    throw new UnauthorizedError('유효하지 않은 JWT 입니다.');
   }
 };
