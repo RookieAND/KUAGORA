@@ -13,7 +13,7 @@ const CURRENT_CONFIG =
 /**
  * 인계받은 승인 코드를 통해 카카오 측에게 토큰을 받는 함수
  * @param code 클라이언트에서 로그인 인증 후 받은 승인 코드
- * @returns 카카오 측으로부터 인계 받은 토큰, 없을 시 null 리턴
+ * @returns 구글 측으로부터 인계 받은 토큰, 없을 시 null 리턴
  */
 export const verifyGoogle = async (code: string) => {
   let resData;
@@ -34,10 +34,7 @@ export const verifyGoogle = async (code: string) => {
       },
     );
     resData = response.data;
-    console.log(resData);
   } catch (err) {
-    console.log(err);
-    console.log(err);
     throw new InternalServerError(
       '구글 측에서 토큰을 발급받는 과정에서 문제가 발생했습니다.',
     );
@@ -56,10 +53,10 @@ export const verifyGoogle = async (code: string) => {
 };
 
 /**
- * 카카오 측에서 전달받은 token이 유효한지를 체크한 후,
+ * 구글 측에서 전달받은 token이 유효한지를 체크한 후,
  * 유효성 보장이 완료되었다면 유저 정보를 리턴하는 함수.
  *
- * @param token 카카오 측에서 전달받은 엑세스 토큰
+ * @param token 구글 측에서 전달받은 엑세스 토큰
  * @returns 유저의 이메일, 이름, 로그인 타입이 담긴 객체
  */
 const getUserInfoFromGoogle = async (token: string) => {

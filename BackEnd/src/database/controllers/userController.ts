@@ -30,7 +30,6 @@ export const registerUser = async (
   email: string,
   social: SocialPlatform,
 ) => {
-  console.log(nickname, email, social);
   const userRepository = getRepository(User);
   const registeredData = userRepository.create({
     nickname,
