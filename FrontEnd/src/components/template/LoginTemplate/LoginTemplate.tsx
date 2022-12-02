@@ -1,25 +1,15 @@
 import * as style from "./LoginTemplate.style";
+import BackgroundImg from "@/assets/images/Headline.jpg";
 
-import Navbar from "@/components/common/Navbar";
-import LoginSection from "@/components/main/Login/LoginSection";
 import LoginBox from "@/components/main/Login/LoginBox";
-import Footer from "@/components/common/Footer";
 
-interface LoginTemplateProps {
-  isLogin: boolean;
-  currentPath: string;
-}
-
-const LoginTemplate = ({ isLogin, currentPath }: LoginTemplateProps) => {
+const LoginTemplate = () => {
   return (
-    <>
-      <Navbar isLogin={isLogin} currentPath={currentPath} />
+    <style.Wrapper image={BackgroundImg}>
       <style.Section>
         <LoginBox />
-        <LoginSection />
       </style.Section>
-      <Footer />
-    </>
+    </style.Wrapper>
   );
 };
 

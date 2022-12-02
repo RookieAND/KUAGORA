@@ -4,13 +4,13 @@ export const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 50%;
-      padding: 96px 128px;
+      width: 640px;
+      padding: 64px 128px;
 
       display: flex;
       flex-direction: column;
 
-      border: 32px solid ${colors.main.opacity30};
+      background-color: rgba(0, 0, 0, 0.5);
     `;
   }}
 `;
@@ -20,7 +20,7 @@ export const TitleBox = styled.div`
   flex-direction: column;
   align-items: center;
 
-  padding: 64px 0px;
+  padding: 32px 0px;
 `;
 
 export const Title = styled.h5`
@@ -31,7 +31,7 @@ export const Title = styled.h5`
 
       font-weight: ${fonts.weight.bold};
       font-size: ${fonts.size.xxl};
-      color: ${colors.main.pressed};
+      color: ${colors.mono.white};
     `;
   }}
 `;
@@ -44,16 +44,31 @@ export const SubTitle = styled.p`
 
       font-weight: ${fonts.weight.light};
       font-size: ${fonts.size.base};
-      color: ${colors.main.normal};
+      color: ${colors.mono.white};
     `;
   }}
 `;
 
 export const ButtonBox = styled.div`
-  height: 196px;
+  height: 256px;
+  padding: 32px 0px 64px 0px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const BackMsg = styled.p`
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      margin: 0px auto;
+      cursor: pointer;
+
+      font-weight: ${fonts.weight.light};
+      font-size: ${fonts.size.base};
+      color: ${colors.mono.white};
+    `;
+  }}
 `;
