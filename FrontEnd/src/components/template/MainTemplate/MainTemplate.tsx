@@ -1,7 +1,7 @@
-import { useRecoilValue } from "recoil";
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { accessTokenSelector, IAccessToken } from "@/stores/auth";
+import { getAccessTokenAtom } from "@/stores/actions";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
@@ -10,15 +10,13 @@ import Information from "@/components/main/Home/Information";
 import QuestionList from "@/components/main/Home/QuestionList";
 
 const MainTemplate = () => {
-  const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
   const router = useRouter();
-
-  const isLogin = accessToken != null;
+  const [accessToken] = useAtom(getAccessTokenAtom);
   const currentPath = router.pathname;
 
   return (
     <>
-      <Navbar isLogin={isLogin} currentPath={currentPath} />
+      <Navbar isLogin={accessToken != null} currentPath={currentPath} />
       <HeadLine />
       <Information />
       <QuestionList />

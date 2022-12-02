@@ -17,7 +17,12 @@ const Information = () => {
       </style.TitleBox>
       {InfoGuideContent.map(
         ({ textDirection, title, desc }: InfoGuideProps) => (
-          <InfoGuide textDirection={textDirection} title={title} desc={desc} />
+          <InfoGuide
+            textDirection={textDirection}
+            title={title}
+            desc={desc}
+            key={`${title}-${desc}`}
+          />
         )
       )}
     </style.Wrapper>

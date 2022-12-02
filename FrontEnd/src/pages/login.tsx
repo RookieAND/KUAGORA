@@ -1,28 +1,31 @@
-import Script from "next/script";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
+import { useAtom } from "jotai";
 
-import { accessTokenSelector, IAccessToken } from "@/stores/auth";
-import LoginTemplate from "~/src/components/template/LoginTemplate/LoginTemplate";
+import { getAccessTokenAtom } from "@/stores/actions";
+import LoginTemplate from "@/components/template/LoginTemplate/LoginTemplate";
 
 const Login = () => {
+  const [accessToken] = useAtom(getAccessTokenAtom);
   const router = useRouter();
-  const accessToken = useRecoilValue<IAccessToken>(accessTokenSelector);
+  const currentPath = router.pathname;
   const isLogin = accessToken != null;
 
   // 이미 로그인이 되어 있다면, 이전 화면으로 되돌림.
-  if (isLogin) {
-    () => router.back();
+  if (accessToken) {
+    router.back();
   }
 
   return (
     <>
-      <Script
-        type="text/javascript"
-        src="https://developers.kakao.com/sdk/js/kakao.min.js"
-        strategy="beforeInteractive"
-      />
-      <LoginTemplate />
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#00917C" />
+        <link rel="icon" href="/favicon.ico" />
+        <title>지식의 요람, KU : AGORA</title>
+      </Head>
+      <LoginTemplate isLogin={isLogin} currentPath={currentPath} />
     </>
   );
 };

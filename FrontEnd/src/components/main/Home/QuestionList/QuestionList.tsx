@@ -36,7 +36,12 @@ const QuestionList = () => {
       </style.TitleBox>
       <style.QuestionBox>
         {DummyQuestionContents.map(({ title, like, comment }) => (
-          <QuestionContext title={title} like={like} comment={comment} />
+          <QuestionContext
+            title={title}
+            like={like}
+            comment={comment}
+            key={`${title}-${like}-${comment}`}
+          />
         ))}
       </style.QuestionBox>
     </style.Wrapper>
