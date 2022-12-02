@@ -41,15 +41,21 @@ authRouter.post(
     }
 
     if (userData) {
-      console.log('토큰 발행 완료');
       const token = createJWT(userData);
-      return res.status(200).json({ token });
+      return res.status(200).json({ token, userData });
     }
 
     // 정상적으로 로그인이 진행되지 않을 경우, 500 Internal Error 발생.
     throw new InternalServerError(
       '소셜 로그인 처리 과정에서 에러가 발생했습니다.',
     );
+  }),
+);
+
+authRouter.get(
+  `/logout`,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    
   }),
 );
 
