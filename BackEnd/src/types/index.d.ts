@@ -2,6 +2,7 @@ declare global {
   namespace Express {
     interface Request {
       uuid?: string;
+      redis?: any; // any 개선 필요, type 관련 조사 필요.
     }
   }
 }

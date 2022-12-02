@@ -8,6 +8,7 @@ import { createConnection } from 'typeorm';
 import docsRouter from '@/routes/docs';
 import authRouter from '@/routes/auth';
 import questionRouter from '@/routes/question';
+import registerRedis from '@/routes/redis';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/ormconfig';
@@ -35,6 +36,9 @@ if (isProd) {
 // Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Redis Middleware
+app.use(registerRedis);
 
 // CORS Setting
 app.use(
