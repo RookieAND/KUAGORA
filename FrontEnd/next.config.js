@@ -14,7 +14,22 @@ module.exports = {
       issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"]
     });
-
     return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/oauth2/naver/:path*",
+        destination: "https://nid.naver.com/:path*"
+      },
+      {
+        source: "/oauth2/kakao/:path*",
+        destination: "https://kauth.kakao.com/oauth/:path*"
+      },
+      {
+        source: "/oauth2/google/:path*",
+        destination: "https://accounts.google.com/o/oauth2/v2/:path*"
+      }
+    ];
   }
 };
