@@ -15,3 +15,5 @@ export const SOCIAL_LOGIN_URL = {
   naver: `https://nid.naver.com/oauth2.0/authorize?client_id=${NAVER_CLIENT_ID}&redirect_uri=${NAVER_REDIRECT_URL}&response_type=code&state=state`,
   google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URL}&scope=profile%20email&access_type=offline&response_type=code`
 };
+
+export type VerifyState = "Ready" | "Pending" | "Rejected"
