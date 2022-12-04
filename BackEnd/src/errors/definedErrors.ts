@@ -13,6 +13,7 @@ class BadRequestError extends Error {
     super(message);
     this.name = 'BadRequestError';
     this.message = message;
+    Object.setPrototypeOf(this, BadRequestError.prototype);
   }
   statusCode = 400;
 }
@@ -26,6 +27,7 @@ class UnauthorizedError extends Error {
     super(message);
     this.name = 'UnauthorizedError';
     this.message = message;
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
   statusCode = 401;
 }
@@ -39,6 +41,7 @@ class ForbiddenError extends Error {
     super(message);
     this.name = 'ForbiddenError';
     this.message = message;
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
   statusCode = 403;
 }
@@ -52,6 +55,7 @@ class NotFoundError extends Error {
     super(message);
     this.name = 'NotFoundError';
     this.message = message;
+    Object.setPrototypeOf(this, NotFoundError.prototype);
   }
   statusCode = 404;
 }
@@ -65,6 +69,7 @@ class InternalServerError extends Error {
     super(message);
     this.name = 'ServerError';
     this.message = message;
+    Object.setPrototypeOf(this, InternalServerError.prototype);
   }
   statusCode = 500;
 }
