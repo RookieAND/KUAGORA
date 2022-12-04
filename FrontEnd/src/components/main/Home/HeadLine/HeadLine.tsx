@@ -2,15 +2,17 @@ import * as style from "@/components/main/Home/HeadLine/HeadLine.style";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { getAccessTokenAtom } from "@/stores/actions";
 import HeadLineImg from "@/assets/images/Headline.jpg";
 
-const Headline = () => {
+interface HeadlineProps {
+  isLogin: boolean;
+}
+
+const Headline = ({ isLogin }: HeadlineProps) => {
   const router = useRouter();
-  const [accessToken] = useAtom(getAccessTokenAtom);
 
   const clickSubmitBtn = () => {
-    if (!accessToken) {
+    if (!isLogin) {
       router.push("/login");
     }
   };

@@ -18,7 +18,7 @@ export const NavItemIcons = {
   main: <MainSvg />,
   question: <EditSquareSvg />,
   profile: <ProfileSvg />,
-  login: <LoginSvg />
+  login: <LoginSvg />,
 } as const;
 
 const NavItem = ({ icon, path, isFocused }: NavItemProps) => {
