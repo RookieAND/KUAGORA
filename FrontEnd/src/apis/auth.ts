@@ -1,4 +1,4 @@
-import { postAsync, APIResult } from "./API";
+import { postAsync, APIResult, deleteAsync } from "./API";
 import { IAccessToken, IUserData } from "@/stores/atoms";
 
 export type SocialPlatform = "google" | "kakao" | "naver";
@@ -13,7 +13,8 @@ interface verifyAsyncProps {
 
 export interface verifyAsyncResult {
   userData: IUserData;
-  token: IAccessToken;
+  access_token: IAccessToken;
+  refresh_token: IAccessToken;
 }
 
 /**
@@ -38,6 +39,19 @@ export async function loginAsync(
 }
 
 /**
+ * 사용자의 로그아웃을 진행하도록 하는 함수
+ * @param token 사용자가 소유한 엑세스 토큰
+ */
+export async function logoutAsync(token: string) {
+  const result = await deleteAsync<loginResultType, null>(`/auth/logout`, {
+    headers: {
+      Authorization: token
+    }
+  });
+  return result;
+}
+
+/**
  * 소셜 플랫폼으로부터 인계 받은 code를 넘겨 토큰을 받는 함수
  * @param social 인증을 진행한 소셜 플랫폼 타입
  * @param code 플랫폼으로부터 넘겨 받은 인증 코드
@@ -55,8 +69,8 @@ export const verifyLoginAsync = async (
   );
 
   if (resData.isSuccess) {
-    const { token, userData } = resData.result;
-    return { token, userData };
+    const { access_token, refresh_token, userData } = resData.result;
+    return { access_token, refresh_token, userData };
   }
   return null;
 };
