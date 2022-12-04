@@ -7,6 +7,11 @@ export interface IUserData {
   email: string | null;
 }
 
+export interface ITokenData {
+  access_token: IAccessToken;
+  refresh_token: IAccessToken;
+}
+
 export type IAccessToken = string | null;
 
 export const userDataAtom = atom<IUserData>({
@@ -15,7 +20,7 @@ export const userDataAtom = atom<IUserData>({
   email: null
 });
 
-export const accessTokenAtom = atomWithStorage<IAccessToken>(
-  "access_token",
-  null
-);
+export const jwtTokenAtom = atomWithStorage<ITokenData>("jwt_token", {
+  access_token: null,
+  refresh_token: null
+});
