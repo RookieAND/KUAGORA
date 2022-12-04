@@ -61,6 +61,19 @@ class NotFoundError extends Error {
 }
 
 /**
+ * 460 Expire Token Error (엑세스 토큰 만료)
+ * @param 서버에서 일어난 에러 발생 사유 message
+ */
+class ExpireTokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ExpireTokenError';
+    this.message = message;
+    Object.setPrototypeOf(this, ExpireTokenError.prototype);
+  }
+  statusCode = 460;
+}
+/**
  * 500 Unauthorized Error (서버 오류)
  * @param 서버에서 일어난 에러 발생 사유 message
  */
@@ -79,5 +92,6 @@ export {
   UnauthorizedError,
   ForbiddenError,
   NotFoundError,
+  ExpireTokenError,
   InternalServerError,
 };
