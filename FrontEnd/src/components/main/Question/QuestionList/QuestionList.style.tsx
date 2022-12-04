@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  margin: 0px auto 64px auto;
+  margin: 0px auto;
 `;
 
 export const TitleBox = styled.div`

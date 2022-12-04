@@ -1,5 +1,5 @@
 import * as style from "./QuestionList.style";
-import QuestionContext from "@/components/main/Home/QuestionList/QuestionContext";
+import QuestionContext from "~/src/components/main/Question/QuestionList/QuestionContext";
 import { QuestionContextProps } from "./QuestionContext";
 
 const DummyQuestionContents: QuestionContextProps[] = [
