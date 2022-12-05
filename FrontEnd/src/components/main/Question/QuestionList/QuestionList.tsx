@@ -1,5 +1,6 @@
 import * as style from "./QuestionList.style";
-import QuestionContext from "~/src/components/main/Question/QuestionList/QuestionContext";
+
+import QuestionContext from "@/components/main/Question/QuestionList/QuestionContext";
 import { QuestionContextProps } from "./QuestionContext";
 
 const DummyQuestionContents: QuestionContextProps[] = [
@@ -28,12 +29,6 @@ const DummyQuestionContents: QuestionContextProps[] = [
 const QuestionList = () => {
   return (
     <style.Wrapper>
-      <style.TitleBox>
-        <style.Title>Question List</style.Title>
-        <style.SubTitle>
-          학우 분들이 가장 최근에 질문한 내용입니다.
-        </style.SubTitle>
-      </style.TitleBox>
       <style.QuestionBox>
         {DummyQuestionContents.map(({ title, like, comment }) => (
           <QuestionContext
