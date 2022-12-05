@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
-import User, { SocialPlatform } from '@/database/entity/user';
+import User from '@/database/entity/user';
 import { InternalServerError } from '@/errors/definedErrors';
+import { SocialPlatform } from '@/constants/social';
 
 /**
  * 로그인 진행 시 인계받은 email, 플랫폼 타입을 통해 유저 정보를 받는 함수
