@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
       flex-wrap: wrap;
       gap: 32px;
 
-      background-color: ${colors.mono.gray2};
+      background-color: ${colors.mono.gray1};
     `;
   }}
 `;

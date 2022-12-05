@@ -1,8 +1,23 @@
 import Head from "next/head";
 
+import dummyQuestionData from "@/constants/dummyQuestionData";
+import { getQuestionListAsync, QuestionPostType } from "@/apis/question";
+
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
 
-const Questions = () => {
+interface QuestionsPageProps {
+  questions: QuestionPostType[];
+}
+
+export async function getServerSideProps() {
+  const response = await getQuestionListAsync(1, 12, "recent");
+  console.log(response);
+  return {
+    props: { questions: response.isSuccess ? response.result : [] }
+  };
+}
+
+const Questions = ({ questions }: QuestionsPageProps) => {
   return (
     <>
       <Head>
@@ -12,7 +27,7 @@ const Questions = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <QuestionsTemplate />
+      <QuestionsTemplate questions={questions} />
     </>
   );
 };

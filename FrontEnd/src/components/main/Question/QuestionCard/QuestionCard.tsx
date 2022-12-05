@@ -7,38 +7,38 @@ import LikeSvg from "@/assets/icons/Like.svg";
 
 interface QuestionCardProps {
   title: string;
-  likes: number;
-  comments: number;
-  questionId: number;
+  likeCount: number;
+  commentCount: number;
+  id: number;
   state: "progressed" | "completed";
 }
 
 const QuestionCard = ({
   title,
-  likes,
-  comments,
-  questionId,
+  likeCount,
+  commentCount,
+  id,
   state
 }: QuestionCardProps) => {
   const router = useRouter();
-  const moveToQuestionPost = () => router.push(`/question/${questionId}`);
+  const moveToQuestionPost = () => router.push(`/question/${id}`);
 
   return (
     <style.Wrapper onClick={moveToQuestionPost}>
       <style.TopSection>
         <style.Title>{omitTitleText(title, 30, "...")}</style.Title>
+      </style.TopSection>
+      <style.BottomSection state={state}>
         <style.StateText>
           {state == "completed" ? "해결된 질문" : "미해결된 질문"}
         </style.StateText>
-      </style.TopSection>
-      <style.BottomSection state={state}>
         <style.IconWrap>
           <CommentSvg />
-          <p>{comments}</p>
+          <p>{commentCount}</p>
         </style.IconWrap>
         <style.IconWrap>
           <LikeSvg />
-          <p>{likes}</p>
+          <p>{likeCount}</p>
         </style.IconWrap>
       </style.BottomSection>
     </style.Wrapper>

@@ -14,10 +14,11 @@ const QuestionPost = ({ questions }: QuestionPostProps) => {
         questions.map((post: QuestionPostType) => (
           <QuestionCard
             title={post.title}
-            likes={post.likes}
-            comments={post.comments}
+            likeCount={post.likeCount}
+            commentCount={post.commentCount}
             state={post.state}
-            questionId={post.questionId}
+            id={post.id}
+            key={post.id}
           />
         ))
       ) : (

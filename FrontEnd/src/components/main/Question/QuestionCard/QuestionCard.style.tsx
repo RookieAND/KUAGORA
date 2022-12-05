@@ -52,10 +52,10 @@ export const StateText = styled.span`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      margin: auto 0px 0px auto;
+      width: 164px;
       padding: 2px;
 
-      text-align: right;
+      text-align: left;
       color: ${colors.mono.gray7};
       font-size: ${fonts.size.base};
       font-weight: ${fonts.weight.normal};
@@ -88,10 +88,6 @@ export const IconWrap = styled.div`
       width: 15%;
       display: flex;
       justify-content: space-between;
-
-      svg {
-        fill: ${colors.mono.white};
-      }
 
       p {
         margin: 0px 0px 0px 4px;
