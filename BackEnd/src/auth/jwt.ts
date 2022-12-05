@@ -25,8 +25,8 @@ export const createJWT = (uuid: string) => {
  *
  *  @returns 유저에게 제공할 리프레시 토큰 (유효기간 7일)
  */
-export const createRefreshJWT = () => {
-  const refresh_token = jwt.sign({}, process.env.JWT_SECRET_KEY!, {
+export const createRefreshJWT = (uuid: string) => {
+  const refresh_token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
     expiresIn: '7d',
   });
   return refresh_token;
