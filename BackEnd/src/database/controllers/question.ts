@@ -31,7 +31,7 @@ export const getQuestionList = async (
   option: 'recent' | 'popular',
   state: 'progressed' | 'completed',
 ) => {
-  const displayType = {
+  const sortType = {
     recent: 'question.createdAt',
     popular: 'likeAmount',
   };
@@ -47,15 +47,60 @@ export const getQuestionList = async (
       'user.uuid',
       'user.nickname',
     ])
+    .innerJoin(
+      (qb) =>
+        qb
+          .select(['subQuestion.id, COUNT(likes.id) AS likeCount'])
+          .from(Question, 'subQuestion')
+          .where('subQuestion.state = :state', { state })
+          .leftJoin('subQuestion.likes', 'likes')
+          .groupBy('subQuestion.id')
+          .offset((page - 1) * amount)
+          .limit(amount),
+      'topQuestion',
+      'topQuestion.id == question.id',
+    )
     .where('question.state = :state', { state })
     .leftJoin('question.user', 'user')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
-    .orderBy(displayType[option], 'DESC')
+    .orderBy(sortType[option], 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
 
   return questionDatas;
+};
+
+/**
+ * 새로운 질문글을 등록하는 함수
+ * @param title 질문글 제목
+ * @param uuid 작성자 uuid
+ * @param content 질문글 내용
+ * @returns
+ */
+export const addQuestion = async (
+  title: string,
+  uuid: string,
+  content: string,
+) => {
+  const writer = new User();
+  writer.uuid = uuid;
+
+  const newQuestion = new Question();
+  newQuestion.title = title;
+  newQuestion.content = content;
+  newQuestion.state = 'progressed';
+  newQuestion.user = writer;
+
+  const addQuestionResult = getRepository(Question)
+    .createQueryBuilder()
+    .insert()
+    .into('question')
+    .values(newQuestion)
+    .updateEntity(false)
+    .execute();
+
+  return true;
 };
 
 /**
