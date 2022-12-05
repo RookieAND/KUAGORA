@@ -16,7 +16,7 @@ const redisClient = async () => {
   return client;
 };
 
-export const getTokenFromRedis = async (uuid: string) => {
+export const getRefreshToken = async (uuid: string) => {
   const client = await redisClient();
   await client.connect();
   const refresh_token = await client.get(uuid);
@@ -24,14 +24,14 @@ export const getTokenFromRedis = async (uuid: string) => {
   return refresh_token;
 };
 
-export const setTokenToRedis = async (uuid: string, token: string) => {
+export const setRefreshToken = async (uuid: string, token: string) => {
   const client = await redisClient();
   await client.connect();
   await client.set(uuid, token);
   await client.quit();
 };
 
-export const delTokenFromRedis = async (uuid: string) => {
+export const delRefreshToken = async (uuid: string) => {
   const client = await redisClient();
   await client.connect();
   await client.del(uuid);
