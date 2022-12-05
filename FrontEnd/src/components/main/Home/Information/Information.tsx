@@ -1,5 +1,6 @@
 import * as style from "./Information.style";
 
+import TitleBox from "~/src/components/common/TitleBox";
 import InfoGuide from "@/components/main/Home/Information/InfoGuide";
 import {
   InfoGuideContent,
@@ -9,12 +10,10 @@ import {
 const Information = () => {
   return (
     <style.Wrapper>
-      <style.TitleBox>
-        <style.Title>Service</style.Title>
-        <style.SubTitle>
-          지식의 요람, <strong>KU : AGORA</strong> 에 대해 소개합니다.
-        </style.SubTitle>
-      </style.TitleBox>
+      <TitleBox
+        title={"지식의 요람"}
+        subTitle={"지식의 요람, [KU : AGORA] 에 대해 소개합니다."}
+      />
       {InfoGuideContent.map(
         ({ textDirection, title, desc }: InfoGuideProps) => (
           <InfoGuide
