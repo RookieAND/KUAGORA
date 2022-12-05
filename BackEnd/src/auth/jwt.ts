@@ -10,12 +10,11 @@ dotenv.config();
  * 새로운 JWT를 생성하는 함수
  *
  * @param user JWT 생성을 위한 User 데이터
- * @returns uuid 데이터로 생성된 JWT, 리프레시 토큰
+ * @returns 유저에게 제공할 엑세스 토큰 (유효기간 1시간)
  */
 export const createJWT = (uuid: string) => {
-  const token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!);
-  const refresh_token = jwt.sign({}, process.env.JWT_SECRET_KEY!, {
-    expiresIn: '7d',
+  const token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
+    expiresIn: '1h',
   });
   return token;
 };
@@ -23,6 +22,7 @@ export const createJWT = (uuid: string) => {
 /**
  * 새로운 리프레시 토큰을 생성하는 함수
  *
+ *  @param user JWT 생성을 위한 User 데이터
  *  @returns 유저에게 제공할 리프레시 토큰 (유효기간 7일)
  */
 export const createRefreshJWT = (uuid: string) => {
