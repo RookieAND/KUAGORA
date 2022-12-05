@@ -1,4 +1,5 @@
 import { postAsync, APIResult, deleteAsync } from "./API";
+import { useAtom } from "jotai";
 import { IAccessToken, IUserData } from "@/stores/atoms";
 
 export type SocialPlatform = "google" | "kakao" | "naver";
@@ -42,13 +43,17 @@ export async function loginAsync(
  * 사용자의 로그아웃을 진행하도록 하는 함수
  * @param token 사용자가 소유한 엑세스 토큰
  */
-export async function logoutAsync(token: string) {
-  const result = await deleteAsync<loginResultType, null>(`/auth/logout`, {
+export async function logoutAsync(token: IAccessToken) {
+  const response = await deleteAsync<loginResultType, null>(`/auth/logout`, {
     headers: {
-      Authorization: token
+      Authorization: token ?? ""
     }
   });
-  return result;
+  // 액세스 토큰이 만료되었을 경우, 리프레시 토큰을 보내고 재전송.
+  if (!response.isSuccess && response.result.statusCode == 460) {
+    
+  }
+  return response.isSuccess;
 }
 
 /**
