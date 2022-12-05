@@ -16,6 +16,7 @@
       "@/database/*": ["src/database/*"],
       "@/errors/*": ["src/errors/*"],
       "@/routes/*": ["src/routes/*"],
+      "@/types/*": ["src/types/*"],
       "@/utils/*": ["src/utils/*"]
     }
   },
