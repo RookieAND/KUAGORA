@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 800px;
+      width: 700px;
       height: 48px;
       margin: 0px auto;
 
@@ -27,9 +27,9 @@ export const SearchInput = styled.input`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      width: 732px;
+      width: 608px;
       height: 36px;
-      margin: auto;
+      margin: auto auto auto 0px;
 
       background-color: transparent;
       border: none;
@@ -37,7 +37,7 @@ export const SearchInput = styled.input`
       color: ${colors.mono.black};
       font-weight: ${fonts.weight.normal};
       font-size: ${fonts.size.base};
-      text-align: center;
+      text-align: left;
     `;
   }}
 `;

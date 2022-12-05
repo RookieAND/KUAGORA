@@ -8,7 +8,11 @@ const QuestionSearch = () => {
       <style.IconWrap>
         <SearchSvg />
       </style.IconWrap>
-      <style.SearchInput placeholder="키워드를 입력해주세요" />
+      <style.SearchInput
+        placeholder="검색어를 입력해주세요."
+        maxLength={30}
+        minLength={1}
+      />
     </style.Wrapper>
   );
 };
