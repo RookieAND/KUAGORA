@@ -18,8 +18,8 @@ const redisClient = async () => {
 };
 
 export const getRefreshToken = async (uuid: string) => {
+  const client = await redisClient();
   try {
-    const client = await redisClient();
     await client.connect();
     const refresh_token = await client.get(uuid);
     await client.quit();
@@ -32,12 +32,13 @@ export const getRefreshToken = async (uuid: string) => {
 };
 
 export const setRefreshToken = async (uuid: string, token: string) => {
+  const client = await redisClient();
   try {
-    const client = await redisClient();
     await client.connect();
     await client.set(uuid, token);
     await client.quit();
   } catch (err) {
+    console.log(err);
     throw new InternalServerError(
       'Redis 를 처리하던 도중 문제가 발생했습니다.',
     );
@@ -45,8 +46,8 @@ export const setRefreshToken = async (uuid: string, token: string) => {
 };
 
 export const delRefreshToken = async (uuid: string) => {
+  const client = await redisClient();
   try {
-    const client = await redisClient();
     await client.connect();
     await client.del(uuid);
     await client.quit();
