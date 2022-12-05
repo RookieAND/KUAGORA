@@ -6,12 +6,11 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Length, IsEmail } from 'class-validator';
+import { SocialPlatform } from '@/constants/social';
 
 import Question from './question';
 import Comment from './comment';
 import Like from './like';
-
-export type SocialPlatform = 'naver' | 'kakao' | 'google';
 
 @Entity()
 class User {

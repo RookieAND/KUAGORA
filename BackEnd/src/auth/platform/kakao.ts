@@ -2,10 +2,7 @@ import axios from 'axios';
 
 import { PROD_CONFIG, DEV_CONFIG } from '@/constants/index';
 import { UnauthorizedError, InternalServerError } from '@/errors/definedErrors';
-import {
-  getUserByEmail,
-  registerUser,
-} from '@/database/controllers/userController';
+import { getUserByEmail, registerUser } from '@/database/controllers/user';
 
 const CURRENT_CONFIG =
   process.env.NODE_ENV === 'production' ? PROD_CONFIG : DEV_CONFIG;

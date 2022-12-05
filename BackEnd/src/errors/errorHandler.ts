@@ -4,6 +4,7 @@ import {
   UnauthorizedError,
   ForbiddenError,
   NotFoundError,
+  ExpireTokenError,
 } from './definedErrors';
 
 /**
@@ -16,6 +17,8 @@ const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log(typeof err);
+  console.log(err instanceof UnauthorizedError);
   if (err instanceof BadRequestError) {
     next(err);
     return res.status(400).json({ errorMessage: err.message });
@@ -32,10 +35,14 @@ const errorHandler = (
     next(err);
     return res.status(404).json({ errorMessage: err.message });
   }
+  if (err instanceof ExpireTokenError) {
+    next(err);
+    return res.status(460).json({ errorMessage: err.message });
+  }
 
   // 나머지 경우는 500 : Internal Server Error로 처리해야 함.
   next(err);
-  return res.status(500).json({ errMsg: 'Invaild Server Error' });
+  return res.status(500).json({ errorMessage: 'Invaild Server Error' });
 };
 
 export default errorHandler;

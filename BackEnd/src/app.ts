@@ -53,9 +53,9 @@ app.get('/', (_, res) => {
   res.status(200).send('KUAGORA Server has been Enabled.');
 });
 
-// Error Handler
-app.use(errorHandler);
-
 app.listen(CURRENT_CONFIG.port, () => {
   console.log(`server is running on ${CURRENT_CONFIG.port}`);
 });
+
+// Error Handler
+app.use(errorHandler);

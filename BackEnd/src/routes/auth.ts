@@ -1,14 +1,20 @@
 import express, { Request, Response, NextFunction } from 'express';
-
 import {
   BadRequestError,
+  ForbiddenError,
   InternalServerError,
   UnauthorizedError,
 } from '@/errors/definedErrors';
-import { wrapAsync } from '@/utils/wrapAsync';
-import { createJWT } from '@/auth/jwt';
-import { verifyKakao, verifyNaver, verifyGoogle } from '@/auth/platform';
+import {
+  delRefreshToken,
+  setRefreshToken,
+  getRefreshToken,
+} from '@/database/controllers/redis';
 
+import { wrapAsync } from '@/utils/wrapAsync';
+import { checkLoggedIn } from '@/routes/jwt';
+import { createJWT, createRefreshJWT, verifyJWT } from '@/auth/jwt';
+import { verifyKakao, verifyNaver, verifyGoogle } from '@/auth/platform';
 const authRouter = express.Router();
 
 authRouter.post(
@@ -41,8 +47,13 @@ authRouter.post(
     }
 
     if (userData) {
-      const token = createJWT(userData);
-      return res.status(200).json({ token, userData });
+      const { uuid } = userData;
+      const token = createJWT(uuid);
+      const refreshToken = createRefreshJWT(uuid);
+      await setRefreshToken(uuid, refreshToken);
+      return res
+        .status(200)
+        .json({ access_token: token, refresh_token: refreshToken, userData });
     }
 
     // 정상적으로 로그인이 진행되지 않을 경우, 500 Internal Error 발생.
@@ -52,10 +63,42 @@ authRouter.post(
   }),
 );
 
-authRouter.get(
+authRouter.delete(
   `/logout`,
+  checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    
+    const uuid = req.uuid!;
+    await delRefreshToken(uuid);
+    res.end();
+  }),
+);
+
+authRouter.post(
+  `/check-token`,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const uuid = req.body.uuid;
+    const refresh_token = req.body.refresh_token;
+    // 리프레시 토큰이 있다면, 이에 대한 유효성 검사를 진행
+    if (refresh_token) {
+      const oldRefreshToken = await getRefreshToken(uuid);
+      const is_expired = await verifyJWT(oldRefreshToken);
+      // 리프레시 토큰이 유효할 경우, 새롭게 토큰을 발급하여 전달
+      if (is_expired) {
+        const newAccessToken = createJWT(uuid);
+        const newRefreshToken = createRefreshJWT(uuid);
+        await setRefreshToken(uuid, newRefreshToken);
+        return res.status(200).json({
+          access_token: newAccessToken,
+          refresh_token: newRefreshToken,
+        });
+      }
+      // 리프레시 토큰이 만료되었을 경우, 403 에러 리턴
+      throw new ForbiddenError(
+        '인계받은 리프레시 토큰 값이 유효하지 않습니다.',
+      );
+    }
+    // 리프레시 토큰이 없을 경우, 401 에러 리턴
+    throw new UnauthorizedError('토큰 갱신을 위한 리프레시 토큰이 없습니다.');
   }),
 );
 
