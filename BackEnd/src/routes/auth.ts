@@ -76,29 +76,33 @@ authRouter.delete(
 authRouter.post(
   `/check-token`,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const uuid = req.body.uuid;
-    const refresh_token = req.body.refresh_token;
-    // 리프레시 토큰이 있다면, 이에 대한 유효성 검사를 진행
-    if (refresh_token) {
-      const oldRefreshToken = await getRefreshToken(uuid);
-      const is_expired = await verifyJWT(oldRefreshToken);
-      // 리프레시 토큰이 유효할 경우, 새롭게 토큰을 발급하여 전달
-      if (is_expired) {
-        const newAccessToken = createJWT(uuid);
-        const newRefreshToken = createRefreshJWT(uuid);
-        await setRefreshToken(uuid, newRefreshToken);
-        return res.status(200).json({
-          access_token: newAccessToken,
-          refresh_token: newRefreshToken,
-        });
+    const refreshToken = req.body.refresh_token as string;
+    if (refreshToken) {
+      // 1. 클라이언트로부터 인계받은 리프레시 토큰이 유효한지를 조사.
+      const uuid = await verifyJWT(refreshToken);
+      if (!uuid) {
+        throw new ForbiddenError(
+          '토큰이 만료되었습니다. 재로그인이 필요합니다.',
+        );
       }
-      // 리프레시 토큰이 만료되었을 경우, 403 에러 리턴
-      throw new ForbiddenError(
-        '인계받은 리프레시 토큰 값이 유효하지 않습니다.',
-      );
+      // 2. Redis 에 저장된 토큰이 전달받은 리프레시 토큰과 동일한지 조사
+      const storedRefreshToken = await getRefreshToken(uuid);
+      if (storedRefreshToken != refreshToken) {
+        throw new BadRequestError(
+          '리프레시 토큰이 유효하지 않습니다. 재로그인이 필요합니다.',
+        );
+      }
+      // 3. 리프레시 토큰이 유효할 경우, 새롭게 토큰을 발급하여 전달
+      const newAccessToken = createJWT(uuid);
+      const newRefreshToken = createRefreshJWT(uuid);
+      await setRefreshToken(uuid, newRefreshToken);
+      return res.status(200).json({
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+      });
     }
     // 리프레시 토큰이 없을 경우, 401 에러 리턴
-    throw new UnauthorizedError('토큰 갱신을 위한 리프레시 토큰이 없습니다.');
+    throw new BadRequestError('토큰 갱신을 위한 리프레시 토큰이 없습니다.');
   }),
 );
 
