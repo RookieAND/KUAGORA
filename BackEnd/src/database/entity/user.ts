@@ -6,8 +6,8 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Length, IsEmail } from 'class-validator';
-import { SocialPlatform } from '@/constants/social';
 
+import { SocialPlatform } from '@/types/social';
 import Question from './question';
 import Comment from './comment';
 import Like from './like';

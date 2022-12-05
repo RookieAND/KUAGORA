@@ -1,8 +1,10 @@
 import { getRepository } from 'typeorm';
-import User from '@/database/entity/user';
+
 import { InternalServerError } from '@/errors/definedErrors';
-import { SocialPlatform } from '@/constants/social';
-import Question from '../entity/question';
+import { SocialPlatform } from '@/types/social';
+
+import User from '@/database/entity/user';
+import Question from '@/database/entity/question';
 
 /**
  * 로그인 진행 시 인계받은 email, 플랫폼 타입을 통해 유저 정보를 받는 함수
@@ -48,40 +50,4 @@ export const registerUser = async (
 
   await userRepository.save(registeredData);
   return registeredData;
-};
-
-export const getUserQuestions = async (
-  uuid: string,
-  page: number,
-  amount: number,
-  option: 'popular' | 'recent',
-) => {
-  const sortType = {
-    recent: 'question.createdAt',
-    popular: 'likeCount',
-  };
-
-  const questionsByUser = getRepository(Question)
-    .createQueryBuilder('question')
-    .select([
-      'question.id',
-      'question.title',
-      'question.content',
-      'question.state',
-      'question.createdAt',
-    ])
-    .innerJoin(
-      (qb) =>
-        qb
-          .select(['subQuestion.id, COUNT(likes.id) AS likeCount'])
-          .from(Question, 'subQuestion')
-          .where('user.uuid = :uuid', { uuid })
-          .leftJoin('subQuestion.likes', 'likes')
-          .leftJoin('subQuestion.user', 'user')
-          .groupBy('subQuestion.id')
-          .offset((page - 1) * amount)
-          .limit(amount),
-      'topQuestion',
-      'topQuestion.id == question.id',
-    );
 };
