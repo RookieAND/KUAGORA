@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   align-items: center;
 
   padding: 64px 0px;
+  margin: auto;
 `;
 
 export const Title = styled.h5`
