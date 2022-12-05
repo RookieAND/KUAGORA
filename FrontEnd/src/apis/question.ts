@@ -7,7 +7,7 @@ export interface QuestionPostType {
   createdAt: string;
   likes: number;
   comments: number;
-  state: "progressed" | "answered";
+  state: "progressed" | "completed";
 }
 
 interface AddQuestionType {
