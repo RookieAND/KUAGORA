@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 100vw;
+      width: 1440px;
       height: 96px;
 
       display: flex;
@@ -22,7 +22,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Navigation = styled.ul`
-  width: 1248px;
+  width: 1440px;
   height: 48px;
 
   display: flex;

@@ -23,7 +23,7 @@ const Navbar = () => {
   // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수 ignoreIcon
   const ignoreIcon = (navType: NavItemKey) =>
     (loginState && navType == "login") ||
-    (loginState && navType == "write") ||
+    (!loginState && navType == "write") ||
     (!loginState && navType == "profile") ||
     (!loginState && navType == "logout");
 
