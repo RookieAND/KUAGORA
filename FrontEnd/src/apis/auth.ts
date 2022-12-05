@@ -1,8 +1,6 @@
 import { postAsync, APIResult, deleteAsync } from "./API";
-import { useAtom } from "jotai";
 import { IAccessToken, IUserData } from "@/stores/atoms";
-
-export type SocialPlatform = "google" | "kakao" | "naver";
+import { SocialPlatform } from "@/constants/social";
 
 interface loginResultType {
   token: string;

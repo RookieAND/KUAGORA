@@ -16,4 +16,5 @@ export const SOCIAL_LOGIN_URL = {
   google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URL}&scope=profile%20email&access_type=offline&response_type=code`
 };
 
-export type VerifyState = "Ready" | "Pending" | "Rejected"
+export type VerifyState = "Ready" | "Pending" | "Rejected";
+export type SocialPlatform = "google" | "kakao" | "naver";
