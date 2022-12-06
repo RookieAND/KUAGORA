@@ -11,23 +11,20 @@ import { BadRequestError } from '@/errors/definedErrors';
 /**
  * 질문글의 id를 통해 정보를 로드하는 함수 getQuestionById
  * @param questionId 찾으려는 질문글의 ID
+ * @param uuid 유저의 uuid
  * @returns ID에 해당되는 질문글 정보
  */
-export const getQuestionById = async (questionId: number) => {
+export const getQuestionById = async (
+  questionId: number,
+  uuid: string | undefined,
+) => {
   let questionData = undefined;
   questionData = await getRepository(Question)
     .createQueryBuilder('question')
-    .select([
-      'question.id',
-      'question.title',
-      'question.content',
-      'question.state',
-      'question.createdAt',
-      'user.uuid',
-      'user.nickname',
-    ])
+    .select(['question', 'user.uuid', 'user.nickname'])
     .where('question.id = :questionId', { questionId })
     .leftJoin('question.user', 'user')
+    .leftJoinAndSelect('question.keywords', 'keyword')
     .getOne();
 
   // 게시글이 존재하는지를 먼저 확인. 타입 가드도 겸임.
@@ -35,12 +32,14 @@ export const getQuestionById = async (questionId: number) => {
     throw new BadRequestError('존재하지 않는 질문글입니다.');
   }
 
-  console.log(questionData);
+  // (!!) 연산자를 통해 true / false 논리 값을 확실히 가져옴.
+  const isLike = !!(await getRepository(Like)
+    .createQueryBuilder('like')
+    .where('like.user_uuid = :uuid', { uuid })
+    .where('like.question_id =:questionId', { questionId })
+    .getOne());
 
-  const { user, ...data } = questionData;
-  const { uuid, nickname } = user;
-
-  return { uuid, nickname, ...data };
+  return { isLike, ...questionData };
 };
 
 /**
@@ -96,6 +95,11 @@ export const getQuestionListByUser = async (
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
+
+  // 올바르게 게시물 목록을 가져왔는지 체크
+  if (!questionsByUser) {
+    throw new BadRequestError('유저의 UUID가 유효하지 않습니다.');
+  }
 
   return questionsByUser;
 };
@@ -165,11 +169,13 @@ export const getQuestionList = async (
  * @param title 질문글 제목
  * @param uuid 작성자 uuid
  * @param content 질문글 내용
+ * @param keywords 키워드 목록
  * @returns
  */
 export const addQuestion = async (
   title: string,
   content: string,
+  keywords: string[],
   uuid: string,
 ) => {
   const newUser = new User();
@@ -190,6 +196,23 @@ export const addQuestion = async (
 
   // InsertResult.raw 를 통해 SQL Query 결과를 가져올 수 있음.
   const newQuestionId = addQuestionResult.raw.insertId;
+
+  // 키워드가 있다면, 이 또한 DB에 적용해야 함.
+  if (keywords.length > 0) {
+    keywords.map(async (keyword) => {
+      const newKeyword = new Keyword();
+      newKeyword.content = keyword;
+
+      await getRepository(Keyword)
+        .createQueryBuilder()
+        .insert()
+        .into('keyword')
+        .values(newKeyword)
+        .updateEntity(false)
+        .execute();
+    });
+  }
+
   return newQuestionId;
 };
 
@@ -226,12 +249,13 @@ export const getComments = async (
       'comment.id',
       'comment.content',
       'comment.createdAt',
+      'comment.isAnswered',
       'user.uuid',
       'user.nickname',
     ])
     .where('comment.question_id = :questionId', { questionId })
     .leftJoin('comment.user', 'user')
-    .orderBy('comment.createdAt', 'DESC')
+    .orderBy('comment.createdAt')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
@@ -269,12 +293,6 @@ export const addComment = async (
     .updateEntity(false)
     .execute();
 
-  if (addCommentResult.raw.affected == -1) {
-    throw new BadRequestError(
-      '존재하지 않는 게시글에 댓글을 추가하려 하였습니다.',
-    );
-  }
-
   const newCommentId = addCommentResult.raw.insertId;
   return newCommentId;
 };
@@ -291,17 +309,52 @@ export const removeComment = async (
   uuid: string,
 ) => {
   const removeCommentResult = await getRepository(Comment)
-    .createQueryBuilder('comment')
+    .createQueryBuilder()
     .softDelete()
-    .where('comment.id =: commentId', { commentId })
-    .andWhere('comment.question_id =: questionId', { questionId })
-    .andWhere('comment.user_uuid =: uuid', { uuid })
+    .where('comment.id = :commentId', { commentId })
+    .andWhere('comment.question_id = :questionId', { questionId })
+    .andWhere('comment.user_uuid = :uuid', { uuid })
     .execute();
 
   if (removeCommentResult.affected !== -1) {
     throw new BadRequestError(
       '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
     );
+  }
+};
+
+/**
+ * 질문글의 상태를 완료됨으로 변경하고, 채택된 댓글의 상태도 변경하는 함수
+ * @param questionId 해결이 완료된 질문글의 ID
+ * @param commentId 질문자에게 채택된 댓글의 ID
+ * @param uuid 질문글을 작성한 작성자의 UUID
+ */
+export const patchQuestionState = async (
+  questionId: number,
+  commentId: number,
+  uuid: string,
+) => {
+  const editQuestionStateResult = await getRepository(Question)
+    .createQueryBuilder('question')
+    .update()
+    .set({ state: 'completed' })
+    .where('question.id = :questionId', { questionId })
+    .andWhere('question.user_uuid = :uuid', { uuid })
+    .execute();
+
+  if (editQuestionStateResult.affected !== 1) {
+    throw new BadRequestError('존재하지 않는 질문글에 대한 요청입니다.');
+  }
+
+  const editCommentStateResult = await getRepository(Comment)
+    .createQueryBuilder('comment')
+    .update()
+    .set({ isAnswered: true })
+    .where('comment.id = :commentId', { commentId })
+    .execute();
+
+  if (editCommentStateResult.affected !== 1) {
+    throw new BadRequestError('존재하지 않는 댓글에 대한 요청입니다.');
   }
 };
 
@@ -360,11 +413,7 @@ export const addKeyword = async (questionId: number, content: string) => {
  * @param keywordId 삭제하려는 키워드의 ID
  * @param uuid 질문글을 작성한 유저의 uuid
  */
-export const removeKeyword = async (
-  questionId: number,
-  keywordId: number,
-) => {
-
+export const removeKeyword = async (questionId: number, keywordId: number) => {
   const removeKeywordResult = await getRepository(Keyword)
     .createQueryBuilder('keyword')
     .softDelete()
