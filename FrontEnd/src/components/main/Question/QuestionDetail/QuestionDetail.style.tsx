@@ -39,7 +39,7 @@ export const Content = styled.pre`
     return css`
       width: 100%;
       min-height: 330px;
-      margin: 0px auto 96px auto;
+      margin: 0px auto;
       padding: 32px;
 
       background-color: ${colors.mono.gray1}99;
@@ -63,7 +63,7 @@ export const IconWrap = styled.div`
   margin: auto;
 `;
 
-export const CommentBox = styled.div`
+export const CommentInputBox = styled.div`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`

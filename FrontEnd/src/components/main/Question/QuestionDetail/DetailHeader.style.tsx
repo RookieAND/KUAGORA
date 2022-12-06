@@ -8,7 +8,7 @@ interface StyledIsCompletedProps {
 export const Wrapper = styled.div`
   width: 100%;
   margin: auto 0px;
-  padding: 64px 32px 32px 32px;
+  padding: 16px 32px;
 
   display: flex;
   flex-wrap: wrap;
@@ -75,11 +75,14 @@ export const IsCompleteBox = styled.h5`
   ${({ theme, state }: StyledIsCompletedProps) => {
     const { colors, fonts } = theme;
     return css`
-      padding: 10px 24px;
+      width: 100%;
+      padding: 10px 0px;
       margin: 0px auto;
-      background-color: ${state == "progressed" ? theme.colors.mono.gray2 : theme.colors.main.opacity30};
+
+      background-color: ${state == "progressed" ? colors.mono.gray2 : colors.main.opacity30};
       font-size: ${fonts.size.xl};
-      color: ${state == "progressed" ? theme.colors.mono.gray6 : theme.colors.main.normal};
+      text-align: center;
+      color: ${state == "progressed" ? colors.mono.gray6 : colors.main.normal};
     `;
   }}
 `;
