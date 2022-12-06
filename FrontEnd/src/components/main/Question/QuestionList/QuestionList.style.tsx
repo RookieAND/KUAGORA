@@ -19,13 +19,13 @@ export const QuestionBox = styled.div`
       gap: 32px;
       padding: 64px;
 
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(2, 1fr);
 
       width: 100%;
       height: 480px;
 
-      background: ${colors.main.opacity30};
+      background: ${colors.mono.gray1}99;
     `;
   }}
 `;

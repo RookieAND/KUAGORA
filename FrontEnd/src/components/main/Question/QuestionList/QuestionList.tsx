@@ -1,41 +1,25 @@
 import * as style from "./QuestionList.style";
 
 import QuestionContext from "@/components/main/Question/QuestionList/QuestionContext";
+import { QuestionPostType } from "@/apis/question";
 import { QuestionContextProps } from "./QuestionContext";
 
-const DummyQuestionContents: QuestionContextProps[] = [
-  {
-    title: "나는 문어 꿈을 꾸는 문어 세상에서 제일가는 문어가 되려면 ",
-    like: 2,
-    comment: 4
-  },
-  {
-    title: "프론트엔드 개발을 잘하고 싶은데 어떻게 해야 할까요? 진짜 어렵네요",
-    like: 5,
-    comment: 0
-  },
-  {
-    title: "아 종강 언제 하냐 진짜 집에서 놀고 싶다",
-    like: 2,
-    comment: 1
-  },
-  {
-    title: "백우진 교수님 기말고사 문제 쉽게 내주시나요? 급해요 아무나 답좀",
-    like: 0,
-    comment: 1
-  }
-];
+interface QuestionListProps {
+  questions: QuestionPostType[];
+}
 
-const QuestionList = () => {
+const QuestionList = ({ questions }: QuestionListProps) => {
   return (
     <style.Wrapper>
       <style.QuestionBox>
-        {DummyQuestionContents.map(({ title, like, comment }) => (
+        {questions.map(({ id, title, likeCount, commentCount, state }: QuestionPostType) => (
           <QuestionContext
             title={title}
-            like={like}
-            comment={comment}
-            key={`${title}-${like}-${comment}`}
+            like={likeCount}
+            comment={commentCount}
+            state={state}
+            questionId={id}
+            key={id}
           />
         ))}
       </style.QuestionBox>
