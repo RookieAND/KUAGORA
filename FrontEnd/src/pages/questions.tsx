@@ -11,7 +11,6 @@ interface QuestionsPageProps {
 
 export async function getServerSideProps() {
   const response = await getQuestionListAsync(1, 12, "recent");
-  console.log(response);
   return {
     props: { questions: response.isSuccess ? response.result : [] }
   };

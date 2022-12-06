@@ -47,10 +47,6 @@ export async function logoutAsync(token: string) {
       Authorization: token
     }
   });
-  // 액세스 토큰이 만료되었을 경우, 리프레시 토큰을 보내고 재전송.
-  // if (!response.isSuccess && response.result.statusCode == 460) {
-  //   return;
-  // }
   return response.isSuccess;
 }
 

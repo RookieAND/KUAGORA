@@ -2,10 +2,11 @@ import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { useState, useEffect } from "react";
 
-import { logoutAsync } from "@/apis/auth";
 import * as style from "@/components/common/Navbar/Navbar.style";
-import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
+
+import { logoutAsync } from "@/apis/auth";
 import { PATH_INFO } from "@/constants/url";
+import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
 import { accessTokenAtom, setJWTAtom } from "@/stores/actions";
 
 const Navbar = () => {
@@ -19,7 +20,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setLoginState(accessToken != null);
-  }, [loginState]);
+  }, [accessToken]);
 
   // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수
   const ignoreIcon = (navType: NavItemKey) =>
@@ -33,6 +34,7 @@ const Navbar = () => {
     const isLogout = await logoutAsync(accessToken as string);
     if (isLogout) {
       setJWTToken({ access_token: null, refresh_token: null });
+      setLoginState(false);
       router.replace("/");
     }
   };
