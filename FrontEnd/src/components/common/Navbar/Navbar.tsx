@@ -24,10 +24,7 @@ const Navbar = () => {
 
   // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수
   const ignoreIcon = (navType: NavItemKey) =>
-    (loginState && navType == "login") ||
-    (!loginState && navType == "write") ||
-    (!loginState && navType == "profile") ||
-    (!loginState && navType == "logout");
+    (loginState && navType == "login") || (!loginState && navType == "write") || (!loginState && navType == "logout");
 
   // 유저의 로그아웃을 진행하는 함수
   const logout = async () => {

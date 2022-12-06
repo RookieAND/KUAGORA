@@ -18,7 +18,6 @@ export const NavItemIcons = {
   main: <MainSvg />,
   question: <DiarySvg />,
   write: <EditSquareSvg />,
-  profile: <ProfileSvg />,
   login: <LoginSvg />,
   logout: <LoginSvg />
 } as const;
