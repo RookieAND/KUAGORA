@@ -128,7 +128,6 @@ export const getQuestionList = async (
     .limit(amount)
     .getMany();
 
-  console.log(questionDatas);
   return questionDatas;
 };
 
@@ -167,6 +166,20 @@ export const addQuestion = async (
   return newQuestionId;
 };
 
+export const removeQuestion = async (questionId: number) => {
+  const removeQuestiontResult = await getRepository(Question)
+    .createQueryBuilder('question')
+    .softDelete()
+    .andWhere('question.id =: questionId', { questionId })
+    .execute();
+
+  if (removeQuestiontResult.raw.affected == -1) {
+    throw new BadRequestError(
+      '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
+    );
+  }
+};
+
 /**
  * 특정 질문글에 달린 댓글 목록을 불러오는 함수
  * @param page 질문글을 보여줄 페이지
@@ -190,10 +203,16 @@ export const getComments = async (
     ])
     .where('question.id = :questionId', { questionId })
     .leftJoin('comment.question', 'question')
-    .orderBy('comment.createdAt')
+    .orderBy('comment.createdAt', 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
+
+  if (!commentDatas) {
+    throw new BadRequestError(
+      '존재하지 않는 글에 댓글을 작성하려 했거나, 작성자의 정보가 유효하지 않습니다.',
+    );
+  }
 
   return commentDatas;
 };
@@ -220,13 +239,19 @@ export const addComment = async (
   comment.user = user;
   comment.question = question;
 
-  await getRepository(Comment)
-    .createQueryBuilder()
+  const addCommentResult = await getRepository(Comment)
+    .createQueryBuilder('comment')
     .insert()
     .into('comment')
     .values(comment)
     .updateEntity(false)
     .execute();
+
+  if (addCommentResult.raw.affected == -1) {
+    throw new BadRequestError(
+      '존재하지 않는 게시글에 댓글을 추가하려 하였습니다.',
+    );
+  }
 };
 
 /**
@@ -241,7 +266,7 @@ export const removeComment = async (
   commentId: number,
 ) => {
   const removeCommentResult = await getRepository(Comment)
-    .createQueryBuilder()
+    .createQueryBuilder('comment')
     .softDelete()
     .where('comment.id =: commentId', { commentId })
     .andWhere('comment.question_id =: questionId', { questionId })
