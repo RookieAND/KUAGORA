@@ -11,6 +11,7 @@ import questionRouter from '@/routes/question';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/ormconfig';
+import { connectRedis } from '@/database/controllers/redis';
 import errorHandler from '@/errors/errorHandler';
 
 dotenv.config();
@@ -22,6 +23,8 @@ const CURRENT_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
 createConnection(typeOrmConfig[CURRENT_CONFIG.mode]).then(() => {
   console.log('Successfully connected to DB.');
 });
+// Redis Connection
+connectRedis();
 
 const app = express();
 
