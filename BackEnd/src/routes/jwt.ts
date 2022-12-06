@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
+import { verifyJWT } from '@/auth/jwt';
 import { UnauthorizedError, ExpireTokenError } from '@/errors/definedErrors';
 import { wrapAsync } from '@/utils/wrapAsync';
-import { verifyJWT } from '@/auth/jwt';
 
 /**
  * 요청에 담긴 엑세스 토큰의 유무를 확인하는 미들웨어

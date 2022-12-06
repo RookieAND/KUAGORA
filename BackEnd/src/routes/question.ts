@@ -1,15 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
 
-import { BadRequestError } from '@/errors/definedErrors';
-import { addQuestion, getQuestionList } from '@/database/controllers/question';
+import {
+  addComment,
+  addQuestion,
+  getComments,
+  getQuestionList,
+  removeComment,
+  removeQuestion,
+  getQuestionById,
+} from '@/database/controllers/question';
+import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
+import { checkLoggedIn } from '@/routes/jwt';
 import { wrapAsync } from '@/utils/wrapAsync';
-import { getQuestionById } from '../database/controllers/question';
-import { checkLoggedIn } from './jwt';
 
 const questionRouter = express.Router();
 
 questionRouter.get(
-  '/list',
+  '/',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { page = '1', amount = '12', option = 'recent' } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
@@ -31,9 +38,8 @@ questionRouter.post(
   `/write`,
   checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const title = req.body.title as string;
-    const content = req.body.content as string;
-    const uuid = req.uuid!;
+    const { title, content } = req.body;
+    const uuid = req.uuid;
 
     if (!title || !content) {
       throw new BadRequestError(
@@ -41,15 +47,43 @@ questionRouter.post(
       );
     }
 
+    if (!uuid) {
+      throw new UnauthorizedError('요청의 헤더에 엑세스 토큰이 없습니다.');
+    }
+
     const questionId = await addQuestion(title, content, uuid);
     return res.status(200).json(questionId);
   }),
 );
 
-questionRouter.get(
-  `/post/:questionId`,
+questionRouter.delete(
+  `/remove/:qid`,
+  checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const questionId = req.params.questionId;
+    const qid = Number(req.params.qid);
+    const uuid = req.uuid;
+
+    if (!qid) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    await removeQuestion(qid, uuid);
+    return res.end();
+  }),
+);
+
+questionRouter.get(
+  `/:qid`,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const questionId = Number(req.params.qid);
 
     if (!questionId) {
       throw new BadRequestError(
@@ -57,9 +91,77 @@ questionRouter.get(
       );
     }
 
-    const questionIdNum = Number(questionId);
-    const question = await getQuestionById(questionIdNum);
+    const question = await getQuestionById(questionId);
     return res.status(200).json(question);
+  }),
+);
+
+// 댓글 추가, 정보 불러오기, 삭제 관련 라우트
+questionRouter.get(
+  `/:qid/comment`,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { page = '1', amount = '12' } = req.query;
+    const [pageNum, amountNum] = [Number(page), Number(amount)];
+    const questionId = Number(req.params.qid);
+
+    if (!questionId) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    const comments = await getComments(pageNum, amountNum, questionId);
+    return res.status(200).json(comments);
+  }),
+);
+
+questionRouter.post(
+  `/:qid/comment`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { content } = req.body;
+    const questionId = Number(req.params.qid);
+    const uuid = req.uuid;
+
+    if (!questionId || !content) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    const newCommentId = await addComment(questionId, uuid, content);
+    return res.status(200).json(newCommentId);
+  }),
+);
+
+questionRouter.delete(
+  `/:qid/:commId/comment`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { qid, commId } = req.params;
+    const [questionId, commentId] = [Number(qid), Number(commId)];
+    const uuid = req.uuid;
+
+    if (!questionId || !commentId) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    await removeComment(questionId, commentId, uuid);
+    return res.end();
   }),
 );
 

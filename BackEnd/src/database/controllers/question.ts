@@ -146,8 +146,6 @@ export const addQuestion = async (
   const newUser = new User();
   newUser.uuid = uuid;
 
-  console.log(newUser);
-
   const newQuestion = new Question();
   newQuestion.title = title;
   newQuestion.content = content;
@@ -166,16 +164,17 @@ export const addQuestion = async (
   return newQuestionId;
 };
 
-export const removeQuestion = async (questionId: number) => {
+export const removeQuestion = async (questionId: number, uuid: string) => {
   const removeQuestiontResult = await getRepository(Question)
     .createQueryBuilder('question')
     .softDelete()
+    .where('question.user_uuid =: uuid', { uuid })
     .andWhere('question.id =: questionId', { questionId })
     .execute();
 
-  if (removeQuestiontResult.raw.affected == -1) {
+  if (removeQuestiontResult.affected !== -1) {
     throw new BadRequestError(
-      '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
+      '존재하지 않는 질문글을 지우려 했거나, 자신이 지우지 않은 글을 지우려 했습니다.',
     );
   }
 };
@@ -195,24 +194,20 @@ export const getComments = async (
   commentDatas = await getRepository(Comment)
     .createQueryBuilder('comment')
     .select([
+      'comment.id',
       'comment.content',
-      'comment.user',
-      'comment.question',
       'comment.createdAt',
-      'question.id',
+      'question.id', // CHECK : comment.question_id 되는지 테스트 필요
+      'user.uuid',
+      'user.nickname',
     ])
     .where('question.id = :questionId', { questionId })
     .leftJoin('comment.question', 'question')
+    .leftJoin('comment.user', 'user')
     .orderBy('comment.createdAt', 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
-
-  if (!commentDatas) {
-    throw new BadRequestError(
-      '존재하지 않는 글에 댓글을 작성하려 했거나, 작성자의 정보가 유효하지 않습니다.',
-    );
-  }
 
   return commentDatas;
 };
@@ -252,6 +247,9 @@ export const addComment = async (
       '존재하지 않는 게시글에 댓글을 추가하려 하였습니다.',
     );
   }
+
+  const newCommentId = addCommentResult.raw.insertId;
+  return newCommentId;
 };
 
 /**
@@ -262,8 +260,8 @@ export const addComment = async (
  */
 export const removeComment = async (
   questionId: number,
-  uuid: string,
   commentId: number,
+  uuid: string,
 ) => {
   const removeCommentResult = await getRepository(Comment)
     .createQueryBuilder('comment')
@@ -273,7 +271,7 @@ export const removeComment = async (
     .andWhere('comment.user_uuid =: uuid', { uuid })
     .execute();
 
-  if (removeCommentResult.affected != -1) {
+  if (removeCommentResult.affected !== -1) {
     throw new BadRequestError(
       '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
     );

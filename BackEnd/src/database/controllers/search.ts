@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import Question from '../entity/question';
+import Question from '@/database/entity/question';
 
 export const searchQuestionByTitle = async (
   title: string,
