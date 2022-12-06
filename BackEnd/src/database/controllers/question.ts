@@ -164,6 +164,53 @@ export const getQuestionList = async (
   return questionDatas;
 };
 
+export const searchQuestionByWord = async (
+  word: string,
+  page: number,
+  amount: number,
+) => {
+  let questionDatas = undefined;
+  questionDatas = await getRepository(Question)
+    .createQueryBuilder('question')
+    .select([
+      'question.id',
+      'question.title',
+      'question.content',
+      'question.state',
+      'question.createdAt',
+      'user.uuid',
+      'user.nickname',
+      'keyword.id',
+      'keyword.content',
+    ])
+    .innerJoin(
+      (qb) =>
+        qb
+          .select([
+            'subQuestion.id',
+            'COUNT(likes.id) AS likeCount',
+            'COUNT(comments.id) AS CommentCount',
+          ])
+          .from(Question, 'subQuestion')
+          .where('subreq.title like :title', { word: `%${word}%` }) // like 절 사용법은 좌측과 같음.
+          .leftJoin('subQuestion.comments', 'comments')
+          .leftJoin('subQuestion.likes', 'likes')
+          .groupBy('subQuestion.id')
+          .offset((page - 1) * amount)
+          .limit(amount),
+      'topQuestion',
+      'topQuestion.subQuestion_id = question.id',
+    )
+    .leftJoin('question.user', 'user')
+    .leftJoin('question.keywords', 'keyword')
+    .loadRelationCountAndMap('question.likeCount', 'question.likes')
+    .loadRelationCountAndMap('question.commentCount', 'question.comments')
+    .orderBy('question.createdAt', 'DESC')
+    .offset((page - 1) * amount)
+    .limit(amount)
+    .getMany();
+};
+
 /**
  * 새로운 질문글을 등록하는 함수
  * @param title 질문글 제목
