@@ -10,6 +10,9 @@ import {
   getQuestionById,
   addLike,
   removeLike,
+  removeKeyword,
+  addKeyword,
+  getKeyword,
 } from '@/database/controllers/question';
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
 import { checkLoggedIn } from '@/routes/jwt';
@@ -214,6 +217,80 @@ questionRouter.post(
 
     const newLikeId = await addLike(questionId, uuid);
     return res.status(200).json({ newLikeId });
+  }),
+);
+
+// 키워드 조회, 추가, 삭제 관련
+questionRouter.delete(
+  `/:qid/:keyid/keyword`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { qid, keyid } = req.params;
+    const [questionId, keywordId] = [Number(qid), Number(keyid)];
+    const uuid = req.uuid;
+
+    if (!questionId || !keywordId) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    await removeKeyword(questionId, keywordId);
+  }),
+);
+
+questionRouter.get(
+  `/:qid/keyword`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const questionId = Number(req.params.qid);
+    const uuid = req.uuid;
+
+    if (!questionId) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    const keywords = await getKeyword(questionId);
+    return res.status(200).json({ keywords });
+  }),
+);
+
+questionRouter.post(
+  `/:qid/keyword`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const questionId = Number(req.params.qid);
+    const uuid = req.uuid;
+    const { content } = req.body;
+
+    if (!questionId || !content) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    const newKeywordId = await addKeyword(questionId, content);
+    return res.status(200).json({ newKeywordId });
   }),
 );
 
