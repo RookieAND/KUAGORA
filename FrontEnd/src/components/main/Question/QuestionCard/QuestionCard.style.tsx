@@ -8,11 +8,12 @@ export const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 320px;
+      width: 324px;
       height: 256px;
 
       background-color: ${colors.mono.white};
       border-radius: 8px;
+      cursor: pointer;
     `;
   }}
 `;
@@ -21,7 +22,6 @@ export const TopSection = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 100%;
       height: 75%;
       padding: 36px 28px 18px 28px;
 
@@ -44,6 +44,29 @@ export const Title = styled.h5`
       color: ${colors.mono.gray7};
       font-size: ${fonts.size.lg};
       font-weight: ${fonts.weight.bold};
+    `;
+  }}
+`;
+
+export const KeywordBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+export const Keyword = styled.span`
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      padding: 2px 4px;
+      margin: 0px;
+
+      background-color: ${colors.main.opacity30};
+
+      color: ${colors.main.pressed};
+      font-size: ${fonts.size.base};
+      font-weight: ${fonts.weight.normal};
     `;
   }}
 `;

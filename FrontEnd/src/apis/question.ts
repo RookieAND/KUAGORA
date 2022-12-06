@@ -1,16 +1,18 @@
 import { getAsync, postAsync } from "./API";
 
 export interface QuestionPostType {
+  id: number;
   title: string;
+  keywords: KeywordDataType[];
   createdAt: string;
-  likes: number;
-  comments: number;
-  questionId: number;
+  likeCount: number;
+  commentCount: number;
   state: "progressed" | "completed";
 }
 
 export interface QuestionDetailType extends QuestionPostType {
   content: string;
+  uuid: string;
   nickname: string;
   isLike: boolean;
 }
@@ -22,6 +24,16 @@ export interface AddQuestionType {
 
 export interface AddQuestionResultType {
   questionId: number;
+}
+
+export interface LikeDataType {
+  isLike: boolean;
+  likeCount: number;
+}
+
+export interface KeywordDataType {
+  id: number;
+  content: string;
 }
 
 export type QuestionSortType = "recent" | "popular";
@@ -37,11 +49,7 @@ export const getQuestionListAsync = async (
 
   return {
     isSuccess: response.isSuccess,
-    result: {
-      questions: response.isSuccess ? response.result : [],
-      page,
-      amount
-    }
+    result: response.isSuccess ? response.result : []
   };
 };
 

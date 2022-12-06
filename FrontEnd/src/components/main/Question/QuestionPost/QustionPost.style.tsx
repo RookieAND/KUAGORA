@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
 
       display: flex;
       flex-wrap: wrap;
-      gap: 32px;
+      gap: 24px;
 
       background-color: ${colors.mono.gray1};
     `;

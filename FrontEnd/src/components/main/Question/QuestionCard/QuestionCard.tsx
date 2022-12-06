@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
 
 import * as style from "./QuestionCard.style";
+
+import { KeywordDataType } from "@/apis/question";
 import { omitTitleText } from "@/utils/omitTitleText";
+
 import CommentSvg from "@/assets/icons/Comment.svg";
 import LikeSvg from "@/assets/icons/Like.svg";
 
@@ -10,6 +13,7 @@ interface QuestionCardProps {
   likeCount: number;
   commentCount: number;
   id: number;
+  keywords: KeywordDataType[];
   state: "progressed" | "completed";
 }
 
@@ -18,6 +22,7 @@ const QuestionCard = ({
   likeCount,
   commentCount,
   id,
+  keywords,
   state
 }: QuestionCardProps) => {
   const router = useRouter();
@@ -27,6 +32,14 @@ const QuestionCard = ({
     <style.Wrapper onClick={moveToQuestionPost}>
       <style.TopSection>
         <style.Title>{omitTitleText(title, 30, "...")}</style.Title>
+        <style.KeywordBox>
+          {keywords.length > 0 &&
+            keywords.map((keyword: KeywordDataType) => (
+              <style.Keyword
+                key={keyword.id}
+              >{`#${keyword.content}`}</style.Keyword>
+            ))}
+        </style.KeywordBox>
       </style.TopSection>
       <style.BottomSection state={state}>
         <style.StateText>

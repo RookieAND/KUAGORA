@@ -17,6 +17,7 @@ const QuestionPost = ({ questions }: QuestionPostProps) => {
             likeCount={post.likeCount}
             commentCount={post.commentCount}
             state={post.state}
+            keywords={post.keywords}
             id={post.id}
             key={post.id}
           />
