@@ -5,6 +5,7 @@ import BasicEntity from '@/database/entity/basic';
 import Like from '@/database/entity/like';
 import User from '@/database/entity/user';
 import Comment from '@/database/entity/comment';
+import Keyword from '@/database/entity/keyword';
 
 @Entity()
 class Question extends BasicEntity {
@@ -31,6 +32,9 @@ class Question extends BasicEntity {
 
   @OneToMany(() => Comment, (comment) => comment.question)
   comments!: Comment[];
+
+  @OneToMany(() => Keyword, (keyword) => keyword.question)
+  keywords!: Keyword[];
 }
 
 export default Question;
