@@ -9,6 +9,7 @@ import {
   removeQuestion,
   getQuestionById,
   addLike,
+  removeLike,
 } from '@/database/controllers/question';
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
 import { checkLoggedIn } from '@/routes/jwt';
@@ -58,7 +59,7 @@ questionRouter.post(
 );
 
 questionRouter.delete(
-  `/remove/:qid`,
+  `/:qid`,
   checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const qid = Number(req.params.qid);
@@ -168,7 +169,29 @@ questionRouter.delete(
   }),
 );
 
-// 좋아요 추가, 조회, 삭제 관련
+// 좋아요 추가, 삭제 관련
+questionRouter.delete(
+  `/:qid/like`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const questionId = Number(req.params.qid);
+    const uuid = req.uuid;
+
+    if (!questionId) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError(
+        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
+      );
+    }
+
+    await removeLike(questionId, uuid);
+  }),
+);
 
 questionRouter.post(
   `/:qid/like`,

@@ -279,6 +279,12 @@ export const removeComment = async (
   }
 };
 
+/**
+ * 특정 질문글에 좋아요를 추가해주는 함수.
+ * @param questionId 좋아요를 추가하려는 질문글의 id
+ * @param uuid 좋아요를 추가하려는 유저의 uuid
+ * @returns 새롭게 추가된 좋아요의 id
+ */
 export const addLike = async (questionId: number, uuid: string) => {
   const user = new User();
   user.uuid = uuid;
@@ -306,4 +312,28 @@ export const addLike = async (questionId: number, uuid: string) => {
 
   const newLikeId = addLikeResult.raw.insertId;
   return newLikeId;
+};
+
+
+/**
+ * 특정 질문글에 달린 좋아요를 취소하는 함수
+ * @param questionId 댓글이 달린 질문글의 ID
+ * @param uuid 댓글을 작성한 유저의 uuid
+ */
+ export const removeLike = async (
+  questionId: number,
+  uuid: string,
+) => {
+  const removeLikeResult = await getRepository(Like)
+    .createQueryBuilder('like')
+    .softDelete()
+    .andWhere('like.question_id =: questionId', { questionId })
+    .andWhere('like.user_uuid =: uuid', { uuid })
+    .execute();
+
+  if (removeLikeResult.affected !== -1) {
+    throw new BadRequestError(
+      '존재하지 않는 게시글의 좋아요를 수정하려 했거나, UUID가 유효하지 않습니다.',
+    );
+  }
 };
