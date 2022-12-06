@@ -7,7 +7,7 @@ interface QuestionsPageProps {
   questions: QuestionPostType[];
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const response = await getQuestionListAsync(1, 8, "recent");
   return {
     props: { questions: response.isSuccess ? response.result : [] }
