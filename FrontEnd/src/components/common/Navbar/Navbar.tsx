@@ -39,26 +39,20 @@ const Navbar = () => {
 
   return (
     <style.Wrapper>
-      <style.Navigation>
-        <style.Logo onClick={() => router.push("/")} />
-        <style.NavItemList>
-          {navList.map(
-            navType =>
-              !ignoreIcon(navType) && (
-                <NavItem
-                  icon={navType}
-                  clickFunc={
-                    navType != "logout"
-                      ? () => router.push(PATH_INFO[navType])
-                      : logout
-                  }
-                  isFocused={currentPath == PATH_INFO[navType]}
-                  key={navType}
-                />
-              )
-          )}
-        </style.NavItemList>
-      </style.Navigation>
+      <style.Logo onClick={() => router.push("/")} />
+      <style.NavItemList>
+        {navList.map(
+          navType =>
+            !ignoreIcon(navType) && (
+              <NavItem
+                icon={navType}
+                clickFunc={navType != "logout" ? () => router.push(PATH_INFO[navType]) : logout}
+                isFocused={currentPath == PATH_INFO[navType]}
+                key={navType}
+              />
+            )
+        )}
+      </style.NavItemList>
     </style.Wrapper>
   );
 };
