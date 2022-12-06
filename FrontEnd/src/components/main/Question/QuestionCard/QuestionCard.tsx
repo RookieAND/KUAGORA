@@ -17,14 +17,7 @@ interface QuestionCardProps {
   state: "progressed" | "completed";
 }
 
-const QuestionCard = ({
-  title,
-  likeCount,
-  commentCount,
-  id,
-  keywords,
-  state
-}: QuestionCardProps) => {
+const QuestionCard = ({ title, likeCount, commentCount, id, keywords, state }: QuestionCardProps) => {
   const router = useRouter();
   const moveToQuestionPost = () => router.push(`/question/${id}`);
 
@@ -35,16 +28,12 @@ const QuestionCard = ({
         <style.KeywordBox>
           {keywords.length > 0 &&
             keywords.map((keyword: KeywordDataType) => (
-              <style.Keyword
-                key={keyword.id}
-              >{`#${keyword.content}`}</style.Keyword>
+              <style.Keyword key={keyword.id}>{`#${keyword.content}`}</style.Keyword>
             ))}
         </style.KeywordBox>
       </style.TopSection>
       <style.BottomSection state={state}>
-        <style.StateText>
-          {state == "completed" ? "해결된 질문" : "미해결된 질문"}
-        </style.StateText>
+        <style.StateText>{state == "completed" ? "해결된 질문" : "미해결된 질문"}</style.StateText>
         <style.IconWrap>
           <CommentSvg />
           <p>{commentCount}</p>

@@ -25,6 +25,7 @@ const QuestionDetail = () => {
 
     const initializeData = async () => {
       const initDataResult = await getQuestionAsync(questionId);
+
       // 질문글 관련 정보 로드 실패 시, 이전으로 되돌아감.
       if (!initDataResult.isSuccess) {
         router.back();
@@ -41,6 +42,8 @@ const QuestionDetail = () => {
             }
           : prev
       );
+      // 질문글 좋아요 관련 업데이트
+      setKeywordData(prev => (initDataResult.isSuccess ? initDataResult.result.keywords : prev));
     };
 
     initializeData();

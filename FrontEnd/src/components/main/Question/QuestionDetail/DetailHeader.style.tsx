@@ -1,9 +1,14 @@
-import styled, { css } from "styled-components";
+import styled, { css, DefaultTheme } from "styled-components";
+
+interface StyledIsCompletedProps {
+  theme: any; // CHECK : 해결할 수 있는 방법 찾아야 함.
+  state: "progressed" | "completed";
+}
 
 export const Wrapper = styled.div`
   width: 100%;
   margin: auto 0px;
-  padding: 64px 32px;
+  padding: 64px 32px 32px 32px;
 
   display: flex;
   flex-wrap: wrap;
@@ -44,11 +49,12 @@ export const AuthorBox = styled.div`
   margin-top: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
 `;
 
 export const StateBox = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 `;
 
@@ -59,28 +65,21 @@ export const StateText = styled.span`
       margin-bottom: 4px;
       text-align: left;
       color: ${colors.mono.gray7};
-      font-size: ${fonts.size.lg};
+      font-size: ${fonts.size.base};
       font-weight: ${fonts.weight.normal};
     `;
   }}
 `;
 
-export const LikeButton = styled.button`
-  ${({ theme }) => {
+export const IsCompleteBox = styled.h5`
+  ${({ theme, state }: StyledIsCompletedProps) => {
     const { colors, fonts } = theme;
     return css`
-      margin: 32px 0px 0px 0px;
-      padding: 8px;
-
-      border: 0px;
-      border-radius: 4px;
-      background-color: ${colors.main.normal};
-      box-shadow: 0px 4px 0px ${colors.main.pressed};
-
-      text-align: center;
-      color: ${colors.mono.white};
-      font-size: ${fonts.size.lg};
-      font-weight: ${fonts.weight.normal};
+      padding: 10px 24px;
+      margin: 0px auto;
+      background-color: ${state == "progressed" ? theme.colors.mono.gray2 : theme.colors.main.opacity30};
+      font-size: ${fonts.size.xl};
+      color: ${state == "progressed" ? theme.colors.mono.gray6 : theme.colors.main.normal};
     `;
   }}
 `;

@@ -1,16 +1,17 @@
 import * as style from "./DetailHeader.style";
 
-import LikeSvg from "@/assets/icons/Like.svg";
+import HeartSvg from "@/assets/icons/Heart.svg";
 
 import { formatISODate } from "@/utils/formatISODate";
 
 interface DetailHeaderProps {
   title: string;
+  state: "progressed" | "completed";
   nickname: string;
   createdAt: string;
 }
 
-const DetailHeader = ({ title, nickname, createdAt }: DetailHeaderProps) => {
+const DetailHeader = ({ title, state, nickname, createdAt }: DetailHeaderProps) => {
   return (
     <style.Wrapper>
       <style.TitleBox>
@@ -20,10 +21,9 @@ const DetailHeader = ({ title, nickname, createdAt }: DetailHeaderProps) => {
       <style.AuthorBox>
         <style.StateBox>
           <style.StateText>작성자 | {nickname}</style.StateText>
-        </style.StateBox>
-        <style.StateBox>
           <style.StateText>{createdAt && `작성일 | ${formatISODate(createdAt)}`}</style.StateText>
         </style.StateBox>
+        <style.IsCompleteBox state={state}>{state == "progressed" ? "미해결" : "해결됨"}</style.IsCompleteBox>
       </style.AuthorBox>
     </style.Wrapper>
   );
