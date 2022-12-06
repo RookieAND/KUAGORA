@@ -17,8 +17,6 @@ const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(typeof err);
-  console.log(err instanceof UnauthorizedError);
   if (err instanceof BadRequestError) {
     next(err);
     return res.status(400).json({ errorMessage: err.message });

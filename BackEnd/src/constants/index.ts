@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const DEV_CONFIG = {
   mode: 'dev',
   port: '4000',
