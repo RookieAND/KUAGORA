@@ -1,5 +1,5 @@
 import questionRouter from '@/routes/question';
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
 
 import BasicEntity from '@/database/entity/basic';
 import Question from '@/database/entity/question';

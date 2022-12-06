@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import { Length } from 'class-validator';
 
 import BasicEntity from '@/database/entity/basic';
@@ -30,9 +37,11 @@ class Question extends BasicEntity {
   @OneToMany(() => Like, (like) => like.question)
   likes!: Like[];
 
+  // [Relation] Question : Comment = 1 : N
   @OneToMany(() => Comment, (comment) => comment.question)
   comments!: Comment[];
 
+  // [Relation] Question : Keyword = 1 : N
   @OneToMany(() => Keyword, (keyword) => keyword.question)
   keywords!: Keyword[];
 }
