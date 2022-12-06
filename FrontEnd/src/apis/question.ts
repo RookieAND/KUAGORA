@@ -71,6 +71,17 @@ export const getQuestionListAsync = async (page: number, amount: number, option:
   };
 };
 
+export const searchQuestionByWord = async (word: string, page: number, amount: number) => {
+  const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
+    params: { page, amount, word }
+  });
+
+  return {
+    isSuccess: response.isSuccess,
+    result: response.isSuccess ? response.result : []
+  };
+};
+
 /**
  * 특정 ID를 가진 질문글 내역을 가지고 오는 함수
  * @param questionId 정보를 가져올 질문글의 ID
