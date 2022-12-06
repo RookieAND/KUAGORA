@@ -2,9 +2,10 @@ import { getRepository } from 'typeorm';
 
 import Question from '@/database/entity/question';
 import Comment from '@/database/entity/comment';
+import Like from '@/database/entity/like';
 import User from '@/database/entity/user';
-import { BadRequestError } from '@/errors/definedErrors';
 
+import { BadRequestError } from '@/errors/definedErrors';
 /**
  * 질문글의 id를 통해 정보를 로드하는 함수 getQuestionById
  * @param questionId 찾으려는 질문글의 ID
@@ -235,7 +236,7 @@ export const addComment = async (
   comment.question = question;
 
   const addCommentResult = await getRepository(Comment)
-    .createQueryBuilder('comment')
+    .createQueryBuilder()
     .insert()
     .into('comment')
     .values(comment)
@@ -276,4 +277,33 @@ export const removeComment = async (
       '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
     );
   }
+};
+
+export const addLike = async (questionId: number, uuid: string) => {
+  const user = new User();
+  user.uuid = uuid;
+
+  const question = new Question();
+  question.id = questionId;
+
+  const newLike = new Like();
+  newLike.user = user;
+  newLike.question = question;
+
+  const addLikeResult = await getRepository(Like)
+    .createQueryBuilder()
+    .insert()
+    .into('like')
+    .values(newLike)
+    .updateEntity(false)
+    .execute();
+
+  if (addLikeResult.raw.affected == -1) {
+    throw new BadRequestError(
+      '존재하지 않는 게시글에 좋아요를 추가하려 하였습니다.',
+    );
+  }
+
+  const newLikeId = addLikeResult.raw.insertId;
+  return newLikeId;
 };
