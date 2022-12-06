@@ -46,6 +46,7 @@ export type QuestionSortType = "recent" | "popular";
 export interface AddQuestionType {
   title: string;
   content: string;
+  keywords: string[];
 }
 
 export interface AddQuestionResultType {
@@ -60,7 +61,7 @@ export interface AddQuestionResultType {
  * @returns 기준에 따라 정렬된 질문글의 일부 정보
  */
 export const getQuestionListAsync = async (page: number, amount: number, option: QuestionSortType) => {
-  const response = await getAsync<QuestionPostType[], any>(`/question`, {
+  const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
     params: { page, amount, option }
   });
 
@@ -87,19 +88,17 @@ export const getQuestionAsync = async (questionId: number) => {
  * @param token 질문글을 작성한 유저의 엑세스 토큰
  * @returns
  */
-export const addQuestionAsync = async (title: string, content: string, token: string) => {
+export const addQuestionAsync = async (title: string, content: string, keywords: string[], token: string) => {
   const response = await postAsync<AddQuestionResultType, AddQuestionType>(
     `question/write`,
     {
       title,
-      content
+      content,
+      keywords
     },
     { headers: { authorization: token } }
   );
-  if (response.isSuccess) {
-    return response.result.questionId;
-  }
-  return null;
+  return response;
 };
 
 /**
