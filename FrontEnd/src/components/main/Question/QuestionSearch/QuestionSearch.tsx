@@ -15,9 +15,9 @@ const QuestionSearch = ({ searchValue, changeSearchValue }: QuestionSearchProps)
   };
 
   const searchWord = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == "Enter" && searchValue.length > 3) {
+    if (e.key == "Enter" && searchValue.length > 2) {
       router.push({
-        pathname: "/question",
+        pathname: "/questions",
         query: { word: searchValue }
       });
     }

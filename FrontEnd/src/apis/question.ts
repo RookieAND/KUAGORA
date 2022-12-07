@@ -72,7 +72,7 @@ export const getQuestionListAsync = async (page: number, amount: number, option:
 };
 
 export const searchQuestionByWord = async (word: string, page: number, amount: number) => {
-  const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
+  const response = await getAsync<QuestionPostType[], unknown>(`/question/search`, {
     params: { page, amount, word }
   });
 
