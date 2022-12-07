@@ -39,12 +39,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="theme-color" content="#00917C" />
-          <title>건국의 지식 집합소, KUAGORA</title>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

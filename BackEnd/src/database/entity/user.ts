@@ -7,11 +7,10 @@ import {
 } from 'typeorm';
 import { Length, IsEmail } from 'class-validator';
 
+import { SocialPlatform } from '@/types/social';
 import Question from './question';
 import Comment from './comment';
 import Like from './like';
-
-export type SocialPlatform = 'naver' | 'kakao' | 'google';
 
 @Entity()
 class User {
@@ -22,7 +21,6 @@ class User {
   registerAt!: Date;
 
   @Column('enum', {
-    name: 'social_platform',
     enum: ['naver', 'kakao', 'google'],
   })
   social!: SocialPlatform;

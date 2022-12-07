@@ -13,6 +13,7 @@ class BadRequestError extends Error {
     super(message);
     this.name = 'BadRequestError';
     this.message = message;
+    Object.setPrototypeOf(this, BadRequestError.prototype);
   }
   statusCode = 400;
 }
@@ -26,6 +27,7 @@ class UnauthorizedError extends Error {
     super(message);
     this.name = 'UnauthorizedError';
     this.message = message;
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
   statusCode = 401;
 }
@@ -39,6 +41,7 @@ class ForbiddenError extends Error {
     super(message);
     this.name = 'ForbiddenError';
     this.message = message;
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
   statusCode = 403;
 }
@@ -52,10 +55,24 @@ class NotFoundError extends Error {
     super(message);
     this.name = 'NotFoundError';
     this.message = message;
+    Object.setPrototypeOf(this, NotFoundError.prototype);
   }
   statusCode = 404;
 }
 
+/**
+ * 460 Expire Token Error (엑세스 토큰 만료)
+ * @param 서버에서 일어난 에러 발생 사유 message
+ */
+class ExpireTokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ExpireTokenError';
+    this.message = message;
+    Object.setPrototypeOf(this, ExpireTokenError.prototype);
+  }
+  statusCode = 460;
+}
 /**
  * 500 Unauthorized Error (서버 오류)
  * @param 서버에서 일어난 에러 발생 사유 message
@@ -65,6 +82,7 @@ class InternalServerError extends Error {
     super(message);
     this.name = 'ServerError';
     this.message = message;
+    Object.setPrototypeOf(this, InternalServerError.prototype);
   }
   statusCode = 500;
 }
@@ -74,5 +92,6 @@ export {
   UnauthorizedError,
   ForbiddenError,
   NotFoundError,
+  ExpireTokenError,
   InternalServerError,
 };

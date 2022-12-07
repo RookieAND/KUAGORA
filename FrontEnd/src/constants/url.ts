@@ -1,8 +1,9 @@
 export const PATH_INFO = {
   main: "/",
-  question: "/question",
-  profile: "/profile",
-  login: "/login"
+  question: "/questions",
+  write: "/write",
+  login: "/login",
+  logout: "/logout"
 } as const;
 
 export type PathNameType = typeof PATH_INFO[keyof typeof PATH_INFO];

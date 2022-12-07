@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { apiURL } from "../constants/api";
+import { apiURL } from "@/constants/api";
 
 /**
  * API 호출 함수의 반환 타입 (비동기 결과 Promise)
