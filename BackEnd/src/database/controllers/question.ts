@@ -192,7 +192,7 @@ export const searchQuestionByWord = async (
             'COUNT(comments.id) AS CommentCount',
           ])
           .from(Question, 'subQuestion')
-          .where('subreq.title like :title', { word: `%${word}%` }) // like 절 사용법은 좌측과 같음.
+          .where('subQuestion.title like :word', { word: `%${word}%` }) // like 절 사용법은 좌측과 같음.
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
@@ -209,6 +209,8 @@ export const searchQuestionByWord = async (
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
+
+  return questionDatas;
 };
 
 /**
