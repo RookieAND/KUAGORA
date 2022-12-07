@@ -1,7 +1,6 @@
 import { postAsync, APIResult, deleteAsync } from "./API";
 import { IAccessToken, IUserData } from "@/stores/atoms";
-
-export type SocialPlatform = "google" | "kakao" | "naver";
+import { SocialPlatform } from "@/constants/social";
 
 interface loginResultType {
   token: string;
@@ -43,12 +42,12 @@ export async function loginAsync(
  * @param token 사용자가 소유한 엑세스 토큰
  */
 export async function logoutAsync(token: string) {
-  const result = await deleteAsync<loginResultType, null>(`/auth/logout`, {
+  const response = await deleteAsync<null, null>(`/auth/logout`, {
     headers: {
       Authorization: token
     }
   });
-  return result;
+  return response.isSuccess;
 }
 
 /**

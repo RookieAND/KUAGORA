@@ -5,11 +5,11 @@ export const Wrapper = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
-      width: 100vw;
+      width: 1440px;
       height: 96px;
 
       display: flex;
-      flex-direction: row;
+      justify-content: space-between;
       align-items: center;
       padding: 32px 64px;
 
@@ -19,20 +19,6 @@ export const Wrapper = styled.div`
       background-color: ${colors.mono.white};
     `;
   }}
-`;
-
-export const Navigation = styled.ul`
-  width: 1248px;
-  height: 48px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  list-style: none;
-  padding: 0px;
-  gap: 16px;
 `;
 
 export const Logo = styled(LogoSvg)`
@@ -48,7 +34,6 @@ export const Logo = styled(LogoSvg)`
 `;
 
 export const NavItemList = styled.ul`
-  width: 144px;
   height: 24px;
 
   display: flex;

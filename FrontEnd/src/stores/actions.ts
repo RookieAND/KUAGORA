@@ -1,5 +1,11 @@
 import { atom } from "jotai";
-import { userDataAtom, IUserData, IAccessToken, jwtTokenAtom } from "./atoms";
+import {
+  userDataAtom,
+  IUserData,
+  IAccessToken,
+  jwtTokenAtom,
+  ITokenData
+} from "./atoms";
 
 export const accessTokenAtom = atom(
   get => {
@@ -20,6 +26,13 @@ export const refreshTokenAtom = atom(
   (get, set, newRefreshToken: IAccessToken) => {
     const prevTokenData = get(jwtTokenAtom);
     set(jwtTokenAtom, { ...prevTokenData, access_token: newRefreshToken });
+  }
+);
+
+export const setJWTAtom = atom(
+  get => get(jwtTokenAtom),
+  (get, set, newJWTData: ITokenData) => {
+    set(jwtTokenAtom, newJWTData);
   }
 );
 

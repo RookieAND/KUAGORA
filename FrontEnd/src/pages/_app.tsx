@@ -9,7 +9,17 @@ import { theme } from "@/constants/styles/theme";
 import "@/assets/fonts/font.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(new QueryClient());
+  const [queryClient] = useState(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          refetchOnMount: false,
+          refetchOnReconnect: false,
+          refetchOnWindowFocus: false
+        }
+      }
+    })
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <Provider>

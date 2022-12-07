@@ -1,7 +1,7 @@
 import * as style from "@/components/common/Navbar/NavItem.style";
-import { useRouter } from "next/router";
 
 import MainSvg from "@/assets/icons/Main.svg";
+import DiarySvg from "@/assets/icons/Diary.svg";
 import EditSquareSvg from "@/assets/icons/EditSquare.svg";
 import ProfileSvg from "@/assets/icons/Profile.svg";
 import LoginSvg from "@/assets/icons/Login.svg";
@@ -10,25 +10,21 @@ export type NavItemKey = keyof typeof NavItemIcons;
 
 export interface NavItemProps {
   icon: NavItemKey;
-  path: string;
+  clickFunc: () => void;
   isFocused: boolean;
 }
 
 export const NavItemIcons = {
   main: <MainSvg />,
-  question: <EditSquareSvg />,
-  profile: <ProfileSvg />,
+  question: <DiarySvg />,
+  write: <EditSquareSvg />,
   login: <LoginSvg />,
+  logout: <LoginSvg />
 } as const;
 
-const NavItem = ({ icon, path, isFocused }: NavItemProps) => {
-  const router = useRouter();
-  const clickNavItem = (path: string) => {
-    router.push(path);
-  };
-
+const NavItem = ({ icon, clickFunc, isFocused }: NavItemProps) => {
   return (
-    <style.Wrapper isFocused={isFocused} onClick={() => clickNavItem(path)}>
+    <style.Wrapper isFocused={isFocused} onClick={clickFunc}>
       {NavItemIcons[icon]}
     </style.Wrapper>
   );

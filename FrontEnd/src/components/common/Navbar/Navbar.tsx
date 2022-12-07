@@ -1,48 +1,57 @@
 import { useRouter } from "next/router";
+import { useAtom } from "jotai";
 import { useState, useEffect } from "react";
 
 import * as style from "@/components/common/Navbar/Navbar.style";
-import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
+
+import { logoutAsync } from "@/apis/auth";
 import { PATH_INFO } from "@/constants/url";
+import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
+import { accessTokenAtom, setJWTAtom } from "@/stores/actions";
 
-export interface NavbarProps {
-  isLogin: boolean;
-  currentPath: string;
-}
-
-const Navbar = ({ isLogin, currentPath }: NavbarProps) => {
+const Navbar = () => {
   const [loginState, setLoginState] = useState<boolean>(false);
-  const navList = Object.keys(PATH_INFO) as [NavItemKey];
-  const router = useRouter();
+  const [accessToken] = useAtom(accessTokenAtom);
+  const [, setJWTToken] = useAtom(setJWTAtom);
 
-  console.log(isLogin);
+  const router = useRouter();
+  const navList = Object.keys(PATH_INFO) as [NavItemKey];
+  const currentPath = router.pathname;
 
   useEffect(() => {
-    setLoginState(isLogin);
-  });
+    setLoginState(accessToken != null);
+  }, [accessToken]);
 
-  // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수 ignoreIcon
+  // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수
   const ignoreIcon = (navType: NavItemKey) =>
-    (loginState && navType == "login") || (!loginState && navType == "profile");
+    (loginState && navType == "login") || (!loginState && navType == "write") || (!loginState && navType == "logout");
+
+  // 유저의 로그아웃을 진행하는 함수
+  const logout = async () => {
+    const isLogout = await logoutAsync(accessToken as string);
+    if (isLogout) {
+      setJWTToken({ access_token: null, refresh_token: null });
+      setLoginState(false);
+      router.replace("/");
+    }
+  };
 
   return (
     <style.Wrapper>
-      <style.Navigation>
-        <style.Logo onClick={() => router.push("/")} />
-        <style.NavItemList>
-          {navList.map(
-            navType =>
-              !ignoreIcon(navType) && (
-                <NavItem
-                  icon={navType}
-                  path={PATH_INFO[navType]}
-                  isFocused={currentPath == PATH_INFO[navType]}
-                  key={navType}
-                />
-              )
-          )}
-        </style.NavItemList>
-      </style.Navigation>
+      <style.Logo onClick={() => router.push("/")} />
+      <style.NavItemList>
+        {navList.map(
+          navType =>
+            !ignoreIcon(navType) && (
+              <NavItem
+                icon={navType}
+                clickFunc={navType != "logout" ? () => router.push(PATH_INFO[navType]) : logout}
+                isFocused={currentPath == PATH_INFO[navType]}
+                key={navType}
+              />
+            )
+        )}
+      </style.NavItemList>
     </style.Wrapper>
   );
 };

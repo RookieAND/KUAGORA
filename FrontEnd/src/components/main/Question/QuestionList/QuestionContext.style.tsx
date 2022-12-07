@@ -12,10 +12,9 @@ export const Wrapper = styled.div`
 
       width: 100%;
       height: 100%;
-      padding: 24px;
+      border-radius: 8px;
 
       background: ${colors.mono.white};
-      border-radius: 4px;
     `;
   }}
 `;
@@ -24,19 +23,36 @@ export const Title = styled.h5`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
+      width: 100%;
+      padding: 24px;
       margin: 0px 0px 8px 0px;
+
       color: ${colors.mono.black};
       font-weight: ${fonts.weight.normal};
-      font-size: ${fonts.size.base};
+      font-size: ${fonts.size.lg};
+      text-align: left;
     `;
   }}
 `;
 
 export const BottomBox = styled.div`
-  width: 100%;
+  ${({ theme }) => {
+    const { colors } = theme;
+    return css`
+      width: 100%;
+      padding: 12px 24px;
 
-  display: flex;
-  justify-content: space-between;
+      border-radius: 0px 0px 8px 8px;
+
+      display: flex;
+      justify-content: space-between;
+      background-color: ${colors.mono.gray4};
+
+      &.completed {
+        background-color: ${colors.main.opacity60};
+      }
+    `;
+  }}
 `;
 
 export const BottomContent = styled.div`
