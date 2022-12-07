@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
-interface QuestionCardButtomProps {
+interface StyledQuestionStateProps {
+  theme: any;
   state: "progressed" | "completed";
 }
 
@@ -55,39 +56,40 @@ export const KeywordBox = styled.div`
   gap: 8px;
 `;
 
-export const Keyword = styled.span`
-  ${({ theme }) => {
+export const Keyword = styled.span<StyledQuestionStateProps>`
+  ${({ theme, state }) => {
     const { colors, fonts } = theme;
     return css`
       padding: 2px 4px;
       margin: 0px;
 
-      background-color: ${colors.main.opacity30};
+      background-color: ${state == "completed" ? colors.main.opacity30 : colors.mono.gray2};
 
-      color: ${colors.main.pressed};
+      color: ${state == "completed" ? colors.main.pressed : colors.mono.gray6};
       font-size: ${fonts.size.base};
       font-weight: ${fonts.weight.normal};
     `;
   }}
 `;
 
-export const StateText = styled.span`
-  ${({ theme }) => {
+export const StateText = styled.span<StyledQuestionStateProps>`
+  ${({ theme, state }) => {
     const { colors, fonts } = theme;
     return css`
       width: 164px;
       padding: 2px;
 
       text-align: left;
-      color: ${colors.mono.gray7};
+      color: ${state == "completed" ? colors.main.pressed : colors.mono.gray6};
       font-size: ${fonts.size.base};
-      font-weight: ${fonts.weight.normal};
+      font-weight: ${fonts.weight.bold};
     `;
   }}
 `;
 
-export const BottomSection = styled.div<QuestionCardButtomProps>`
+export const BottomSection = styled.div<StyledQuestionStateProps>`
   ${({ theme, state }) => {
+    const { colors } = theme;
     return css`
       width: 100%;
       height: 25%;
@@ -96,9 +98,7 @@ export const BottomSection = styled.div<QuestionCardButtomProps>`
       display: flex;
       justify-content: space-between;
 
-      background-color: ${state == "progressed"
-        ? theme.colors.mono.gray4
-        : theme.colors.main.opacity60};
+      background-color: ${state == "progressed" ? colors.mono.gray4 : colors.main.opacity60};
       border-radius: 0px 0px 8px 8px;
     `;
   }}
