@@ -5,26 +5,23 @@ import { InternalServerError } from '@/errors/definedErrors';
 const isProd: boolean = process.env.NODE_ENV === 'production';
 const CURRENT_CONFIG = isProd ? PROD_CONFIG : DEV_CONFIG;
 
-const redisClient = async () => {
-  const client = createClient({
-    url: `redis://${CURRENT_CONFIG.redis.username}:${CURRENT_CONFIG.redis.password}@${CURRENT_CONFIG.redis.host}:${CURRENT_CONFIG.redis.port}`,
-    socket: {
-      port: Number(CURRENT_CONFIG.redis.port),
-      host: CURRENT_CONFIG.redis.host,
-      connectTimeout: 50000,
-    },
-  });
-  return client;
+const client = createClient({
+  url: `redis://RookieAND:Qorrhkddls1!@redis-14828.c266.us-east-1-3.ec2.cloud.redislabs.com:14828`, // 왜 숨길 수 없는지 원인 찾아야 함.
+  socket: {
+    connectTimeout: 50000,
+  },
+});
+
+export const connectRedis = async () => {
+  await client.connect();
 };
 
 export const getRefreshToken = async (uuid: string) => {
-  const client = await redisClient();
   try {
-    await client.connect();
     const refresh_token = await client.get(uuid);
-    await client.quit();
     return refresh_token;
   } catch (err) {
+    console.log(err);
     throw new InternalServerError(
       'Redis 를 처리하던 도중 문제가 발생했습니다.',
     );
@@ -32,11 +29,8 @@ export const getRefreshToken = async (uuid: string) => {
 };
 
 export const setRefreshToken = async (uuid: string, token: string) => {
-  const client = await redisClient();
   try {
-    await client.connect();
     await client.set(uuid, token);
-    await client.quit();
   } catch (err) {
     console.log(err);
     throw new InternalServerError(
@@ -46,12 +40,10 @@ export const setRefreshToken = async (uuid: string, token: string) => {
 };
 
 export const delRefreshToken = async (uuid: string) => {
-  const client = await redisClient();
   try {
-    await client.connect();
     await client.del(uuid);
-    await client.quit();
   } catch (err) {
+    console.log(err);
     throw new InternalServerError(
       'Redis 를 처리하던 도중 문제가 발생했습니다.',
     );
