@@ -8,6 +8,7 @@ import { createConnection } from 'typeorm';
 import docsRouter from '@/routes/docs';
 import authRouter from '@/routes/auth';
 import questionRouter from '@/routes/question';
+import searchRouter from '@/routes/search';
 
 import { DEV_CONFIG, PROD_CONFIG } from '@/constants/index';
 import typeOrmConfig from '@/database/config/ormconfig';
@@ -51,6 +52,7 @@ app.use(
 app.use('/api-docs', docsRouter);
 app.use('/auth', authRouter);
 app.use('/question', questionRouter);
+app.use('/search', searchRouter);
 
 app.get('/', (_, res) => {
   res.status(200).send('KUAGORA Server has been Enabled.');
