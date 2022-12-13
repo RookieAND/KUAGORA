@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import * as style from "./QuestionSearch.style";
 import SearchSvg from "@/assets/icons/Search.svg";
+import SearchOptionSelect from "@/components/main/Question/QuestionSearch/SearchOptionSelect";
 
 interface QuestionSearchProps {
   searchValue: string;
@@ -25,17 +26,21 @@ const QuestionSearch = ({ searchValue, changeSearchValue }: QuestionSearchProps)
 
   return (
     <style.Wrapper>
-      <style.IconWrap>
-        <SearchSvg />
-      </style.IconWrap>
-      <style.SearchInput
-        value={searchValue}
-        onChange={changeInput}
-        onKeyDown={searchWord}
-        placeholder="검색어를 입력해주세요. (3글자 이상)"
-        maxLength={30}
-        minLength={1}
-      />
+      <SearchOptionSelect selectType="search" />
+      <SearchOptionSelect selectType="sort" />
+      <style.SearchBar>
+        <style.IconWrap>
+          <SearchSvg />
+        </style.IconWrap>
+        <style.SearchInput
+          value={searchValue}
+          onChange={changeInput}
+          onKeyDown={searchWord}
+          placeholder="검색어를 입력해주세요. (3글자 이상)"
+          maxLength={30}
+          minLength={1}
+        />
+      </style.SearchBar>
     </style.Wrapper>
   );
 };
