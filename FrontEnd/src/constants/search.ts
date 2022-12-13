@@ -1,4 +1,8 @@
-const SORT_OPTION: SelectInfoType[] = [
+const SEARCH_OPTION: SelectInfoType[] = [
+  {
+    option: "default",
+    display: "검색 옵션"
+  },
   {
     option: "title",
     display: "제목 별"
@@ -9,7 +13,11 @@ const SORT_OPTION: SelectInfoType[] = [
   }
 ];
 
-const SEARCH_OPTION: SelectInfoType[] = [
+const SORT_OPTION: SelectInfoType[] = [
+  {
+    option: "default",
+    display: "정렬 옵션"
+  },
   {
     option: "recent",
     display: "최신 순"

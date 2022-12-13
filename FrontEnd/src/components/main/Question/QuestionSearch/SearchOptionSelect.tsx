@@ -26,10 +26,10 @@ const SearchOptionSelect = ({ selectType }: SearchOptionSelectProps) => {
   return (
     <style.Wrapper onClick={toggleSelectShow} isShowing={isShowing}>
       <style.SelectedLabel>
-        {selectedOptionIdx == -1 ? "옵션 미선택" : `${selectOptionList[selectedOptionIdx].display}`}
+        {`${selectOptionList[selectedOptionIdx == -1 ? 0 : selectedOptionIdx].display}`}
       </style.SelectedLabel>
       <style.SelectList isShowing={isShowing}>
-        {selectOptionList.map(({ option, display }: SelectInfoType, index: number) => {
+        {selectOptionList.slice(1).map(({ option, display }: SelectInfoType, index: number) => {
           return (
             <style.SelectOption key={option} onClick={() => selectNewOption(index)}>
               {display}
