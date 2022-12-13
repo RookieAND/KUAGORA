@@ -12,14 +12,14 @@ export const Wrapper = styled.div<StyledHeadlineWrapperProps>`
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
+
       padding: 40px 80px;
       gap: 48px;
 
       width: 100%;
       height: 400px;
 
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)),
-        url(${image.src});
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)), url(${image.src});
       background-size: cover;
     `;
   }}

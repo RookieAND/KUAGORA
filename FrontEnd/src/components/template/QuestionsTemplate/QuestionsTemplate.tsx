@@ -2,8 +2,8 @@ import { QuestionPostType } from "@/apis/question";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
-import TitleBox from "@/components/common/TitleBox";
 import QuestionHeadline from "@/components/main/Question/QustionHeadline";
+import QuestionSearch from "@/components/main/Question/QuestionSearch";
 import QuestionPost from "@/components/main/Question/QuestionPost";
 
 interface QuestionsTemplateProps {
@@ -16,8 +16,8 @@ const QuestionsTemplate = ({ questions, searchValue, changeSearchValue }: Questi
   return (
     <>
       <Navbar />
-      <QuestionHeadline searchValue={searchValue} changeSearchValue={changeSearchValue} />
-      <TitleBox title={"Question List"} subTitle={"검색에 의한 질문글 목록입니다."} />
+      <QuestionHeadline />
+      <QuestionSearch searchValue={searchValue} changeSearchValue={changeSearchValue} />
       <QuestionPost questions={questions} />
       <Footer />
     </>

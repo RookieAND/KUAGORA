@@ -72,8 +72,19 @@ export const getQuestionListAsync = async (page: number, amount: number, option:
 };
 
 export const searchQuestionByWord = async (word: string, page: number, amount: number) => {
-  const response = await getAsync<QuestionPostType[], unknown>(`/question/search`, {
+  const response = await getAsync<QuestionPostType[], unknown>(`/search/title`, {
     params: { page, amount, word }
+  });
+
+  return {
+    isSuccess: response.isSuccess,
+    result: response.isSuccess ? response.result : []
+  };
+};
+
+export const searchQuestionByKeyword = async (keyword: string, page: number, amount: number) => {
+  const response = await getAsync<QuestionPostType[], unknown>(`/search/keyword`, {
+    params: { page, amount, keyword }
   });
 
   return {

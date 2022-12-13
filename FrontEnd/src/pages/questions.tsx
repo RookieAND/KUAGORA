@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { getQuestionListAsync, QuestionPostType } from "@/apis/question";
 
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
-import { searchQuestionByWord } from "../apis/question";
+import { searchQuestionByWord, searchQuestionByKeyword } from "@/apis/question";
 
 interface QuestionsPageProps {
   recentQuestions: QuestionPostType[];
@@ -33,7 +33,7 @@ const Questions = ({ recentQuestions }: QuestionsPageProps) => {
       if (!queryWord) {
         return;
       }
-      const initSearchData = await searchQuestionByWord(queryWord, 1, 16);
+      const initSearchData = await searchQuestionByKeyword(queryWord, 1, 16);
       setQuestions(prev => (initSearchData.isSuccess ? initSearchData.result : prev));
     };
 
