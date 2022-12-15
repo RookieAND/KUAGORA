@@ -14,12 +14,7 @@ interface QuestionSearchProps {
   changeSearchQuery: (word: string) => void;
 }
 
-const QuestionSearch = ({
-  searchQuery,
-  searchOption,
-  sortOption,
-  changeSearchQuery,
-}: QuestionSearchProps) => {
+const QuestionSearch = ({ searchQuery, searchOption, sortOption, changeSearchQuery }: QuestionSearchProps) => {
   const router = useRouter();
 
   const changeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +25,7 @@ const QuestionSearch = ({
     if (e.key == "Enter" && searchQuery.length > 1) {
       router.push({
         pathname: "/search",
-        query: { query: searchQuery, searchOption, sortOption }
+        query: { query: searchQuery, search: searchOption, sort: sortOption }
       });
     }
   };
