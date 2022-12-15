@@ -9,7 +9,7 @@ import QuestionSearch from "@/components/main/Question/QuestionSearch";
 import QuestionPost from "@/components/main/Question/QuestionPost";
 
 interface QuestionsTemplateProps {
-  questions: QuestionPostType[];
+  questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
   searchQuery: string;
   searchOption: QuestionSearchType;

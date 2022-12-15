@@ -5,14 +5,14 @@ import * as style from "./QustionPost.style";
 import QuestionCard from "@/components/main/Question/QuestionCard";
 
 interface QuestionPostProps {
-  questions: QuestionPostType[];
+  questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
 }
 
 const QuestionPost = ({ questions, questionRef }: QuestionPostProps) => {
   return (
     <style.Wrapper ref={questionRef}>
-      {questions.length > 0 ? (
+      {questions && questions.length > 0 ? (
         questions.map(({ title, likeCount, commentCount, state, keywords, id }: QuestionPostType) => (
           <QuestionCard
             title={title}
