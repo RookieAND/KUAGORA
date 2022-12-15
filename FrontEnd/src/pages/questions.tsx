@@ -4,36 +4,26 @@ import { useInfiniteQuery } from "react-query";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
-import { getQuestionsAsync, QuestionSortType, QuestionSearchType, QuestionPostType } from "@/apis/question";
-import { SelectType } from "@/constants/search";
+import { getQuestionsAsync, QuestionSortType, QuestionSearchType } from "@/apis/question";
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
-interface SearchFilterType {
-  search: QuestionSearchType;
-  sort: QuestionSortType;
-}
-
 const Questions = () => {
   const router = useRouter();
-  const targetRef = useRef(null);
+  const questionRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const searchOption = (router?.query?.search || "title") as QuestionSearchType;
   const sortOption = (router?.query?.sort || "recent") as QuestionSortType;
-
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
 
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["question", sortOption],
+  const { data, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ["question", { sortOption }],
     /**
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
      */
     ({ pageParam = 1 }) => {
-      if (!router.isReady) {
-        return undefined;
-      }
       return getQuestionsAsync(pageParam, amount, sortOption);
     },
     {
@@ -63,16 +53,13 @@ const Questions = () => {
     setSearchQuery(newQuery);
   };
 
-  useInfiniteScroll(targetRef, fetchNextQuestions);
+  useInfiniteScroll(questionRef, fetchNextQuestions);
 
   // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
   // 각 페이지 별 질문글 데이터는 1차원 배열에 담겨 있으므로, flat을 통해 이를 하나로 묶어야 함.
-  const questions: QuestionPostType[] = [];
-  data?.pages.map(apiRes => {
-    if (apiRes?.isSuccess) {
-      questions.push(...apiRes.result.content);
-    }
-  });
+  const questions = !isFetching
+    ? data?.pages.map(pageResult => (pageResult?.isSuccess ? pageResult.result.content : [])).flat()
+    : [];
 
   console.log(data);
 
@@ -87,7 +74,7 @@ const Questions = () => {
       </Head>
       <QuestionsTemplate
         questions={questions}
-        questionRef={targetRef}
+        questionRef={questionRef}
         searchQuery={searchQuery}
         sortOption={sortOption}
         searchOption={searchOption}
