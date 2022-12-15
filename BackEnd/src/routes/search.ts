@@ -12,42 +12,61 @@ const searchRouter = express.Router();
 searchRouter.get(
   '/title',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { page = '1', amount = '12', word = '' } = req.query;
+    const {
+      page = '1',
+      amount = '12',
+      query = '',
+      sortOption = 'recent',
+    } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
 
-    if (!pageNum || !amountNum || !word) {
-      throw new BadRequestError(
-        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+    if (
+      pageNum > 0 &&
+      amountNum > 0 &&
+      (sortOption === 'recent' || sortOption === 'popular')
+    ) {
+      const questions = await getQuestionByWord(
+        query as string,
+        pageNum,
+        amountNum,
+        sortOption,
       );
+      return res.status(200).json(questions);
     }
 
-    const questions = await getQuestionByWord(
-      word as string,
-      pageNum,
-      amountNum,
+    throw new BadRequestError(
+      '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
     );
-    return res.status(200).json(questions);
   }),
 );
 
 searchRouter.get(
   '/keyword',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { page = '1', amount = '12', keyword = '' } = req.query;
+    const {
+      page = '1',
+      amount = '12',
+      query = '',
+      sortOption = 'recent',
+    } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
-
-    if (!pageNum || !amountNum || !keyword) {
-      throw new BadRequestError(
-        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+    if (
+      pageNum > 0 &&
+      amountNum > 0 &&
+      (sortOption === 'recent' || sortOption === 'popular')
+    ) {
+      const questions = await getQuestionByKeyword(
+        query as string,
+        pageNum,
+        amountNum,
+        sortOption,
       );
+      return res.status(200).json(questions);
     }
 
-    const questions = await getQuestionByKeyword(
-      keyword as string,
-      pageNum,
-      amountNum,
+    throw new BadRequestError(
+      '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
     );
-    return res.status(200).json(questions);
   }),
 );
 
