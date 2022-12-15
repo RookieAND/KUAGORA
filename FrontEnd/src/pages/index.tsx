@@ -1,16 +1,16 @@
 import Head from "next/head";
 
 import MainTemplate from "@/components/template/MainTemplate";
-import { QuestionPostType, getQuestionListAsync } from "@/apis/question";
+import { QuestionPostType, getQuestionsAsync } from "@/apis/question";
 
 interface QuestionsPageProps {
   questions: QuestionPostType[];
 }
 
 export async function getStaticProps() {
-  const response = await getQuestionListAsync(1, 8, "recent");
+  const response = await getQuestionsAsync(1, 8, "recent");
   return {
-    props: { questions: response.isSuccess ? response.result : [] }
+    props: { questions: response.isSuccess ? response.result.content : [] }
   };
 }
 
