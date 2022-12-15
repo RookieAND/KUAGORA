@@ -21,7 +21,7 @@ export const getQuestionByWord = async (
     },
     popular: {
       subQuery: 'likeCount',
-      query: 'question.likeCount',
+      query: 'topQuestion.likeCount',
     },
   };
 
@@ -83,7 +83,7 @@ export const getQuestionByKeyword = async (
     },
     popular: {
       subQuery: 'likeCount',
-      query: 'question.likeCount',
+      query: 'topQuestion.likeCount',
     },
   };
 
@@ -97,6 +97,8 @@ export const getQuestionByKeyword = async (
       'question.createdAt',
       'user.uuid',
       'user.nickname',
+      'keyword.id',
+      'keyword.content',
     ])
     .innerJoin(
       (qb) =>
@@ -120,6 +122,7 @@ export const getQuestionByKeyword = async (
     )
     .leftJoin('question.user', 'user')
     .leftJoinAndSelect('question.keywords', 'keywords')
+    .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
     .orderBy(sortType[option].query, 'DESC')
     .offset((page - 1) * amount)

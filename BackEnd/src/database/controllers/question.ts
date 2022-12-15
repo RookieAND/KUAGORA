@@ -9,6 +9,73 @@ import User from '@/database/entity/user';
 import { BadRequestError } from '@/errors/definedErrors';
 
 /**
+ * 주어진 조건에 맞춰 질문글 목록을 보여주는 함수 getQuestionList
+ * @param page 질문글을 보여줄 페이지
+ * @param amount 하나의 페이지에 보여줄 질문글의 수량
+ * @param sortOption 질문글을 나열시킬 기준 (인기 순, 최신 순)
+ */
+export const getQuestionList = async (
+  page: number,
+  amount: number,
+  sortOption: 'recent' | 'popular',
+) => {
+  const sortType = {
+    recent: {
+      subQuery: 'subQuestion.createdAt',
+      query: 'question.createdAt',
+    },
+    popular: {
+      subQuery: 'likeCount',
+      query: 'topQuestion.likeCount',
+    },
+  };
+
+  let questionDatas = undefined;
+  questionDatas = await getRepository(Question)
+    .createQueryBuilder('question')
+    .select([
+      'question.id',
+      'question.title',
+      'question.content',
+      'question.state',
+      'question.createdAt',
+      'user.uuid',
+      'user.nickname',
+      'keyword.id',
+      'keyword.content',
+    ])
+    .innerJoin(
+      (qb) =>
+        qb
+          .select([
+            'subQuestion.id',
+            'COUNT(likes.id) AS likeCount',
+            'COUNT(comments.id) AS CommentCount',
+          ])
+          .from(Question, 'subQuestion')
+          .leftJoin('subQuestion.comments', 'comments')
+          .leftJoin('subQuestion.likes', 'likes')
+          .groupBy('subQuestion.id')
+          .orderBy(sortType[sortOption].subQuery, 'DESC')
+          .offset((page - 1) * amount)
+          .limit(amount),
+      'topQuestion',
+      // 서브 쿼리 alias 내의 column 사용 시, 언더바로 연결지어야 함.
+      'topQuestion.subQuestion_id = question.id',
+    )
+    .leftJoin('question.user', 'user')
+    .leftJoin('question.keywords', 'keyword')
+    .loadRelationCountAndMap('question.likeCount', 'question.likes')
+    .loadRelationCountAndMap('question.commentCount', 'question.comments')
+    .orderBy(sortType[sortOption].query, 'DESC')
+    .offset((page - 1) * amount)
+    .limit(amount)
+    .getMany();
+
+  return questionDatas;
+};
+
+/**
  * 질문글의 id를 통해 정보를 로드하는 함수 getQuestionById
  * @param questionId 찾으려는 질문글의 ID
  * @param uuid 유저의 uuid
@@ -108,73 +175,6 @@ export const getQuestionListByUser = async (
   }
 
   return questionsByUser;
-};
-
-/**
- * 주어진 조건에 맞춰 질문글 목록을 보여주는 함수 getQuestionList
- * @param page 질문글을 보여줄 페이지
- * @param amount 하나의 페이지에 보여줄 질문글의 수량
- * @param option 질문글을 나열시킬 기준 (인기 순, 최신 순)
- */
-export const getQuestionList = async (
-  page: number,
-  amount: number,
-  sortOption: 'recent' | 'popular',
-) => {
-  const sortType = {
-    recent: {
-      subQuery: 'subQuestion.createdAt',
-      query: 'question.createdAt',
-    },
-    popular: {
-      subQuery: 'likeCount',
-      query: 'question.likeCount',
-    },
-  };
-
-  let questionDatas = undefined;
-  questionDatas = await getRepository(Question)
-    .createQueryBuilder('question')
-    .select([
-      'question.id',
-      'question.title',
-      'question.content',
-      'question.state',
-      'question.createdAt',
-      'user.uuid',
-      'user.nickname',
-      'keyword.id',
-      'keyword.content',
-    ])
-    .innerJoin(
-      (qb) =>
-        qb
-          .select([
-            'subQuestion.id',
-            'COUNT(likes.id) AS likeCount',
-            'COUNT(comments.id) AS CommentCount',
-          ])
-          .from(Question, 'subQuestion')
-          .leftJoin('subQuestion.comments', 'comments')
-          .leftJoin('subQuestion.likes', 'likes')
-          .groupBy('subQuestion.id')
-          .orderBy(sortType[sortOption].subQuery, 'DESC')
-          .offset((page - 1) * amount)
-          .limit(amount),
-      'topQuestion',
-      // 서브 쿼리 alias 내의 column 사용 시, 언더바로 연결지어야 함.
-      'topQuestion.subQuestion_id = question.id',
-    )
-    .leftJoin('question.user', 'user')
-    .leftJoin('question.keywords', 'keyword')
-    .loadRelationCountAndMap('question.likeCount', 'question.likes')
-    .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[sortOption].query, 'DESC')
-    .offset((page - 1) * amount)
-    .limit(amount)
-    .getMany();
-
-  return questionDatas;
 };
 
 /**
