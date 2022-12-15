@@ -12,7 +12,19 @@ export const getQuestionByWord = async (
   word: string,
   page: number,
   amount: number,
+  option: 'recent' | 'popular',
 ) => {
+  const sortType = {
+    recent: {
+      subQuery: 'subQuestion.createdAt',
+      query: 'question.createdAt',
+    },
+    popular: {
+      subQuery: 'likeCount',
+      query: 'question.likeCount',
+    },
+  };
+
   let questionDatas = undefined;
   questionDatas = await getRepository(Question)
     .createQueryBuilder('question')
@@ -40,6 +52,7 @@ export const getQuestionByWord = async (
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
+          .orderBy(sortType[option].subQuery, 'DESC')
           .offset((page - 1) * amount)
           .limit(amount),
       'topQuestion',
@@ -49,7 +62,7 @@ export const getQuestionByWord = async (
     .leftJoin('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy('question.createdAt', 'DESC')
+    .orderBy(sortType[option].query, 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
@@ -61,7 +74,19 @@ export const getQuestionByKeyword = async (
   keyword: string,
   page: number,
   amount: number,
+  option: 'recent' | 'popular',
 ) => {
+  const sortType = {
+    recent: {
+      subQuery: 'subQuestion.createdAt',
+      query: 'question.createdAt',
+    },
+    popular: {
+      subQuery: 'likeCount',
+      query: 'question.likeCount',
+    },
+  };
+
   const searchQuestionResult = await getRepository(Question)
     .createQueryBuilder('question')
     .select([
@@ -76,22 +101,27 @@ export const getQuestionByKeyword = async (
     .innerJoin(
       (qb) =>
         qb
-          .select(['subQuestion.id', 'COUNT(comments.id) AS commentCount'])
+          .select([
+            'subQuestion.id',
+            'COUNT(likes.id) AS likeCount',
+            'COUNT(comments.id) AS CommentCount',
+          ])
           .from(Question, 'subQuestion')
           .where('keywords.content = :keyword', { keyword })
           .leftJoin('subQuestion.comments', 'comments')
+          .leftJoin('subQuestion.likes', 'likes')
           .leftJoin('subQuestion.keywords', 'keywords')
           .groupBy('subQuestion.id')
+          .orderBy(sortType[option].subQuery, 'DESC')
           .offset((page - 1) * amount)
-          .limit(amount)
-          .orderBy('subQuestion.createdAt', 'DESC'),
+          .limit(amount),
       'topQuestion',
       'topQuestion.subQuestion_id = question.id',
     )
     .leftJoin('question.user', 'user')
     .leftJoinAndSelect('question.keywords', 'keywords')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy('question.createdAt', 'DESC')
+    .orderBy(sortType[option].query, 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();

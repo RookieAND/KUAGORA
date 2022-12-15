@@ -47,17 +47,23 @@ export const getQuestionById = async (
  * @param uuid 질문글을 작성한 유저의 uuid
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
- * @param option 질문글을 나열시킬 기준 (인기 순, 최신 순)
+ * @param sortOption 질문글을 나열시킬 기준 (인기 순, 최신 순)
  */
 export const getQuestionListByUser = async (
   uuid: string,
   page: number,
   amount: number,
-  option: 'popular' | 'recent',
+  sortOption: 'popular' | 'recent',
 ) => {
   const sortType = {
-    recent: 'question.createdAt',
-    popular: 'likeCount',
+    recent: {
+      subQuery: 'subQuestion.createdAt',
+      query: 'question.createdAt',
+    },
+    popular: {
+      subQuery: 'likeCount',
+      query: 'question.likeCount',
+    },
   };
 
   const questionsByUser = getRepository(Question)
@@ -85,13 +91,13 @@ export const getQuestionListByUser = async (
           .groupBy('subQuestion.id')
           .offset((page - 1) * amount)
           .limit(amount)
-          .orderBy(sortType[option], 'DESC'),
+          .orderBy(sortType[sortOption].subQuery, 'DESC'),
       'topQuestion',
       'topQuestion.subQuestion_id == question.id',
     )
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[option], 'DESC')
+    .orderBy(sortType[sortOption].query, 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
@@ -113,11 +119,17 @@ export const getQuestionListByUser = async (
 export const getQuestionList = async (
   page: number,
   amount: number,
-  option: 'recent' | 'popular',
+  sortOption: 'recent' | 'popular',
 ) => {
   const sortType = {
-    recent: 'question.createdAt',
-    popular: 'likeAmount',
+    recent: {
+      subQuery: 'subQuestion.createdAt',
+      query: 'question.createdAt',
+    },
+    popular: {
+      subQuery: 'likeCount',
+      query: 'question.likeCount',
+    },
   };
 
   let questionDatas = undefined;
@@ -146,6 +158,7 @@ export const getQuestionList = async (
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
+          .orderBy(sortType[sortOption].subQuery, 'DESC')
           .offset((page - 1) * amount)
           .limit(amount),
       'topQuestion',
@@ -156,7 +169,7 @@ export const getQuestionList = async (
     .leftJoin('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[option], 'DESC')
+    .orderBy(sortType[sortOption].query, 'DESC')
     .offset((page - 1) * amount)
     .limit(amount)
     .getMany();
