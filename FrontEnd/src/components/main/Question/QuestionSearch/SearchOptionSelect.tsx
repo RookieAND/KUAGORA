@@ -21,7 +21,6 @@ const SearchOptionSelect = ({ selectType }: SearchOptionSelectProps) => {
     if (selectedOptionIdx !== idx) {
       setSelectedOptionIdx(idx);
       router.push({
-        pathname: "/questions",
         query: { [selectType]: selectOptionList[idx].option }
       });
     }
