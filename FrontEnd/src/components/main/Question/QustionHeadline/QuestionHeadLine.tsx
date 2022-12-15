@@ -1,15 +1,17 @@
 import * as style from "./QuestionHeadLine.style";
-import { useRouter } from "next/router";
-
 import HeadLineImg from "@/assets/images/Headline.jpg";
 
-const QuestionHeadline = () => {
-  const router = useRouter();
+interface QuestionHeadlineProps {
+  title: string;
+  subtitle: string;
+}
+
+const QuestionHeadline = ({ title, subtitle }: QuestionHeadlineProps) => {
   return (
     <style.Wrapper image={HeadLineImg}>
       <style.TextBox>
-        <style.MainText>Question List</style.MainText>
-        <style.SubText>학우 분들이 남긴 다양한 질문을 확인해보세요.</style.SubText>
+        <style.MainText>{title}</style.MainText>
+        <style.SubText>{subtitle}</style.SubText>
       </style.TextBox>
     </style.Wrapper>
   );

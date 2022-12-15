@@ -1,48 +1,80 @@
 import Head from "next/head";
 
-import { useEffect, useState } from "react";
+import { useInfiniteQuery } from "react-query";
+import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { getQuestionListAsync, QuestionPostType } from "@/apis/question";
 
+import { getQuestionsAsync, QuestionSortType, QuestionSearchType, QuestionPostType } from "@/apis/question";
+import { SelectType } from "@/constants/search";
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
-import { searchQuestionByWord, searchQuestionByKeyword } from "@/apis/question";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
-interface QuestionsPageProps {
-  recentQuestions: QuestionPostType[];
+interface SearchFilterType {
+  search: QuestionSearchType;
+  sort: QuestionSortType;
 }
 
-export async function getStaticProps() {
-  const response = await getQuestionListAsync(1, 12, "recent");
-  return {
-    props: { recentQuestions: response.isSuccess ? response.result : [] }
-  };
-}
-
-const Questions = ({ recentQuestions }: QuestionsPageProps) => {
-  const [searchValue, setSearchValue] = useState("");
-  const [questions, setQuestions] = useState<QuestionPostType[]>(recentQuestions);
+const Questions = () => {
   const router = useRouter();
+  const targetRef = useRef(null);
 
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchOption = (router?.query?.search || "title") as QuestionSearchType;
+  const sortOption = (router?.query?.sort || "recent") as QuestionSortType;
 
-    const getSearchData = async () => {
-      const queryWord = router.query.word as string;
-      if (!queryWord) {
-        return;
+  const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
+
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ["question", sortOption],
+    /**
+     * useInfiniteQuery 쿼리에 할당된 콜백 함수
+     * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
+     */
+    ({ pageParam = 1 }) => {
+      if (!router.isReady) {
+        return undefined;
       }
-      const initSearchData = await searchQuestionByKeyword(queryWord, 1, 16);
-      setQuestions(prev => (initSearchData.isSuccess ? initSearchData.result : prev));
-    };
+      return getQuestionsAsync(pageParam, amount, sortOption);
+    },
+    {
+      /**
+       * getNextPageParam : 다음 API를 요청할 때 사용될 pageParam의 값을 지정 (만약 마지막 페이지일 경우, undefined)
+       * 파라미터로는 lastPage (호출된 가장 마지막에 있는 페이지 데이터), allPage (호출된 모든 페이지 데이터) 를 제공
+       */
+      getNextPageParam: lastPage => {
+        if (!lastPage || !lastPage.isSuccess || lastPage.result.isLast) {
+          return undefined;
+        }
+        return lastPage.result;
+      },
+      staleTime: 30000
+    }
+  );
 
-    getSearchData();
-  }, [router.isReady, router.query]);
-
-  const changeSearchValue = (word: string) => {
-    setSearchValue(word);
+  // useInfiniteScroll에 넘길 Callback, 다음 페이지가 존재할 경우 이를 불러오는 함수.
+  const fetchNextQuestions = async () => {
+    if (hasNextPage) {
+      await fetchNextPage();
+    }
   };
+
+  // 질문글 검색 바의 Value를 새롭게 변경해주는 함수.
+  const changeSearchQuery = (newQuery: string) => {
+    setSearchQuery(newQuery);
+  };
+
+  useInfiniteScroll(targetRef, fetchNextQuestions);
+
+  // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
+  // 각 페이지 별 질문글 데이터는 1차원 배열에 담겨 있으므로, flat을 통해 이를 하나로 묶어야 함.
+  const questions: QuestionPostType[] = [];
+  data?.pages.map(apiRes => {
+    if (apiRes?.isSuccess) {
+      questions.push(...apiRes.result.content);
+    }
+  });
+
+  console.log(data);
 
   return (
     <>
@@ -53,7 +85,14 @@ const Questions = ({ recentQuestions }: QuestionsPageProps) => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <QuestionsTemplate questions={questions} searchValue={searchValue} changeSearchValue={changeSearchValue} />
+      <QuestionsTemplate
+        questions={questions}
+        questionRef={targetRef}
+        searchQuery={searchQuery}
+        sortOption={sortOption}
+        searchOption={searchOption}
+        changeSearchQuery={changeSearchQuery}
+      />
     </>
   );
 };

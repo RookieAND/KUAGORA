@@ -1,25 +1,27 @@
-import * as style from "./QustionPost.style";
-
+import { RefObject } from "react";
 import { QuestionPostType } from "~/src/apis/question";
-import QuestionCard from "../QuestionCard";
+
+import * as style from "./QustionPost.style";
+import QuestionCard from "@/components/main/Question/QuestionCard";
 
 interface QuestionPostProps {
   questions: QuestionPostType[];
+  questionRef: RefObject<HTMLDivElement>;
 }
 
-const QuestionPost = ({ questions }: QuestionPostProps) => {
+const QuestionPost = ({ questions, questionRef }: QuestionPostProps) => {
   return (
-    <style.Wrapper>
+    <style.Wrapper ref={questionRef}>
       {questions.length > 0 ? (
-        questions.map((post: QuestionPostType) => (
+        questions.map(({ title, likeCount, commentCount, state, keywords, id }: QuestionPostType) => (
           <QuestionCard
-            title={post.title}
-            likeCount={post.likeCount}
-            commentCount={post.commentCount}
-            state={post.state}
-            keywords={post.keywords}
-            id={post.id}
-            key={post.id}
+            title={title}
+            likeCount={likeCount}
+            commentCount={commentCount}
+            state={state}
+            keywords={keywords}
+            id={id}
+            key={id}
           />
         ))
       ) : (
