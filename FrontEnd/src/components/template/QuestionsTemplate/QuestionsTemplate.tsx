@@ -1,6 +1,5 @@
 import { RefObject } from "react";
 import { QuestionPostType, QuestionSearchType, QuestionSortType } from "@/apis/question";
-import { SelectType } from "@/constants/search";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
