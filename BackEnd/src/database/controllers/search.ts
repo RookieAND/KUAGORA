@@ -63,8 +63,6 @@ export const getQuestionByWord = async (
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
     .orderBy(sortType[option].query, 'DESC')
-    .offset((page - 1) * amount)
-    .limit(amount)
     .getMany();
 
   return questionDatas;
@@ -125,8 +123,6 @@ export const getQuestionByKeyword = async (
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
     .orderBy(sortType[option].query, 'DESC')
-    .offset((page - 1) * amount)
-    .limit(amount)
     .getMany();
 
   return searchQuestionResult;
