@@ -10,8 +10,8 @@ interface QuestionsPageProps {
 
 export async function getServerSideProps() {
   const [recentQuestions, popularQuestions] = await Promise.all([
-    getQuestionsAsync(1, 8, "recent"),
-    getQuestionsAsync(1, 8, "popular")
+    getQuestionsAsync(1, 8, "recent", "progressed"),
+    getQuestionsAsync(1, 8, "popular", "completed")
   ]);
 
   return {

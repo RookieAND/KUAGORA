@@ -4,27 +4,29 @@ import { useInfiniteQuery } from "react-query";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
-import { getQuestionsAsync, QuestionSortType, QuestionSearchType } from "@/apis/question";
+import { getQuestionsAsync, QuestionSortType, QuestionSearchType, QuestionAnsweredType } from "@/apis/question";
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
 const Questions = () => {
   const router = useRouter();
   const questionRef = useRef(null);
-
   const [searchQuery, setSearchQuery] = useState("");
-  const searchOption = (router?.query?.search || "title") as QuestionSearchType;
-  const sortOption = (router?.query?.sort || "recent") as QuestionSortType;
+
+  const { search, sort, answered } = router.query;
+  const searchOption = (search || "title") as QuestionSearchType;
+  const sortOption = (sort || "recent") as QuestionSortType;
+  const answeredOption = (answered || "both") as QuestionAnsweredType;
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
 
-  const { data, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["question", { sortOption }],
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ["question", { sortOption, answeredOption }],
     /**
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
      */
     ({ pageParam = 1 }) => {
-      return getQuestionsAsync(pageParam, amount, sortOption);
+      return getQuestionsAsync(pageParam, amount, sortOption, answeredOption);
     },
     {
       /**
