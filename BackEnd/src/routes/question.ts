@@ -236,6 +236,7 @@ questionRouter.delete(
     }
 
     await removeLike(questionId, uuid);
+    res.end();
   }),
 );
 

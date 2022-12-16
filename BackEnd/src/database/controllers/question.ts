@@ -494,8 +494,6 @@ export const removeLike = async (questionId: number, uuid: string) => {
     .andWhere('like.user_uuid = :uuid', { uuid })
     .execute();
 
-  console.log(removeLikeResult);
-
   if (removeLikeResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 게시글의 좋아요를 수정하려 했거나, UUID가 유효하지 않습니다.',
