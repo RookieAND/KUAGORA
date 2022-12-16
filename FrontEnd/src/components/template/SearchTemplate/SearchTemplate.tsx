@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { QuestionPostType, QuestionSearchType, QuestionSortType } from "@/apis/question";
+import { QuestionPostType, QuestionSearchType } from "@/apis/question";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
@@ -10,24 +10,19 @@ import QuestionPost from "@/components/main/Question/QuestionPost";
 interface SearchTemplateProps {
   questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
-  searchQuery: string;
-  changeSearchQuery: (newQuery: string) => void;
+  searchOption: QuestionSearchType;
+  searchedQuery: string;
 }
 
-const SearchTemplate = ({
-  questions,
-  questionRef,
-  searchQuery,
-  changeSearchQuery
-}: SearchTemplateProps) => {
+const SearchTemplate = ({ questions, questionRef, searchOption, searchedQuery }: SearchTemplateProps) => {
   return (
     <>
       <Navbar />
-      <QuestionHeadline title={"Search Result"} subtitle={`${searchQuery} 에 대한 검색 결과입니다.`} />
-      <QuestionSearch
-        searchQuery={searchQuery}
-        changeSearchQuery={changeSearchQuery}
+      <QuestionHeadline
+        title={"Search Result"}
+        subtitle={`[${searchedQuery}] 에 대한 ${searchOption === "keyword" ? "키워드" : "제목"} 검색 결과입니다.`}
       />
+      <QuestionSearch searchedQuery={searchOption === "title" ? searchedQuery : `#${searchedQuery}`} />
       <QuestionPost questions={questions} questionRef={questionRef} />
       <Footer />
     </>

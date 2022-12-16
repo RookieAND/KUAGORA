@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 import { useInfiniteQuery } from "react-query";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/router";
 
 import { QuestionAnsweredType, QuestionSortType, QuestionSearchType, getQuestionsByQueryAsync } from "@/apis/question";
@@ -12,7 +12,6 @@ import SearchTemplate from "@/components/template/SearchTemplate";
 const Search = () => {
   const router = useRouter();
   const questionRef = useRef(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const { query, search, sort, answered } = router.query;
   const searchedQuery = (query || "") as string;
@@ -22,7 +21,7 @@ const Search = () => {
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["question", { sortOption, searchOption, answeredOption }],
+    ["question", { searchedQuery, sortOption, searchOption, answeredOption }],
     /**
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
@@ -52,11 +51,6 @@ const Search = () => {
     }
   };
 
-  // 질문글 검색 바의 Value를 새롭게 변경해주는 함수.
-  const changeSearchQuery = (newQuery: string) => {
-    setSearchQuery(newQuery);
-  };
-
   useInfiniteScroll(questionRef, fetchNextQuestions);
 
   // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
@@ -75,8 +69,8 @@ const Search = () => {
       <SearchTemplate
         questions={questions}
         questionRef={questionRef}
-        searchQuery={searchQuery}
-        changeSearchQuery={changeSearchQuery}
+        searchOption={searchOption}
+        searchedQuery={searchedQuery}
       />
     </>
   );
