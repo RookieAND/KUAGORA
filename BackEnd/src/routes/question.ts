@@ -1,6 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 
 import {
+  SortOptionType,
+  AnsweredOptionType,
+} from '@/constants/question';
+import {
   addQuestion,
   getQuestionList,
   getQuestionById,

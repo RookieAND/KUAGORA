@@ -1,4 +1,11 @@
 import { getRepository } from 'typeorm';
+
+import {
+  SORT_TYPE,
+  ANSWERED_TYPE,
+  SortOptionType,
+  AnsweredOptionType,
+} from '@/constants/question';
 import Question from '@/database/entity/question';
 
 /**
@@ -12,8 +19,8 @@ export const getQuestionByWord = async (
   word: string,
   page: number,
   amount: number,
-  sortOption: 'recent' | 'popular',
-  answeredOption: 'progressed' | 'completed' | 'both',
+  sortOption: SortOptionType,
+  answeredOption: AnsweredOptionType,
 ) => {
   const sortType = {
     recent: {
@@ -56,12 +63,12 @@ export const getQuestionByWord = async (
           .from(Question, 'subQuestion')
           .where('subQuestion.title like :word', { word: `%${word}%` }) // like 절 사용법은 좌측과 같음.
           .andWhere('subQuestion.state IN(:...answeredStates)', {
-            answeredStates: answeredType[answeredOption],
+            answeredStates: ANSWERED_TYPE[answeredOption],
           })
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
-          .orderBy(sortType[sortOption].subQuery, 'DESC')
+          .orderBy(SORT_TYPE[sortOption].subQuery, 'DESC')
           .offset((page - 1) * amount)
           .limit(amount),
       'topQuestion',
@@ -71,7 +78,7 @@ export const getQuestionByWord = async (
     .leftJoin('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[sortOption].query, 'DESC')
+    .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
   return questionDatas;
@@ -81,25 +88,9 @@ export const getQuestionByKeyword = async (
   keyword: string,
   page: number,
   amount: number,
-  sortOption: 'recent' | 'popular',
-  answeredOption: 'progressed' | 'completed' | 'both',
+  sortOption: SortOptionType,
+  answeredOption: AnsweredOptionType,
 ) => {
-  const sortType = {
-    recent: {
-      subQuery: 'subQuestion.createdAt',
-      query: 'question.createdAt',
-    },
-    popular: {
-      subQuery: 'likeCount',
-      query: 'topQuestion.likeCount',
-    },
-  };
-  const answeredType = {
-    progressed: ['progressed'],
-    completed: ['completed'],
-    both: ['progressed', 'completed'],
-  };
-
   const searchQuestionResult = await getRepository(Question)
     .createQueryBuilder('question')
     .select([
@@ -124,13 +115,13 @@ export const getQuestionByKeyword = async (
           .from(Question, 'subQuestion')
           .where('keywords.content = :keyword', { keyword })
           .andWhere('subQuestion.state IN(:...answeredStates)', {
-            answeredStates: answeredType[answeredOption],
+            answeredStates: ANSWERED_TYPE[answeredOption],
           })
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .leftJoin('subQuestion.keywords', 'keywords')
           .groupBy('subQuestion.id')
-          .orderBy(sortType[sortOption].subQuery, 'DESC')
+          .orderBy(SORT_TYPE[sortOption].subQuery, 'DESC')
           .offset((page - 1) * amount)
           .limit(amount),
       'topQuestion',
@@ -140,7 +131,7 @@ export const getQuestionByKeyword = async (
     .leftJoinAndSelect('question.keywords', 'keywords')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[sortOption].query, 'DESC')
+    .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
   return searchQuestionResult;

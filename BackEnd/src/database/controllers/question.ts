@@ -6,6 +6,7 @@ import Like from '@/database/entity/like';
 import Question from '@/database/entity/question';
 import User from '@/database/entity/user';
 
+import { SORT_TYPE, ANSWERED_TYPE, SortOptionType, AnsweredOptionType } from '@/constants/question';
 import { BadRequestError } from '@/errors/definedErrors';
 
 /**
@@ -18,25 +19,9 @@ import { BadRequestError } from '@/errors/definedErrors';
 export const getQuestionList = async (
   page: number,
   amount: number,
-  sortOption: 'recent' | 'popular',
-  answeredOption: 'progressed' | 'completed' | 'both',
+  sortOption: SortOptionType,
+  answeredOption: AnsweredOptionType,
 ) => {
-  const sortType = {
-    recent: {
-      subQuery: 'subQuestion.createdAt',
-      query: 'question.createdAt',
-    },
-    popular: {
-      subQuery: 'likeCount',
-      query: 'topQuestion.likeCount',
-    },
-  };
-  const answeredType = {
-    progressed: ['progressed'],
-    completed: ['completed'],
-    both: ['progressed', 'completed'],
-  };
-
   let questionDatas = undefined;
   questionDatas = await getRepository(Question)
     .createQueryBuilder('question')
@@ -60,7 +45,7 @@ export const getQuestionList = async (
             'COUNT(comments.id) AS CommentCount',
           ])
           .where('subQuestion.state IN(:...answeredStates)', {
-            answeredStates: answeredType[answeredOption],
+            answeredStates: ANSWERED_TYPE[answeredOption],
           })
           .from(Question, 'subQuestion')
           .leftJoin('subQuestion.comments', 'comments')
@@ -68,7 +53,7 @@ export const getQuestionList = async (
           .groupBy('subQuestion.id')
           .offset((page - 1) * amount)
           .limit(amount)
-          .orderBy(sortType[sortOption].subQuery, 'DESC'),
+          .orderBy(SORT_TYPE[sortOption].subQuery, 'DESC'),
       'topQuestion',
       // 서브 쿼리 alias 내의 column 사용 시, 언더바로 연결지어야 함.
       'topQuestion.subQuestion_id = question.id',
@@ -77,10 +62,9 @@ export const getQuestionList = async (
     .leftJoin('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[sortOption].query, 'DESC')
+    .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
-  console.log(answeredType[answeredOption]);
   return questionDatas;
 };
 
