@@ -6,6 +6,7 @@ import Like from '@/database/entity/like';
 import Question from '@/database/entity/question';
 import User from '@/database/entity/user';
 
+import { SORT_TYPE, ANSWERED_TYPE, SortOptionType, AnsweredOptionType } from '@/constants/question';
 import { BadRequestError } from '@/errors/definedErrors';
 
 /**
@@ -13,23 +14,14 @@ import { BadRequestError } from '@/errors/definedErrors';
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
  * @param sortOption 질문글을 나열시킬 기준 (인기 순, 최신 순)
+ * @param answeredOption 질문글의 채택 여부 (미채택, 채택, 둘 다)
  */
 export const getQuestionList = async (
   page: number,
   amount: number,
-  sortOption: 'recent' | 'popular',
+  sortOption: SortOptionType,
+  answeredOption: AnsweredOptionType,
 ) => {
-  const sortType = {
-    recent: {
-      subQuery: 'subQuestion.createdAt',
-      query: 'question.createdAt',
-    },
-    popular: {
-      subQuery: 'likeCount',
-      query: 'topQuestion.likeCount',
-    },
-  };
-
   let questionDatas = undefined;
   questionDatas = await getRepository(Question)
     .createQueryBuilder('question')
@@ -52,13 +44,16 @@ export const getQuestionList = async (
             'COUNT(likes.id) AS likeCount',
             'COUNT(comments.id) AS CommentCount',
           ])
+          .where('subQuestion.state IN(:...answeredStates)', {
+            answeredStates: ANSWERED_TYPE[answeredOption],
+          })
           .from(Question, 'subQuestion')
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
           .offset((page - 1) * amount)
           .limit(amount)
-          .orderBy(sortType[sortOption].subQuery, 'DESC'),
+          .orderBy(SORT_TYPE[sortOption].subQuery, 'DESC'),
       'topQuestion',
       // 서브 쿼리 alias 내의 column 사용 시, 언더바로 연결지어야 함.
       'topQuestion.subQuestion_id = question.id',
@@ -67,7 +62,7 @@ export const getQuestionList = async (
     .leftJoin('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
-    .orderBy(sortType[sortOption].query, 'DESC')
+    .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
   return questionDatas;
