@@ -35,9 +35,8 @@ const Questions = () => {
         if (!lastPage || !lastPage.isSuccess || lastPage.result.isLast) {
           return undefined;
         }
-        return lastPage.result;
-      },
-      staleTime: 30000
+        return lastPage.result.nextPage;
+      }
     }
   );
 
@@ -57,11 +56,7 @@ const Questions = () => {
 
   // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
   // 각 페이지 별 질문글 데이터는 1차원 배열에 담겨 있으므로, flat을 통해 이를 하나로 묶어야 함.
-  const questions = !isFetching
-    ? data?.pages.map(pageResult => (pageResult?.isSuccess ? pageResult.result.content : [])).flat()
-    : [];
-
-  console.log(data);
+  const questions = data?.pages.map(pageResult => (pageResult?.isSuccess ? pageResult.result.content : [])).flat();
 
   return (
     <>

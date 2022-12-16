@@ -23,7 +23,6 @@ export const QuestionBox = styled.div`
       grid-template-rows: repeat(2, 1fr);
 
       width: 100%;
-      height: 480px;
 
       background: ${colors.mono.gray1}99;
     `;
