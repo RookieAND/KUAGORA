@@ -21,7 +21,7 @@ const Search = () => {
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["question", { sortOption, searchOption, answeredOption }],
+    ["question", { searchedQuery, sortOption, searchOption, answeredOption }],
     /**
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
@@ -66,7 +66,12 @@ const Search = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <SearchTemplate questions={questions} questionRef={questionRef} searchedQuery={searchedQuery} />
+      <SearchTemplate
+        questions={questions}
+        questionRef={questionRef}
+        searchOption={searchOption}
+        searchedQuery={searchedQuery}
+      />
     </>
   );
 };
