@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 import { useInfiniteQuery } from "react-query";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/router";
 
 import { QuestionAnsweredType, QuestionSortType, QuestionSearchType, getQuestionsByQueryAsync } from "@/apis/question";
@@ -12,7 +12,6 @@ import SearchTemplate from "@/components/template/SearchTemplate";
 const Search = () => {
   const router = useRouter();
   const questionRef = useRef(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const { query, search, sort, answered } = router.query;
   const searchedQuery = (query || "") as string;
@@ -52,11 +51,6 @@ const Search = () => {
     }
   };
 
-  // 질문글 검색 바의 Value를 새롭게 변경해주는 함수.
-  const changeSearchQuery = (newQuery: string) => {
-    setSearchQuery(newQuery);
-  };
-
   useInfiniteScroll(questionRef, fetchNextQuestions);
 
   // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
@@ -72,12 +66,7 @@ const Search = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <SearchTemplate
-        questions={questions}
-        questionRef={questionRef}
-        searchQuery={searchQuery}
-        changeSearchQuery={changeSearchQuery}
-      />
+      <SearchTemplate questions={questions} questionRef={questionRef} searchedQuery={searchedQuery} />
     </>
   );
 };
