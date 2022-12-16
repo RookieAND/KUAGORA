@@ -62,6 +62,10 @@ export interface AddQuestionResultType {
   questionId: number;
 }
 
+export interface AddLikesResultType {
+  likesId: number;
+}
+
 /**
  * 전체 질문글 중, 특정 검색의 결과를 옵션에 맞게 정렬하여 목록으로 가져오는 함수
  * @param page 질문글을 보여줄 페이지
@@ -135,7 +139,7 @@ export const getQuestionsAsync = async (
  * @returns 질문글 내에 담긴 정보
  */
 export const getQuestionAsync = async (questionId: number) => {
-  const response = await getAsync<QuestionDetailType, unknown>(`/question/${questionId}`);
+  const response = await getAsync<QuestionDetailType, any>(`/question/${questionId}`);
   return response;
 };
 
@@ -231,5 +235,31 @@ export const getKeywordsAsync = async (questionId: number) => {
  */
 export const getLikesAsync = async (questionId: number) => {
   const response = await getAsync<LikeDataType[], null>(`question/${questionId}/like`);
+  return response;
+};
+
+/**
+ * 질문글에 새로운 좋아요 정보를 추가하는 함수
+ * @param questionId 좋아요 정보를 추가할 질문글 ID
+ * @param token 좋아요 정보를 추가한 유저의 token
+ * @returns 새롭게 추가된 좋아요 정보의 ID
+ */
+export const addLikesAsync = async (questionId: number, token: string) => {
+  const response = await postAsync<AddLikesResultType, null>(`question/${questionId}/like`, null, {
+    headers: { authorization: token }
+  });
+  return response;
+};
+
+/**
+ * 유저가 이전에 달았던 질문글의 좋아요 정보를 삭제하는 함수
+ * @param questionId 좋아요 정보를 삭제할 질문글 ID
+ * @param token 좋아요 정보를 삭제한 유저의 token
+ * @returns 좋아요 정보 삭제 여부 (isSuccess)
+ */
+export const deleteLikesAsync = async (questionId: number, token: string) => {
+  const response = await deleteAsync<null, null>(`question/${questionId}/like`, {
+    headers: { authorization: token }
+  });
   return response;
 };
