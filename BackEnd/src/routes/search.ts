@@ -17,19 +17,24 @@ searchRouter.get(
       amount = '12',
       query = '',
       sortOption = 'recent',
+      answeredOption = 'both',
     } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
 
     if (
       pageNum > 0 &&
       amountNum > 0 &&
-      (sortOption === 'recent' || sortOption === 'popular')
+      (sortOption === 'recent' || sortOption === 'popular') &&
+      (answeredOption == 'progressed' ||
+        answeredOption == 'completed' ||
+        answeredOption == 'both')
     ) {
       const questions = await getQuestionByWord(
         query as string,
         pageNum,
         amountNum,
         sortOption,
+        answeredOption,
       );
       return res.status(200).json(questions);
     }
@@ -48,18 +53,23 @@ searchRouter.get(
       amount = '12',
       query = '',
       sortOption = 'recent',
+      answeredOption = 'both',
     } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
     if (
       pageNum > 0 &&
       amountNum > 0 &&
-      (sortOption === 'recent' || sortOption === 'popular')
+      (sortOption === 'recent' || sortOption === 'popular') &&
+      (answeredOption == 'progressed' ||
+        answeredOption == 'completed' ||
+        answeredOption == 'both')
     ) {
       const questions = await getQuestionByKeyword(
         query as string,
         pageNum,
         amountNum,
         sortOption,
+        answeredOption,
       );
       return res.status(200).json(questions);
     }
