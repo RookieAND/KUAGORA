@@ -34,6 +34,7 @@ const QuestionSearch = ({ searchQuery, searchOption, sortOption, changeSearchQue
     <style.Wrapper>
       <SearchOptionSelect selectType="search" />
       <SearchOptionSelect selectType="sort" />
+      <SearchOptionSelect selectType="answered" />
       <style.SearchBar>
         <style.IconWrap>
           <SearchSvg />
