@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { QuestionSearchType, QuestionSortType, QuestionAnsweredType } from "@/apis/question";
 import { SelectType } from "@/constants/search";
 
 import * as style from "./QuestionSearch.style";
