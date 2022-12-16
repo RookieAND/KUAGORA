@@ -22,7 +22,7 @@ const SearchTemplate = ({ questions, questionRef, searchOption, searchedQuery }:
         title={"Search Result"}
         subtitle={`[${searchedQuery}] 에 대한 ${searchOption === "keyword" ? "키워드" : "제목"} 검색 결과입니다.`}
       />
-      <QuestionSearch searchedQuery={searchedQuery} />
+      <QuestionSearch searchedQuery={searchOption === "title" ? searchedQuery : `#${searchedQuery}`} />
       <QuestionPost questions={questions} questionRef={questionRef} />
       <Footer />
     </>
