@@ -3,18 +3,20 @@ import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
-import { getQuestionAsync, QuestionDetailType, LikeDataType, CommentDataType, getCommentsAsync } from "@/apis/question";
+import { getQuestionAsync, QuestionDetailType, LikeDataType, addLikesAsync, deleteLikesAsync } from "@/apis/question";
 import QuestionsDetailTemplate from "@/components/template/QuestionDetailTemplate";
-import { setUserDataAtom } from "@/stores/actions";
+import { setUserDataAtom, accessTokenAtom } from "@/stores/actions";
+import { access } from "fs";
 
 const QuestionDetail = () => {
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
   const [userData] = useAtom(setUserDataAtom);
+  const [accessToken] = useAtom(accessTokenAtom);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [detailContent, setDetailContent] = useState<QuestionDetailType | undefined>(undefined);
-  const [likes, setLikes] = useState<LikeDataType>({
+  const [likesData, setLikesData] = useState<LikeDataType>({
     isLike: false,
     likeCount: 0
   });
@@ -35,7 +37,7 @@ const QuestionDetail = () => {
       setDetailContent(prev => (initDataResult.isSuccess ? initDataResult.result : prev));
 
       // 질문글 좋아요 관련 업데이트
-      setLikes(prev =>
+      setLikesData(prev =>
         initDataResult.isSuccess
           ? {
               isLike: initDataResult.result.isLike,
@@ -54,6 +56,25 @@ const QuestionDetail = () => {
     setIsAnswered(true);
   };
 
+  const toggleLikeState = async () => {
+    if (!accessToken) {
+      return;
+    }
+    // 만약 좋아요를 누르지 않았던 상태였다면, 좋아요 정보를 추가함.
+    // 좋아요를 이미 눌렀던 상태였다면, 좋아요 정보를 다시 삭제함.
+    const { isLike: prevIsLike, likeCount: prevLikeCount } = likesData;
+    let response;
+    if (!prevIsLike) {
+      response = await addLikesAsync(questionId, accessToken);
+    } else {
+      response = await deleteLikesAsync(questionId, accessToken);
+    }
+    // 기존의 state를 기반으로 새로운 좋아요 여부 정보를 체크.
+    if (response.isSuccess) {
+      setLikesData({ isLike: !prevIsLike, likeCount: prevLikeCount + (!prevIsLike ? 1 : -1) });
+    }
+  };
+
   // 타입 가드 (데이터 fetching 전 로드)
   if (detailContent == undefined) {
     return <span>Loading...</span>;
@@ -70,9 +91,10 @@ const QuestionDetail = () => {
       </Head>
       <QuestionsDetailTemplate
         detailContent={detailContent}
-        likes={likes}
+        likesData={likesData}
         isWriter={isWriter}
         changeQuestionState={changeQuestionState}
+        toggleLikeState={toggleLikeState}
       />
     </>
   );
