@@ -14,8 +14,6 @@ const PostQuestion = () => {
   const [postTitle, setPostTitle] = useState<string>("");
   const router = useRouter();
 
-  console.log(postKeywords);
-
   const submitNewPost = async () => {
     if (!accessToken) {
       router.push("/login");
@@ -24,7 +22,7 @@ const PostQuestion = () => {
     if (postTitle.length > 0 && postContent.length > 0) {
       const response = await addQuestionAsync(postTitle, postContent, postKeywords, accessToken);
       if (response.isSuccess) {
-        router.replace("/questions");
+        router.replace(`/question/${response.result.questionId}`);
       }
       return response.isSuccess ? response.result : null;
     }

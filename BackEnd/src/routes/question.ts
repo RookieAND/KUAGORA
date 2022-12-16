@@ -1,6 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 
 import {
+  SortOptionType,
+  AnsweredOptionType,
+} from '@/constants/question';
+import {
   addQuestion,
   getQuestionList,
   getQuestionById,
@@ -14,7 +18,6 @@ import {
   getKeyword,
   removeKeyword,
   patchQuestionState,
-  searchQuestionByWord,
 } from '@/database/controllers/question';
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
 import { checkLoggedIn } from '@/routes/jwt';
@@ -25,40 +28,27 @@ const questionRouter = express.Router();
 questionRouter.get(
   '/',
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { page = '1', amount = '12', option = 'recent' } = req.query;
+    const {
+      page = '1',
+      amount = '12',
+      sortOption = 'recent',
+      answeredOption = 'both',
+    } = req.query;
     const [pageNum, amountNum] = [Number(page), Number(amount)];
     if (
       pageNum * amountNum > 0 &&
-      (option == 'recent' || option == 'popular')
+      (sortOption == 'recent' || sortOption == 'popular') &&
+      (answeredOption == 'progressed' ||
+        answeredOption == 'completed' ||
+        answeredOption == 'both')
     ) {
-      const questions = await getQuestionList(pageNum, amountNum, option);
+      const questions = await getQuestionList(pageNum, amountNum, sortOption, answeredOption);
       return res.status(200).json(questions);
     }
 
     throw new BadRequestError(
       '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
     );
-  }),
-);
-
-questionRouter.get(
-  '/search',
-  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { page = '1', amount = '12', word = '' } = req.query;
-    const [pageNum, amountNum] = [Number(page), Number(amount)];
-
-    if (!pageNum || !amountNum || !word) {
-      throw new BadRequestError(
-        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
-      );
-    }
-
-    const questions = await searchQuestionByWord(
-      word as string,
-      pageNum,
-      amountNum,
-    );
-    return res.status(200).json(questions);
   }),
 );
 
@@ -80,7 +70,7 @@ questionRouter.post(
     }
 
     const questionId = await addQuestion(title, content, keywords, uuid);
-    return res.status(200).json(questionId);
+    return res.status(200).json({ questionId });
   }),
 );
 

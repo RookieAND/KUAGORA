@@ -16,10 +16,9 @@ export const Wrapper = styled.div<StyledHeadlineWrapperProps>`
       gap: 48px;
 
       width: 100%;
-      height: 700px;
+      height: 600px;
 
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)),
-        url(${image.src});
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)), url(${image.src});
       background-size: cover;
     `;
   }}

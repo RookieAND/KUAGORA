@@ -1,4 +1,5 @@
 import { deleteAsync, getAsync, patchAsync, postAsync } from "@/apis/API";
+import { APIResult } from "./API";
 
 export interface QuestionPostType {
   id: number;
@@ -9,6 +10,12 @@ export interface QuestionPostType {
   likeCount: number;
   commentCount: number;
   keywords: KeywordDataType[];
+}
+
+export interface QuestionInfQueryType {
+  content: QuestionPostType[];
+  isLast: boolean;
+  nextPage: number;
 }
 
 export interface QuestionDetailType extends QuestionPostType {
@@ -42,6 +49,8 @@ export interface CommentDataType {
 }
 
 export type QuestionSortType = "recent" | "popular";
+export type QuestionSearchType = "title" | "keyword";
+export type QuestionAnsweredType = "progressed" | "completed" | "both";
 
 export interface AddQuestionType {
   title: string;
@@ -54,32 +63,70 @@ export interface AddQuestionResultType {
 }
 
 /**
+ * 전체 질문글 중, 특정 검색의 결과를 옵션에 맞게 정렬하여 목록으로 가져오는 함수
+ * @param page 질문글을 보여줄 페이지
+ * @param amount 하나의 페이지에 보여줄 질문글의 수량
+ * @param query 질문글 검색 쿼리
+ * @param sortOption 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param searchOption 질문글 검색 옵션 (제목 별, 키워드 별)
+ * @param answeredOption 질문글 채택에 따른 정렬 기준
+ */
+export const getQuestionsByQueryAsync = async (
+  page: number,
+  amount: number,
+  query: string = "",
+  sortOption: QuestionSortType,
+  searchOption: QuestionSearchType,
+  answeredOption: QuestionAnsweredType
+) => {
+  const response = await getAsync<QuestionPostType[], any>(`/search/${searchOption}`, {
+    params: { page, amount, query, sortOption, answeredOption }
+  });
+
+  if (response.isSuccess) {
+    return {
+      isSuccess: response.isSuccess,
+      result: {
+        content: response.result,
+        isLast: response.result.length < amount,
+        nextPage: page + 1
+      }
+    };
+  }
+
+  return response;
+};
+
+/**
  * 전체 질문글 중, 정렬 기준을 통해 일부를 목록으로 가져오는 함수
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
- * @param option 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param sortOption 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param answeredOption 질문글 채택에 따른 정렬 기준
  * @returns 기준에 따라 정렬된 질문글의 일부 정보
  */
-export const getQuestionListAsync = async (page: number, amount: number, option: QuestionSortType) => {
+export const getQuestionsAsync = async (
+  page: number,
+  amount: number,
+  sortOption: QuestionSortType,
+  answeredOption: QuestionAnsweredType
+): APIResult<QuestionInfQueryType> => {
   const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
-    params: { page, amount, option }
+    params: { page, amount, sortOption, answeredOption }
   });
 
-  return {
-    isSuccess: response.isSuccess,
-    result: response.isSuccess ? response.result : []
-  };
-};
+  if (response.isSuccess) {
+    return {
+      isSuccess: response.isSuccess,
+      result: {
+        content: response.result,
+        isLast: response.result.length < amount,
+        nextPage: page + 1
+      }
+    };
+  }
 
-export const searchQuestionByWord = async (word: string, page: number, amount: number) => {
-  const response = await getAsync<QuestionPostType[], unknown>(`/question/search`, {
-    params: { page, amount, word }
-  });
-
-  return {
-    isSuccess: response.isSuccess,
-    result: response.isSuccess ? response.result : []
-  };
+  return response;
 };
 
 /**

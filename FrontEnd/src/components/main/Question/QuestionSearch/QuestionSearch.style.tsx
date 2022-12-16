@@ -1,17 +1,25 @@
 import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
+  width: 1112px;
+  height: 48px;
+  margin: 48px auto;
+
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const SearchBar = styled.div`
   ${({ theme }) => {
     const { colors } = theme;
     return css`
       width: 700px;
       height: 48px;
-      margin: 0px auto;
 
       display: flex;
       justify-content: space-between;
 
-      background-color: ${colors.mono.white};
+      background-color: ${colors.mono.gray2};
       border-radius: 16px;
     `;
   }}
@@ -27,7 +35,7 @@ export const SearchInput = styled.input`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      width: 608px;
+      width: 624px;
       height: 36px;
       margin: auto auto auto 0px;
 

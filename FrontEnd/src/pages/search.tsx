@@ -4,29 +4,31 @@ import { useInfiniteQuery } from "react-query";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
-import { getQuestionsAsync, QuestionSortType, QuestionSearchType, QuestionAnsweredType } from "@/apis/question";
-import QuestionsTemplate from "@/components/template/QuestionsTemplate";
+import { QuestionAnsweredType, QuestionSortType, QuestionSearchType, getQuestionsByQueryAsync } from "@/apis/question";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
-const Questions = () => {
+import SearchTemplate from "@/components/template/SearchTemplate";
+
+const Search = () => {
   const router = useRouter();
   const questionRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { search, sort, answered } = router.query;
+  const { query, search, sort, answered } = router.query;
+  const searchedQuery = (query || "") as string;
   const searchOption = (search || "title") as QuestionSearchType;
   const sortOption = (sort || "recent") as QuestionSortType;
   const answeredOption = (answered || "both") as QuestionAnsweredType;
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["question", { sortOption, answeredOption }],
+    ["question", { sortOption, searchOption, answeredOption }],
     /**
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
      */
     ({ pageParam = 1 }) => {
-      return getQuestionsAsync(pageParam, amount, sortOption, answeredOption);
+      return getQuestionsByQueryAsync(pageParam, amount, searchedQuery, sortOption, searchOption, answeredOption);
     },
     {
       /**
@@ -38,7 +40,8 @@ const Questions = () => {
           return undefined;
         }
         return lastPage.result.nextPage;
-      }
+      },
+      staleTime: 30000
     }
   );
 
@@ -69,7 +72,7 @@ const Questions = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <QuestionsTemplate
+      <SearchTemplate
         questions={questions}
         questionRef={questionRef}
         searchQuery={searchQuery}
@@ -79,4 +82,4 @@ const Questions = () => {
   );
 };
 
-export default Questions;
+export default Search;
