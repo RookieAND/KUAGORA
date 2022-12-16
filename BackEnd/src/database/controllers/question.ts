@@ -13,11 +13,13 @@ import { BadRequestError } from '@/errors/definedErrors';
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
  * @param sortOption 질문글을 나열시킬 기준 (인기 순, 최신 순)
+ * @param answeredOption 질문글의 채택 여부 (미채택, 채택, 둘 다)
  */
 export const getQuestionList = async (
   page: number,
   amount: number,
   sortOption: 'recent' | 'popular',
+  answeredOption: 'progressed' | 'completed' | 'both',
 ) => {
   const sortType = {
     recent: {
@@ -28,6 +30,11 @@ export const getQuestionList = async (
       subQuery: 'likeCount',
       query: 'topQuestion.likeCount',
     },
+  };
+  const answeredType = {
+    progressed: ['progressed'],
+    completed: ['completed'],
+    both: ['progressed', 'completed'],
   };
 
   let questionDatas = undefined;
@@ -52,6 +59,9 @@ export const getQuestionList = async (
             'COUNT(likes.id) AS likeCount',
             'COUNT(comments.id) AS CommentCount',
           ])
+          .where('subQuestion.state IN(:...answeredStates)', {
+            answeredStates: answeredType[answeredOption],
+          })
           .from(Question, 'subQuestion')
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
@@ -70,6 +80,7 @@ export const getQuestionList = async (
     .orderBy(sortType[sortOption].query, 'DESC')
     .getMany();
 
+  console.log(answeredType[answeredOption]);
   return questionDatas;
 };
 
