@@ -56,9 +56,9 @@ export const getQuestionList = async (
           .leftJoin('subQuestion.comments', 'comments')
           .leftJoin('subQuestion.likes', 'likes')
           .groupBy('subQuestion.id')
-          .orderBy(sortType[sortOption].subQuery, 'DESC')
           .offset((page - 1) * amount)
-          .limit(amount),
+          .limit(amount)
+          .orderBy(sortType[sortOption].subQuery, 'DESC'),
       'topQuestion',
       // 서브 쿼리 alias 내의 column 사용 시, 언더바로 연결지어야 함.
       'topQuestion.subQuestion_id = question.id',
@@ -68,8 +68,6 @@ export const getQuestionList = async (
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
     .orderBy(sortType[sortOption].query, 'DESC')
-    .offset((page - 1) * amount)
-    .limit(amount)
     .getMany();
 
   return questionDatas;
@@ -88,7 +86,13 @@ export const getQuestionById = async (
   let questionData = undefined;
   questionData = await getRepository(Question)
     .createQueryBuilder('question')
-    .select(['question', 'user.uuid', 'user.nickname'])
+    .select([
+      'question',
+      'user.uuid',
+      'user.nickname',
+      'keyword.id',
+      'keyword.content',
+    ])
     .where('question.id = :questionId', { questionId })
     .leftJoin('question.user', 'user')
     .leftJoinAndSelect('question.keywords', 'keyword')
