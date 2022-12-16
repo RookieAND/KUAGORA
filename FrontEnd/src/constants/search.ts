@@ -31,7 +31,7 @@ const ANSWERED_OPTION: SelectInfoType[] = [
   },
   {
     option: "both",
-    display: "고려 안함"
+    display: "전체"
   }
 ];
 
