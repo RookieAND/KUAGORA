@@ -1,11 +1,13 @@
 import { useRef, useEffect, RefObject } from "react";
 
+type callbackFuncType = (...args: any) => any;
+
 /**
  * Intersection Observer를 활용하여 관측 Ref를 관찰하고, 콜백 함수를 실행하는 Hook
  * @param targetRef 관찰하려는 HTML Element Ref
  * @param callbackFunc 관측 대상이 관찰되었을 경우 실행할 Callback
  */
-const useInfiniteScroll = (targetRef: RefObject<HTMLDivElement>, callbackFunc: any) => {
+const useInfiniteScroll = (targetRef: RefObject<HTMLDivElement>, callbackFunc: callbackFuncType) => {
   const observeRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const useInfiniteScroll = (targetRef: RefObject<HTMLDivElement>, callbackFunc: a
        * root : 관찰 Root 의 대상을 지정 (default : 브라우저의 뷰 포트)
        */
       {
-        threshold: 0.95
+        threshold: 1
       }
     );
 
