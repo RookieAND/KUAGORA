@@ -1,9 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 
-import {
-  SortOptionType,
-  AnsweredOptionType,
-} from '@/constants/question';
+import { SortOptionType, AnsweredOptionType } from '@/constants/question';
 import {
   addQuestion,
   getQuestionList,
@@ -42,7 +39,12 @@ questionRouter.get(
         answeredOption == 'completed' ||
         answeredOption == 'both')
     ) {
-      const questions = await getQuestionList(pageNum, amountNum, sortOption, answeredOption);
+      const questions = await getQuestionList(
+        pageNum,
+        amountNum,
+        sortOption,
+        answeredOption,
+      );
       return res.status(200).json(questions);
     }
 
