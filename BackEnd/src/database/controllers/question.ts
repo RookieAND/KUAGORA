@@ -435,8 +435,8 @@ export const removeKeyword = async (questionId: number, keywordId: number) => {
   const removeKeywordResult = await getRepository(Keyword)
     .createQueryBuilder('keyword')
     .softDelete()
-    .andWhere('keyword.question_id =: questionId', { questionId })
-    .andWhere('keyword.id =: keywordId', { keywordId })
+    .andWhere('keyword.question_id = :questionId', { questionId })
+    .andWhere('keyword.id = :keywordId', { keywordId })
     .execute();
 
   if (removeKeywordResult.affected !== -1) {
@@ -489,9 +489,9 @@ export const addLike = async (questionId: number, uuid: string) => {
 export const removeLike = async (questionId: number, uuid: string) => {
   const removeLikeResult = await getRepository(Like)
     .createQueryBuilder('like')
-    .softDelete()
-    .andWhere('like.question_id =: questionId', { questionId })
-    .andWhere('like.user_uuid =: uuid', { uuid })
+    .delete()
+    .where('like.question_id = :questionId', { questionId })
+    .andWhere('like.user_uuid = :uuid', { uuid })
     .execute();
 
   if (removeLikeResult.affected !== -1) {
