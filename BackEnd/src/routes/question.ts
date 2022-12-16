@@ -58,7 +58,7 @@ questionRouter.post(
     }
 
     const questionId = await addQuestion(title, content, keywords, uuid);
-    return res.status(200).json(questionId);
+    return res.status(200).json({ questionId });
   }),
 );
 
