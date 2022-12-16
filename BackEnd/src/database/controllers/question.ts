@@ -6,7 +6,12 @@ import Like from '@/database/entity/like';
 import Question from '@/database/entity/question';
 import User from '@/database/entity/user';
 
-import { SORT_TYPE, ANSWERED_TYPE, SortOptionType, AnsweredOptionType } from '@/constants/question';
+import {
+  SORT_TYPE,
+  ANSWERED_TYPE,
+  SortOptionType,
+  AnsweredOptionType,
+} from '@/constants/question';
 import { BadRequestError } from '@/errors/definedErrors';
 
 /**
@@ -91,6 +96,7 @@ export const getQuestionById = async (
     .where('question.id = :questionId', { questionId })
     .leftJoin('question.user', 'user')
     .leftJoinAndSelect('question.keywords', 'keyword')
+    .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .getOne();
 
   // 게시글이 존재하는지를 먼저 확인. 타입 가드도 겸임.
