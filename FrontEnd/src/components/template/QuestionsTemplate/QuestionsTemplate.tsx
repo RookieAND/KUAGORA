@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { QuestionPostType, QuestionSearchType, QuestionSortType } from "@/apis/question";
+import { QuestionAnsweredType, QuestionPostType, QuestionSearchType, QuestionSortType } from "@/apis/question";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
@@ -11,8 +11,6 @@ interface QuestionsTemplateProps {
   questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
   searchQuery: string;
-  searchOption: QuestionSearchType;
-  sortOption: QuestionSortType;
   changeSearchQuery: (newQuery: string) => void;
 }
 
@@ -20,8 +18,6 @@ const QuestionsTemplate = ({
   questions,
   questionRef,
   searchQuery,
-  searchOption,
-  sortOption,
   changeSearchQuery
 }: QuestionsTemplateProps) => {
   return (
@@ -31,8 +27,6 @@ const QuestionsTemplate = ({
       <QuestionSearch
         searchQuery={searchQuery}
         changeSearchQuery={changeSearchQuery}
-        searchOption={searchOption}
-        sortOption={sortOption}
       />
       <QuestionPost questions={questions} questionRef={questionRef} />
       <Footer />

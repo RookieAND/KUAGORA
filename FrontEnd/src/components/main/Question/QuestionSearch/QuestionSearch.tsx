@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { QuestionSearchType, QuestionSortType } from "@/apis/question";
+import { QuestionSearchType, QuestionSortType, QuestionAnsweredType } from "@/apis/question";
 import { SelectType } from "@/constants/search";
 
 import * as style from "./QuestionSearch.style";
@@ -9,12 +9,13 @@ import SearchOptionSelect from "@/components/main/Question/QuestionSearch/Search
 
 interface QuestionSearchProps {
   searchQuery: string;
-  searchOption: QuestionSearchType;
-  sortOption: QuestionSortType;
   changeSearchQuery: (word: string) => void;
 }
 
-const QuestionSearch = ({ searchQuery, searchOption, sortOption, changeSearchQuery }: QuestionSearchProps) => {
+const QuestionSearch = ({
+  searchQuery,
+  changeSearchQuery
+}: QuestionSearchProps) => {
   const router = useRouter();
 
   const changeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,16 +26,22 @@ const QuestionSearch = ({ searchQuery, searchOption, sortOption, changeSearchQue
     if (e.key == "Enter" && searchQuery.length > 1) {
       router.push({
         pathname: "/search",
-        query: { query: searchQuery, search: searchOption, sort: sortOption }
+        query: { query: searchQuery }
       });
     }
   };
 
+  const changeSearchFilter = (option: SelectType, value: string) => {
+    router.push({
+      query: { ...router.query, [option]: value }
+    });
+  };
+
   return (
     <style.Wrapper>
-      <SearchOptionSelect selectType="search" />
-      <SearchOptionSelect selectType="sort" />
-      <SearchOptionSelect selectType="answered" />
+      <SearchOptionSelect selectType="search" changeSearchFilter={changeSearchFilter} />
+      <SearchOptionSelect selectType="sort" changeSearchFilter={changeSearchFilter} />
+      <SearchOptionSelect selectType="answered" changeSearchFilter={changeSearchFilter} />
       <style.SearchBar>
         <style.IconWrap>
           <SearchSvg />

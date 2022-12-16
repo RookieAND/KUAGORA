@@ -73,8 +73,6 @@ const Questions = () => {
         questions={questions}
         questionRef={questionRef}
         searchQuery={searchQuery}
-        sortOption={sortOption}
-        searchOption={searchOption}
         changeSearchQuery={changeSearchQuery}
       />
     </>

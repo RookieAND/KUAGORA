@@ -6,9 +6,10 @@ import { SELECT_INFO, SelectType, SelectInfoType } from "@/constants/search";
 
 interface SearchOptionSelectProps {
   selectType: SelectType;
+  changeSearchFilter: (option: SelectType, value: string) => void;
 }
 
-const SearchOptionSelect = ({ selectType }: SearchOptionSelectProps) => {
+const SearchOptionSelect = ({ selectType, changeSearchFilter }: SearchOptionSelectProps) => {
   const router = useRouter();
   const [isShowing, setIsShowing] = useState(false);
   const [selectedOptionIdx, setSelectedOptionIdx] = useState(0);
@@ -20,9 +21,7 @@ const SearchOptionSelect = ({ selectType }: SearchOptionSelectProps) => {
   const selectNewOption = (idx: number) => {
     if (selectedOptionIdx !== idx) {
       setSelectedOptionIdx(idx);
-      router.push({
-        query: { [selectType]: selectOptionList[idx].option }
-      });
+      changeSearchFilter(selectType, selectOptionList[idx].option);
     }
   };
 
