@@ -20,9 +20,25 @@ const SORT_OPTION: SelectInfoType[] = [
   }
 ];
 
+const ANSWERED_OPTION: SelectInfoType[] = [
+  {
+    option: "progressed",
+    display: "미채택"
+  },
+  {
+    option: "completed",
+    display: "채택됨"
+  },
+  {
+    option: "both",
+    display: "고려 안함"
+  }
+];
+
 export const SELECT_INFO = {
   search: SEARCH_OPTION,
-  sort: SORT_OPTION
+  sort: SORT_OPTION,
+  answered: ANSWERED_OPTION
 };
 
 export type SelectType = keyof typeof SELECT_INFO;

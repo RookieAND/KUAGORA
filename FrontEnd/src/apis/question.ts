@@ -50,6 +50,7 @@ export interface CommentDataType {
 
 export type QuestionSortType = "recent" | "popular";
 export type QuestionSearchType = "title" | "keyword";
+export type QuestionAnsweredType = "progressed" | "completed" | "both";
 
 export interface AddQuestionType {
   title: string;
@@ -65,19 +66,21 @@ export interface AddQuestionResultType {
  * 전체 질문글 중, 특정 검색의 결과를 옵션에 맞게 정렬하여 목록으로 가져오는 함수
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
- * @param sortOption 질문글 정렬 옵션 (최신 순, 인기 순)
- * @param searchOption 질문글 검색 옵션 (제목 별, 키워드 별)
  * @param query 질문글 검색 쿼리
+ * @param sortOption 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param searchOption 질문글 검색 옵션 (제목 별, 키워드 별)
+ * @param answeredOption 질문글 채택에 따른 정렬 기준
  */
 export const getQuestionsByQueryAsync = async (
   page: number,
   amount: number,
+  query: string = "",
   sortOption: QuestionSortType,
   searchOption: QuestionSearchType,
-  query: string = ""
+  answeredOption: QuestionAnsweredType
 ) => {
   const response = await getAsync<QuestionPostType[], any>(`/search/${searchOption}`, {
-    params: { page, amount, sortOption, query }
+    params: { page, amount, query, sortOption, answeredOption }
   });
 
   if (response.isSuccess) {
@@ -98,16 +101,18 @@ export const getQuestionsByQueryAsync = async (
  * 전체 질문글 중, 정렬 기준을 통해 일부를 목록으로 가져오는 함수
  * @param page 질문글을 보여줄 페이지
  * @param amount 하나의 페이지에 보여줄 질문글의 수량
- * @param option 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param sortOption 질문글을 정렬할 기준 (최신 순, 인기 순)
+ * @param answeredOption 질문글 채택에 따른 정렬 기준
  * @returns 기준에 따라 정렬된 질문글의 일부 정보
  */
 export const getQuestionsAsync = async (
   page: number,
   amount: number,
-  sortOption: QuestionSortType
+  sortOption: QuestionSortType,
+  answeredOption: QuestionAnsweredType
 ): APIResult<QuestionInfQueryType> => {
   const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
-    params: { page, amount, sortOption }
+    params: { page, amount, sortOption, answeredOption }
   });
 
   if (response.isSuccess) {

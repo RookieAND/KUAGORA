@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { QuestionPostType, QuestionSearchType, QuestionSortType } from "@/apis/question";
+import { QuestionPostType } from "@/apis/question";
 
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
@@ -11,29 +11,15 @@ interface QuestionsTemplateProps {
   questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
   searchQuery: string;
-  searchOption: QuestionSearchType;
-  sortOption: QuestionSortType;
   changeSearchQuery: (newQuery: string) => void;
 }
 
-const QuestionsTemplate = ({
-  questions,
-  questionRef,
-  searchQuery,
-  searchOption,
-  sortOption,
-  changeSearchQuery
-}: QuestionsTemplateProps) => {
+const QuestionsTemplate = ({ questions, questionRef, searchQuery, changeSearchQuery }: QuestionsTemplateProps) => {
   return (
     <>
       <Navbar />
       <QuestionHeadline title={"Question List"} subtitle={"학우 분들이 남긴 다양한 질문을 확인해보세요."} />
-      <QuestionSearch
-        searchQuery={searchQuery}
-        changeSearchQuery={changeSearchQuery}
-        searchOption={searchOption}
-        sortOption={sortOption}
-      />
+      <QuestionSearch searchQuery={searchQuery} changeSearchQuery={changeSearchQuery} />
       <QuestionPost questions={questions} questionRef={questionRef} />
       <Footer />
     </>
