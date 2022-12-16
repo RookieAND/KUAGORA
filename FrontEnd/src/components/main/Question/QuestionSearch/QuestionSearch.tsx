@@ -11,10 +11,7 @@ interface QuestionSearchProps {
   changeSearchQuery: (word: string) => void;
 }
 
-const QuestionSearch = ({
-  searchQuery,
-  changeSearchQuery
-}: QuestionSearchProps) => {
+const QuestionSearch = ({ searchQuery, changeSearchQuery }: QuestionSearchProps) => {
   const router = useRouter();
 
   const changeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +35,6 @@ const QuestionSearch = ({
 
   return (
     <style.Wrapper>
-      <SearchOptionSelect selectType="search" changeSearchFilter={changeSearchFilter} />
       <SearchOptionSelect selectType="sort" changeSearchFilter={changeSearchFilter} />
       <SearchOptionSelect selectType="answered" changeSearchFilter={changeSearchFilter} />
       <style.SearchBar>
