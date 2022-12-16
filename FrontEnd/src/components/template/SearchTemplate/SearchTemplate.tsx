@@ -11,8 +11,6 @@ interface SearchTemplateProps {
   questions: QuestionPostType[] | undefined;
   questionRef: RefObject<HTMLDivElement>;
   searchQuery: string;
-  searchOption: QuestionSearchType;
-  sortOption: QuestionSortType;
   changeSearchQuery: (newQuery: string) => void;
 }
 
@@ -20,8 +18,6 @@ const SearchTemplate = ({
   questions,
   questionRef,
   searchQuery,
-  searchOption,
-  sortOption,
   changeSearchQuery
 }: SearchTemplateProps) => {
   return (
@@ -31,8 +27,6 @@ const SearchTemplate = ({
       <QuestionSearch
         searchQuery={searchQuery}
         changeSearchQuery={changeSearchQuery}
-        searchOption={searchOption}
-        sortOption={sortOption}
       />
       <QuestionPost questions={questions} questionRef={questionRef} />
       <Footer />
