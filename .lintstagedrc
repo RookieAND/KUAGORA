@@ -1,3 +1,4 @@
 {
-    "./src/**/*.[jt]s?(x)": "eslint --cache --fix"
+    "./BackEnd/src/**/*.[jt]s?(x)": "eslint --cache --fix",
+    "./FrontEnd/src/**/*.[jt]s?(x)": "eslint --cache --fix"
 }
