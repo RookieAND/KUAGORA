@@ -11,5 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "nodemon": "^2.0.20"
-  }
+  },
+  "devDependencies": {
+    "husky": "^8.0.2"
+  },
+  "repository": "https://github.com/RookieAND/KUAGORA.git"
 }
