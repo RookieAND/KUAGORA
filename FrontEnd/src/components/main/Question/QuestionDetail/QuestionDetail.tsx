@@ -5,7 +5,6 @@ import { KeywordDataType, LikeDataType } from "@/apis/question";
 interface QuestionDetailProps {
   content: string;
   keywords: KeywordDataType[];
-  likes: LikeDataType;
 }
 
 const QuestionDetail = ({ content, keywords }: QuestionDetailProps) => {

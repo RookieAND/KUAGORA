@@ -2,19 +2,28 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
 
-import { getQuestionAsync, QuestionDetailType, LikeDataType, CommentDataType, getCommentsAsync } from "@/apis/question";
+import {
+  getQuestionAsync,
+  QuestionDetailType,
+  LikeDataType,
+  getLikesAsync,
+  addLikesAsync,
+  deleteLikesAsync
+} from "@/apis/question";
 import QuestionsDetailTemplate from "@/components/template/QuestionDetailTemplate";
-import { setUserDataAtom } from "@/stores/actions";
+import { setUserDataAtom, accessTokenAtom } from "@/stores/actions";
 
 const QuestionDetail = () => {
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
   const [userData] = useAtom(setUserDataAtom);
+  const [accessToken] = useAtom(accessTokenAtom);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [detailContent, setDetailContent] = useState<QuestionDetailType | undefined>(undefined);
-  const [likes, setLikes] = useState<LikeDataType>({
+  const [likesData, setLikesData] = useState<LikeDataType>({
     isLike: false,
     likeCount: 0
   });
@@ -35,7 +44,7 @@ const QuestionDetail = () => {
       setDetailContent(prev => (initDataResult.isSuccess ? initDataResult.result : prev));
 
       // 질문글 좋아요 관련 업데이트
-      setLikes(prev =>
+      setLikesData(prev =>
         initDataResult.isSuccess
           ? {
               isLike: initDataResult.result.isLike,
@@ -49,9 +58,29 @@ const QuestionDetail = () => {
   }, [router.isReady, questionId, userData, isAnswered]);
 
   const isWriter = userData.uuid === detailContent?.user.uuid;
+  console.log(userData.uuid, detailContent?.user.uuid);
 
   const changeQuestionState = () => {
     setIsAnswered(true);
+  };
+
+  const toggleLikeState = async () => {
+    if (!accessToken || isWriter) {
+      return;
+    }
+    // 좋아요 정보에 대한 optimistic update 우선 진행.
+    const { isLike: prevIsLike, likeCount: prevLikeCount } = likesData;
+    setLikesData({ isLike: !prevIsLike, likeCount: prevLikeCount + (!prevIsLike ? 1 : -1) });
+    // 사용자의 이전 좋아요 여부에 따른 API 호출 (추가 혹은 삭제)
+    let response;
+    response = !prevIsLike
+      ? await addLikesAsync(questionId, accessToken)
+      : await deleteLikesAsync(questionId, accessToken);
+    // 통신 연결에 실패했다면, 원래 값으로 좋아요 정보를 롤백.
+    if (!response.isSuccess) {
+      setLikesData({ isLike: prevIsLike, likeCount: prevLikeCount });
+      return;
+    }
   };
 
   // 타입 가드 (데이터 fetching 전 로드)
@@ -70,9 +99,10 @@ const QuestionDetail = () => {
       </Head>
       <QuestionsDetailTemplate
         detailContent={detailContent}
-        likes={likes}
+        likesData={likesData}
         isWriter={isWriter}
         changeQuestionState={changeQuestionState}
+        toggleLikeState={toggleLikeState}
       />
     </>
   );

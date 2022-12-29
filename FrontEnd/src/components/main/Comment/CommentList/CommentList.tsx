@@ -78,7 +78,6 @@ const CommentList = ({ isWriter, state, changeQuestionState }: CommentListProps)
   };
 
   const comments = data?.isSuccess ? data.result : [];
-  console.log(comments);
 
   return (
     <style.Wrapper>

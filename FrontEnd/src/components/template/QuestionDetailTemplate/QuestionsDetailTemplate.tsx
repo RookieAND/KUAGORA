@@ -1,21 +1,23 @@
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 import { QuestionDetail, DetailHeader } from "@/components/main/Question/QuestionDetail";
-import { CommentDataType, QuestionDetailType, LikeDataType } from "@/apis/question";
+import { QuestionDetailType, LikeDataType } from "@/apis/question";
 import CommentList from "@/components/main/Comment/CommentList";
 
 interface QuestionDetailTemplateProps {
   detailContent: QuestionDetailType;
-  changeQuestionState: () => void;
-  likes: LikeDataType;
+  likesData: LikeDataType;
   isWriter: boolean;
+  changeQuestionState: () => void;
+  toggleLikeState: () => void;
 }
 
 const QuestionDetailTemplate = ({
   detailContent,
-  likes,
+  likesData,
   isWriter,
-  changeQuestionState
+  changeQuestionState,
+  toggleLikeState
 }: QuestionDetailTemplateProps) => {
   return (
     <>
@@ -25,8 +27,10 @@ const QuestionDetailTemplate = ({
         state={detailContent.state}
         nickname={detailContent.user.nickname}
         createdAt={detailContent.createdAt}
+        likesData={likesData}
+        toggleLikeState={toggleLikeState}
       />
-      <QuestionDetail content={detailContent.content} keywords={detailContent.keywords} likes={likes} />
+      <QuestionDetail content={detailContent.content} keywords={detailContent.keywords} />
       <CommentList isWriter={isWriter} state={detailContent.state} changeQuestionState={changeQuestionState} />
       <Footer />
     </>
