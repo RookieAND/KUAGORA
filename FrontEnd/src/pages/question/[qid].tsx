@@ -2,11 +2,18 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
 
-import { getQuestionAsync, QuestionDetailType, LikeDataType, addLikesAsync, deleteLikesAsync } from "@/apis/question";
+import {
+  getQuestionAsync,
+  QuestionDetailType,
+  LikeDataType,
+  getLikesAsync,
+  addLikesAsync,
+  deleteLikesAsync
+} from "@/apis/question";
 import QuestionsDetailTemplate from "@/components/template/QuestionDetailTemplate";
 import { setUserDataAtom, accessTokenAtom } from "@/stores/actions";
-import { access } from "fs";
 
 const QuestionDetail = () => {
   const router = useRouter();
@@ -51,27 +58,28 @@ const QuestionDetail = () => {
   }, [router.isReady, questionId, userData, isAnswered]);
 
   const isWriter = userData.uuid === detailContent?.user.uuid;
+  console.log(userData.uuid, detailContent?.user.uuid);
 
   const changeQuestionState = () => {
     setIsAnswered(true);
   };
 
   const toggleLikeState = async () => {
-    if (!accessToken) {
+    if (!accessToken || isWriter) {
       return;
     }
-    // 만약 좋아요를 누르지 않았던 상태였다면, 좋아요 정보를 추가함.
-    // 좋아요를 이미 눌렀던 상태였다면, 좋아요 정보를 다시 삭제함.
+    // 좋아요 정보에 대한 optimistic update 우선 진행.
     const { isLike: prevIsLike, likeCount: prevLikeCount } = likesData;
+    setLikesData({ isLike: !prevIsLike, likeCount: prevLikeCount + (!prevIsLike ? 1 : -1) });
+    // 사용자의 이전 좋아요 여부에 따른 API 호출 (추가 혹은 삭제)
     let response;
-    if (!prevIsLike) {
-      response = await addLikesAsync(questionId, accessToken);
-    } else {
-      response = await deleteLikesAsync(questionId, accessToken);
-    }
-    // 기존의 state를 기반으로 새로운 좋아요 여부 정보를 체크.
-    if (response.isSuccess) {
-      setLikesData({ isLike: !prevIsLike, likeCount: prevLikeCount + (!prevIsLike ? 1 : -1) });
+    response = !prevIsLike
+      ? await addLikesAsync(questionId, accessToken)
+      : await deleteLikesAsync(questionId, accessToken);
+    // 통신 연결에 실패했다면, 원래 값으로 좋아요 정보를 롤백.
+    if (!response.isSuccess) {
+      setLikesData({ isLike: prevIsLike, likeCount: prevLikeCount });
+      return;
     }
   };
 
