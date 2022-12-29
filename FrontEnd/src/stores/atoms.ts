@@ -14,7 +14,7 @@ export interface ITokenData {
 
 export type IAccessToken = string | null;
 
-export const userDataAtom = atom<IUserData>({
+export const userDataAtom = atomWithStorage<IUserData>("user_data", {
   uuid: null,
   nickname: null,
   email: null
