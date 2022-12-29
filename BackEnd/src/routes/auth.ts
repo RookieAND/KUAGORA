@@ -51,13 +51,11 @@ authRouter.post(
       const token = createJWT(uuid);
       const refreshToken = createRefreshJWT(uuid);
       await setRefreshToken(uuid, refreshToken);
-      return res
-        .status(200)
-        .json({
-          access_token: token,
-          refresh_token: refreshToken,
-          userData: { uuid, nickname, email },
-        });
+      return res.status(200).json({
+        accessToken: token,
+        refreshToken: refreshToken,
+        userData: { uuid, nickname, email },
+      });
     }
 
     // 정상적으로 로그인이 진행되지 않을 경우, 500 Internal Error 발생.
