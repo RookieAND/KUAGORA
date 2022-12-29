@@ -1,29 +1,64 @@
 # KUAGORA
 
-## Description [프로젝트 소개]
+## 📑 Description
 
 React.js, Express 서버를 활용하여 대학 생활과 관련된 질문들을
 자유롭게 올리고 답변을 받는 커뮤니티를 개설하는 프로젝트입니다.
 
-## Dependencies
+## 🧱 Dependencies
 
--   typescript
--   React, styled-component, Recoil
--   express, axios, typeorm, mysql2
+- Typescript (Programming Language)
+- Husky (Git Hooks)
+- commitlint, lint-staged (Git Convention)
+- React (SPA)
+- Next.js (SSR)
+- Jotai (Global State)
+- React-query (Server State Management)
+- Styled-components (Styling)
+- Axios (HTTP Client)
+- Express (Web Application Server)
+- TypeORM (ORM)
+- Redis (Cache DB)
+- MySQL (DB)
+- Swagger
+- jsonwebtoken (Authorization)
 
-## System [시스템 안내]
+## 📂 Structure
 
--   추후 작성 예정
+```
+/BackEnd
+    └─ /src
+        └─ /auth
+        └─ /constants
+        └─ /database
+        └─ /errors
+        └─ /routes
+        └─ /swagger
+        └─ /types
+        └─ /utils
+/FrontEnd
+    └─ /src
+        └─ /apis
+        └─ /assets
+        └─ /components
+        └─ /constants
+        └─ /hooks
+        └─ /pages
+        └─ /stores
+        └─ /utils
+```
 
-## Authors [제작자]
+## ⚙️ Feature
 
--   RookieAND\_ (https://github.com/RookieAND)
+- 카카오, 네이버, 구글 OAuth2 기반 로그인
+- 질문글 작성 및 채택 시스템
+- 좋아요 및 댓글 기능
+- 최신순 / 추천순, 채택 여부에 따른 필터링 기능
 
-## Version History
+## 💻 Authors
 
--   0.1
-    -   프로젝트 시작.
+- RookieAND\_ (https://github.com/RookieAND)
 
-## License
+## 🔐 License
 
 해당 프로젝트의 라이센스는 [MIT] License 규정을 지키고 있습니다.
