@@ -1,11 +1,13 @@
-import { Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-import BasicEntity from './basic';
 import User from './user';
 import Question from './question';
 
 @Entity()
-class Like extends BasicEntity {
+class Like {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
   // [Relation] Like : Question = N : 1
   @ManyToOne(() => Question, (question) => question.likes)
   @JoinColumn({
