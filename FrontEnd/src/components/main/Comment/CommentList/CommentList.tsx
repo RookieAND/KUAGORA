@@ -4,13 +4,8 @@ import { useState } from "react";
 import { useAtom } from "jotai";
 
 import { accessTokenAtom, setUserDataAtom } from "@/stores/actions";
-import {
-  addNewCommentAsync,
-  CommentDataType,
-  getCommentsAsync,
-  patchQuestionStateAsync,
-  removeCommentAsync
-} from "@/apis/question";
+import { addNewCommentAsync, getCommentsAsync, patchQuestionStateAsync, removeCommentAsync } from "@/apis/question";
+import type { CommentDataType } from "@/apis/question";
 
 import * as style from "./CommentList.style";
 import CommentInput from "@/components/main/Comment/CommentInput";

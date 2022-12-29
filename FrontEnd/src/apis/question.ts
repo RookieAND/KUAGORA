@@ -1,5 +1,5 @@
 import { deleteAsync, getAsync, patchAsync, postAsync } from "@/apis/API";
-import { APIResult } from "./API";
+import type { APIResult } from "@/apis/API";
 
 export interface QuestionPostType {
   id: number;
@@ -78,7 +78,7 @@ export interface AddLikesResultType {
 export const getQuestionsByQueryAsync = async (
   page: number,
   amount: number,
-  query: string = "",
+  query: string,
   sortOption: QuestionSortType,
   searchOption: QuestionSearchType,
   answeredOption: QuestionAnsweredType

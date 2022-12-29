@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
 
 import * as style from "./SearchOptionSelect.style";
-import { SELECT_INFO, SelectType, SelectInfoType } from "@/constants/search";
+import type { SelectType, SelectInfoType } from "@/constants/search";
+import { SELECT_INFO } from "@/constants/search";
 
 interface SearchOptionSelectProps {
   selectType: SelectType;
@@ -10,7 +10,6 @@ interface SearchOptionSelectProps {
 }
 
 const SearchOptionSelect = ({ selectType, changeSearchFilter }: SearchOptionSelectProps) => {
-  const router = useRouter();
   const [isShowing, setIsShowing] = useState(false);
   const [selectedOptionIdx, setSelectedOptionIdx] = useState(0);
 

@@ -1,5 +1,5 @@
-import { RefObject } from "react";
-import { QuestionPostType } from "~/src/apis/question";
+import type { RefObject } from "react";
+import type { QuestionPostType } from "~/src/apis/question";
 
 import * as style from "./QustionPost.style";
 import QuestionCard from "@/components/main/Question/QuestionCard";

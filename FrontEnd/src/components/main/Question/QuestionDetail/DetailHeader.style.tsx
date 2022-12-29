@@ -1,4 +1,4 @@
-import styled, { css, DefaultTheme } from "styled-components";
+import styled, { css } from "styled-components";
 
 interface StyledIsCompletedProps {
   theme: any; // CHECK : 해결할 수 있는 방법 찾아야 함.
@@ -102,7 +102,7 @@ export const LikeBox = styled.div<StyledIsLikeProps>`
 
 export const LikeText = styled.p`
   ${({ theme }) => {
-    const { colors, fonts } = theme;
+    const { fonts } = theme;
     return css`
       margin: 4px 0px;
       font-size: ${fonts.size.lg};

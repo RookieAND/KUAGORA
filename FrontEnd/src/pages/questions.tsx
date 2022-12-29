@@ -4,7 +4,8 @@ import { useInfiniteQuery } from "react-query";
 import { useRef } from "react";
 import { useRouter } from "next/router";
 
-import { getQuestionsAsync, QuestionSortType, QuestionAnsweredType } from "@/apis/question";
+import type { QuestionSortType, QuestionAnsweredType } from "@/apis/question";
+import { getQuestionsAsync } from "@/apis/question";
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
@@ -62,10 +63,7 @@ const Questions = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <QuestionsTemplate
-        questions={questions}
-        questionRef={questionRef}
-      />
+      <QuestionsTemplate questions={questions} questionRef={questionRef} />
     </>
   );
 };

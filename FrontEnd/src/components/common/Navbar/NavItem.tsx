@@ -3,7 +3,6 @@ import * as style from "@/components/common/Navbar/NavItem.style";
 import MainSvg from "@/assets/icons/Main.svg";
 import DiarySvg from "@/assets/icons/Diary.svg";
 import EditSquareSvg from "@/assets/icons/EditSquare.svg";
-import ProfileSvg from "@/assets/icons/Profile.svg";
 import LoginSvg from "@/assets/icons/Login.svg";
 
 export type NavItemKey = keyof typeof NavItemIcons;
