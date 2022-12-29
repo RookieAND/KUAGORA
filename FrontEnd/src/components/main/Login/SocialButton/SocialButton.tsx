@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { SocialPlatform, SOCIAL_LOGIN_URL } from "@/constants/social";
+import type { SocialPlatform } from "@/constants/social";
+import { SOCIAL_LOGIN_URL } from "@/constants/social";
 
 import * as styles from "./SocialButton.style";
 import KakaoLogoSvg from "@/assets/icons/KakaoLogo.svg";

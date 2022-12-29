@@ -1,18 +1,13 @@
 import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
-  ${({ theme }) => {
-    const { colors } = theme;
-    return css`
-      width: 640px;
-      padding: 64px 128px;
+  width: 640px;
+  padding: 64px 128px;
 
-      display: flex;
-      flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-      background-color: rgba(0, 0, 0, 0.5);
-    `;
-  }}
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 export const TitleBox = styled.div`

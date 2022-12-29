@@ -1,7 +1,8 @@
 import Head from "next/head";
 
 import MainTemplate from "@/components/template/MainTemplate";
-import { QuestionPostType, getQuestionsAsync } from "@/apis/question";
+import type { QuestionPostType } from "@/apis/question";
+import { getQuestionsAsync } from "@/apis/question";
 
 interface QuestionsPageProps {
   recentQuestions: QuestionPostType[];

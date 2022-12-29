@@ -22,16 +22,16 @@ const SORT_OPTION: SelectInfoType[] = [
 
 const ANSWERED_OPTION: SelectInfoType[] = [
   {
+    option: "both",
+    display: "전체"
+  },
+  {
     option: "progressed",
     display: "미채택"
   },
   {
     option: "completed",
     display: "채택됨"
-  },
-  {
-    option: "both",
-    display: "고려 안함"
   }
 ];
 

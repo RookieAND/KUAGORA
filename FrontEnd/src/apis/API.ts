@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import { apiURL } from "@/constants/api";
 
 /**
@@ -61,10 +62,7 @@ function preProcessError(err: unknown): APIError {
  * @param config Axios 요청 관련 config (AxiosRequestConfig)
  * @returns 요청 성공 시 결과 객체, 요청 실패 시 에러 객체 리턴.
  */
-export async function getAsync<T, D>(
-  url: string,
-  config?: AxiosRequestConfig
-): APIResult<T> {
+export async function getAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await axios.get<T, AxiosResponse<T, D>, D>(url, {
       baseURL: apiURL,
@@ -87,11 +85,7 @@ export async function getAsync<T, D>(
  * @param config Axios 요청 관련 config (AxiosRequestConfig)
  * @returns 요청 성공과 실패에 따른 APIResult 타입 리턴
  */
-export async function postAsync<T, D>(
-  url: string,
-  data: D,
-  config?: AxiosRequestConfig
-): APIResult<T> {
+export async function postAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await axios.post<T, AxiosResponse<T, D>, D>(url, data, {
       baseURL: apiURL,
@@ -113,10 +107,7 @@ export async function postAsync<T, D>(
  * @param config Axios 요청 관련 config (AxiosRequestConfig)
  * @returns 요청 성공과 실패에 따른 APIResult 타입 리턴
  */
-export async function deleteAsync<T, D>(
-  url: string,
-  config?: AxiosRequestConfig
-): APIResult<T> {
+export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await axios.delete<T, AxiosResponse<T, D>, D>(url, {
       baseURL: apiURL,
@@ -139,11 +130,7 @@ export async function deleteAsync<T, D>(
  * @param config Axios 요청 관련 config (AxiosRequestConfig)
  * @returns 요청 성공과 실패에 따른 APIResult 타입 리턴
  */
-export async function patchAsync<T, D>(
-  url: string,
-  data: D,
-  config?: AxiosRequestConfig
-): APIResult<T> {
+export async function patchAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await axios.patch<T, AxiosResponse<T, D>, D>(url, data, {
       baseURL: apiURL,

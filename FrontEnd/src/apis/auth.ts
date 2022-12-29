@@ -1,38 +1,32 @@
-import { postAsync, APIResult, deleteAsync } from "./API";
-import { IAccessToken, IUserData } from "@/stores/atoms";
-import { SocialPlatform } from "@/constants/social";
+import type { APIResult } from "@/apis/API";
+import { postAsync, deleteAsync } from "@/apis/API";
+import type { IAccessToken, IUserData } from "@/stores/atoms";
+import type { SocialPlatform } from "@/constants/social";
 
-interface loginResultType {
+interface LoginResultType {
   token: string;
 }
 
-interface verifyAsyncProps {
+interface VerifyAsyncProps {
   code: string;
 }
 
-export interface verifyAsyncResult {
+export interface VerifyAsyncResult {
   userData: IUserData;
-  access_token: IAccessToken;
-  refresh_token: IAccessToken;
+  accessToken: IAccessToken;
+  refreshToken: IAccessToken;
 }
 
 /**
  * 발급 받은 JWT 토큰을 통해 로그인을 진행하는 함수.
  * @param token JWT 액세스 토큰
  */
-export async function loginAsync(
-  social: SocialPlatform,
-  token: string
-): APIResult<loginResultType> {
-  const result = await postAsync<loginResultType, null>(
-    `/auth/login/${social}`,
-    null,
-    {
-      headers: {
-        Authorization: token
-      }
+export async function loginAsync(social: SocialPlatform, token: string): APIResult<LoginResultType> {
+  const result = await postAsync<LoginResultType, null>(`/auth/login/${social}`, null, {
+    headers: {
+      Authorization: token
     }
-  );
+  });
 
   return result;
 }
@@ -56,20 +50,14 @@ export async function logoutAsync(token: string) {
  * @param code 플랫폼으로부터 넘겨 받은 인증 코드
  * @returns 서버로부터 발급한 유저의 JWT
  */
-export const verifyLoginAsync = async (
-  social: SocialPlatform,
-  code: string
-): Promise<verifyAsyncResult | null> => {
-  const resData = await postAsync<verifyAsyncResult, verifyAsyncProps>(
-    `/auth/verify/${social}`,
-    {
-      code
-    }
-  );
+export const verifyLoginAsync = async (social: SocialPlatform, code: string): Promise<VerifyAsyncResult | null> => {
+  const resData = await postAsync<VerifyAsyncResult, VerifyAsyncProps>(`/auth/verify/${social}`, {
+    code
+  });
 
   if (resData.isSuccess) {
-    const { access_token, refresh_token, userData } = resData.result;
-    return { access_token, refresh_token, userData };
+    const { accessToken, refreshToken, userData } = resData.result;
+    return { accessToken, refreshToken, userData };
   }
   return null;
 };

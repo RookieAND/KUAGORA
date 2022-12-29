@@ -1,20 +1,19 @@
 import Head from "next/head";
 
 import { useInfiniteQuery } from "react-query";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/router";
 
-import { getQuestionsAsync, QuestionSortType, QuestionSearchType, QuestionAnsweredType } from "@/apis/question";
+import type { QuestionSortType, QuestionAnsweredType } from "@/apis/question";
+import { getQuestionsAsync } from "@/apis/question";
 import QuestionsTemplate from "@/components/template/QuestionsTemplate";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
 const Questions = () => {
   const router = useRouter();
   const questionRef = useRef(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const { search, sort, answered } = router.query;
-  const searchOption = (search || "title") as QuestionSearchType;
+  const { sort, answered } = router.query;
   const sortOption = (sort || "recent") as QuestionSortType;
   const answeredOption = (answered || "both") as QuestionAnsweredType;
   const amount = 12; // 1회 fetch 시 최대 12개의 질문글을 불러옴
@@ -49,11 +48,6 @@ const Questions = () => {
     }
   };
 
-  // 질문글 검색 바의 Value를 새롭게 변경해주는 함수.
-  const changeSearchQuery = (newQuery: string) => {
-    setSearchQuery(newQuery);
-  };
-
   useInfiniteScroll(questionRef, fetchNextQuestions);
 
   // useInfiniteQuery 로 받은 데이터를 페이지 별로 순회하여 API 성공 여부에 따른 값을 추가.
@@ -69,12 +63,7 @@ const Questions = () => {
         <link rel="icon" href="/favicon.ico" />
         <title>지식의 요람, KU : AGORA</title>
       </Head>
-      <QuestionsTemplate
-        questions={questions}
-        questionRef={questionRef}
-        searchQuery={searchQuery}
-        changeSearchQuery={changeSearchQuery}
-      />
+      <QuestionsTemplate questions={questions} questionRef={questionRef} />
     </>
   );
 };

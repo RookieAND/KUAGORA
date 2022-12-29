@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 
 interface StyledInfoGuideImageProps {
   src: StaticImageData;
@@ -21,8 +21,7 @@ export const Image = styled.div<StyledInfoGuideImageProps>`
       width: 50%;
       height: 400px;
 
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)),
-        url(${src.src});
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)), url(${src.src});
       background-size: cover;
     `;
   }}

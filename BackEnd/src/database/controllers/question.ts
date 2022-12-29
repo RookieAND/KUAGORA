@@ -6,7 +6,12 @@ import Like from '@/database/entity/like';
 import Question from '@/database/entity/question';
 import User from '@/database/entity/user';
 
-import { SORT_TYPE, ANSWERED_TYPE, SortOptionType, AnsweredOptionType } from '@/constants/question';
+import {
+  SORT_TYPE,
+  ANSWERED_TYPE,
+  SortOptionType,
+  AnsweredOptionType,
+} from '@/constants/question';
 import { BadRequestError } from '@/errors/definedErrors';
 
 /**
@@ -91,6 +96,7 @@ export const getQuestionById = async (
     .where('question.id = :questionId', { questionId })
     .leftJoin('question.user', 'user')
     .leftJoinAndSelect('question.keywords', 'keyword')
+    .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .getOne();
 
   // 게시글이 존재하는지를 먼저 확인. 타입 가드도 겸임.
@@ -236,7 +242,7 @@ export const removeQuestion = async (questionId: number, uuid: string) => {
     .andWhere('question.id =: questionId', { questionId })
     .execute();
 
-  if (removeQuestiontResult.affected !== -1) {
+  if (removeQuestiontResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 질문글을 지우려 했거나, 자신이 지우지 않은 글을 지우려 했습니다.',
     );
@@ -328,7 +334,7 @@ export const removeComment = async (
     .andWhere('comment.user_uuid = :uuid', { uuid })
     .execute();
 
-  if (removeCommentResult.affected !== -1) {
+  if (removeCommentResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 댓글을 지우려 하셨거나, 자신이 작성하지 않은 댓글을 지우려 하셨습니다.',
     );
@@ -365,7 +371,7 @@ export const patchQuestionState = async (
     .where('comment.id = :commentId', { commentId })
     .execute();
 
-  if (editCommentStateResult.affected !== 1) {
+  if (editCommentStateResult.affected === 1) {
     throw new BadRequestError('존재하지 않는 댓글에 대한 요청입니다.');
   }
 };
@@ -409,7 +415,7 @@ export const addKeyword = async (questionId: number, content: string) => {
     .updateEntity(false)
     .execute();
 
-  if (addKeywordResult.raw.affected == -1) {
+  if (addKeywordResult.raw.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 게시글에 키워드를 추가하려 하였습니다.',
     );
@@ -429,11 +435,11 @@ export const removeKeyword = async (questionId: number, keywordId: number) => {
   const removeKeywordResult = await getRepository(Keyword)
     .createQueryBuilder('keyword')
     .softDelete()
-    .andWhere('keyword.question_id =: questionId', { questionId })
-    .andWhere('keyword.id =: keywordId', { keywordId })
+    .andWhere('keyword.question_id = :questionId', { questionId })
+    .andWhere('keyword.id = :keywordId', { keywordId })
     .execute();
 
-  if (removeKeywordResult.affected !== -1) {
+  if (removeKeywordResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 게시글의 키워드를 삭제하려 했습니다.',
     );
@@ -465,7 +471,7 @@ export const addLike = async (questionId: number, uuid: string) => {
     .updateEntity(false)
     .execute();
 
-  if (addLikeResult.raw.affected == -1) {
+  if (addLikeResult.raw.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 게시글에 좋아요를 추가하려 하였습니다.',
     );
@@ -483,12 +489,12 @@ export const addLike = async (questionId: number, uuid: string) => {
 export const removeLike = async (questionId: number, uuid: string) => {
   const removeLikeResult = await getRepository(Like)
     .createQueryBuilder('like')
-    .softDelete()
-    .andWhere('like.question_id =: questionId', { questionId })
-    .andWhere('like.user_uuid =: uuid', { uuid })
+    .delete()
+    .where('like.question_id = :questionId', { questionId })
+    .andWhere('like.user_uuid = :uuid', { uuid })
     .execute();
 
-  if (removeLikeResult.affected !== -1) {
+  if (removeLikeResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 게시글의 좋아요를 수정하려 했거나, UUID가 유효하지 않습니다.',
     );

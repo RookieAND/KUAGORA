@@ -30,7 +30,7 @@ const PostQuestionTemplate = ({
       <Navbar />
       <PostHeader postTitle={postTitle} changeTitleInput={changeTitleInput} submitNewPost={submitNewPost} />
       <PostKeyword postKeywords={postKeywords} addNewKeyword={addNewKeyword} removeKeyword={removeKeyword} />
-      <PostContent changeContentInput={changeContentInput} />
+      <PostContent postContent={postContent} changeContentInput={changeContentInput} />
       <Footer />
     </>
   );

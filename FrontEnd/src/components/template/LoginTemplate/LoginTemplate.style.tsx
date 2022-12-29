@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 
 interface StyledWrapperProps {
   image: StaticImageData;
@@ -20,8 +20,7 @@ export const Wrapper = styled.div`
       justify-content: center;
       align-items: center;
 
-      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)),
-        url(${image.src});
+      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25)), url(${image.src});
       background-size: cover;
     `;
   }}

@@ -3,7 +3,7 @@ import { setUserDataAtom } from "@/stores/actions";
 
 import * as style from "./CommentElement.style";
 
-import { UserDataType } from "@/apis/question";
+import type { UserDataType } from "@/apis/question";
 import { formatISODate } from "@/utils/formatISODate";
 
 interface CommentElementProps {

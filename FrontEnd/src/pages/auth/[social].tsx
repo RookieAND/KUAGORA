@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { setUserDataAtom, setJWTAtom } from "@/stores/actions";
 import { verifyLoginAsync } from "@/apis/auth";
-import { VerifyState, SocialPlatform } from "@/constants/social";
+import type { VerifyState, SocialPlatform } from "@/constants/social";
 import LoginTemplate from "@/components/template/LoginTemplate";
 
 const SocialLogin = () => {
@@ -23,8 +23,8 @@ const SocialLogin = () => {
       const social = router.query.social as SocialPlatform;
       const result = await verifyLoginAsync(social, code);
       if (result != null) {
-        const { access_token, refresh_token, userData } = result;
-        setJWT({ access_token, refresh_token });
+        const { accessToken, refreshToken, userData } = result;
+        setJWT({ accessToken, refreshToken });
         setUserData(userData);
         router.replace("/");
       } else {

@@ -1,8 +1,13 @@
-import styled, { css, DefaultTheme } from "styled-components";
+import styled, { css } from "styled-components";
 
 interface StyledIsCompletedProps {
   theme: any; // CHECK : 해결할 수 있는 방법 찾아야 함.
   state: "progressed" | "completed";
+}
+
+interface StyledIsLikeProps {
+  theme: any;
+  isLike: boolean;
 }
 
 export const Wrapper = styled.div`
@@ -46,7 +51,6 @@ export const Title = styled.h5`
 `;
 
 export const AuthorBox = styled.div`
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -66,6 +70,42 @@ export const StateText = styled.span`
       text-align: left;
       color: ${colors.mono.gray7};
       font-size: ${fonts.size.base};
+      font-weight: ${fonts.weight.normal};
+    `;
+  }}
+`;
+
+export const LikeBox = styled.div<StyledIsLikeProps>`
+  ${({ theme, isLike }) => {
+    const { colors } = theme;
+    return css`
+      width: 100%;
+      padding: 4px 44px;
+      margin: 8px auto;
+
+      display: flex;
+      justify-content: space-between;
+
+      background-color: ${isLike ? colors.red.rose : colors.main.opacity30};
+      color: ${isLike ? colors.mono.white : colors.main.normal};
+      border-radius: 8px;
+      cursor: pointer;
+
+      svg,
+      path {
+        fill: ${isLike ? colors.mono.white : colors.main.normal};
+        margin: auto 0px;
+      }
+    `;
+  }}
+`;
+
+export const LikeText = styled.p`
+  ${({ theme }) => {
+    const { fonts } = theme;
+    return css`
+      margin: 4px 0px;
+      font-size: ${fonts.size.lg};
       font-weight: ${fonts.weight.normal};
     `;
   }}

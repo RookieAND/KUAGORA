@@ -1,11 +1,10 @@
 import * as style from "./QuestionDetail.style";
 
-import { KeywordDataType, LikeDataType } from "@/apis/question";
+import type { KeywordDataType } from "@/apis/question";
 
 interface QuestionDetailProps {
   content: string;
   keywords: KeywordDataType[];
-  likes: LikeDataType;
 }
 
 const QuestionDetail = ({ content, keywords }: QuestionDetailProps) => {

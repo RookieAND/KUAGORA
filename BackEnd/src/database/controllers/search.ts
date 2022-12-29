@@ -22,22 +22,6 @@ export const getQuestionByWord = async (
   sortOption: SortOptionType,
   answeredOption: AnsweredOptionType,
 ) => {
-  const sortType = {
-    recent: {
-      subQuery: 'subQuestion.createdAt',
-      query: 'question.createdAt',
-    },
-    popular: {
-      subQuery: 'likeCount',
-      query: 'topQuestion.likeCount',
-    },
-  };
-  const answeredType = {
-    progressed: ['progressed'],
-    completed: ['completed'],
-    both: ['progressed', 'completed'],
-  };
-
   let questionDatas = undefined;
   questionDatas = await getRepository(Question)
     .createQueryBuilder('question')
@@ -128,7 +112,7 @@ export const getQuestionByKeyword = async (
       'topQuestion.subQuestion_id = question.id',
     )
     .leftJoin('question.user', 'user')
-    .leftJoinAndSelect('question.keywords', 'keywords')
+    .leftJoinAndSelect('question.keywords', 'keyword')
     .loadRelationCountAndMap('question.likeCount', 'question.likes')
     .loadRelationCountAndMap('question.commentCount', 'question.comments')
     .orderBy(SORT_TYPE[sortOption].query, 'DESC')

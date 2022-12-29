@@ -4,12 +4,7 @@
     "node": true,
     "es6": true
   },
-  "extends": [
-    "airbnb",
-    "airbnb/hooks",
-    "plugin:prettier/recommended",
-    "plugin:@next/next/recommended"
-  ],
+  "extends": ["airbnb-typescript", "prettier", "next"],
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -20,7 +15,7 @@
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
   "rules": {
     "react/self-closing-comp": "error",
     "react/no-unescaped-entities": "off",
@@ -47,7 +42,7 @@
     "import/no-extraneous-dependencies": "off",
     "import/no-default-export": "off",
     "import/prefer-default-export": "off",
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react/jsx-filename-extension": [

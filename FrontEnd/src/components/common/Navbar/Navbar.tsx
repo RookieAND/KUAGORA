@@ -6,7 +6,8 @@ import * as style from "@/components/common/Navbar/Navbar.style";
 
 import { logoutAsync } from "@/apis/auth";
 import { PATH_INFO } from "@/constants/url";
-import NavItem, { NavItemKey } from "@/components/common/Navbar/NavItem";
+import NavItem from "@/components/common/Navbar/NavItem";
+import type { NavItemKey } from "@/components/common/Navbar/NavItem";
 import { accessTokenAtom, setJWTAtom } from "@/stores/actions";
 
 const Navbar = () => {
@@ -30,7 +31,7 @@ const Navbar = () => {
   const logout = async () => {
     const isLogout = await logoutAsync(accessToken as string);
     if (isLogout) {
-      setJWTToken({ access_token: null, refresh_token: null });
+      setJWTToken({ accessToken: null, refreshToken: null });
       setLoginState(false);
       router.replace("/");
     }
