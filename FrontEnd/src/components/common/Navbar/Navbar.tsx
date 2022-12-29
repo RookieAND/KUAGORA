@@ -31,7 +31,7 @@ const Navbar = () => {
   const logout = async () => {
     const isLogout = await logoutAsync(accessToken as string);
     if (isLogout) {
-      setJWTToken({ access_token: null, refresh_token: null });
+      setJWTToken({ accessToken: null, refreshToken: null });
       setLoginState(false);
       router.replace("/");
     }
