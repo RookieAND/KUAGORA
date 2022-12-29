@@ -1,13 +1,14 @@
-import { useRef, useEffect, RefObject } from "react";
+import type { RefObject } from "react";
+import { useRef, useEffect } from "react";
 
-type callbackFuncType = (...args: any) => any;
+type CallbackFuncType = (...args: any) => any;
 
 /**
  * Intersection Observer를 활용하여 관측 Ref를 관찰하고, 콜백 함수를 실행하는 Hook
  * @param targetRef 관찰하려는 HTML Element Ref
  * @param callbackFunc 관측 대상이 관찰되었을 경우 실행할 Callback
  */
-const useInfiniteScroll = (targetRef: RefObject<HTMLDivElement>, callbackFunc: callbackFuncType) => {
+const useInfiniteScroll = (targetRef: RefObject<HTMLDivElement>, callbackFunc: CallbackFuncType) => {
   const observeRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {

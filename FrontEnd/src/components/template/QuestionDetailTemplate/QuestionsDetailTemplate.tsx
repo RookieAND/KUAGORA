@@ -1,7 +1,7 @@
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 import { QuestionDetail, DetailHeader } from "@/components/main/Question/QuestionDetail";
-import { QuestionDetailType, LikeDataType } from "@/apis/question";
+import type { QuestionDetailType, LikeDataType } from "@/apis/question";
 import CommentList from "@/components/main/Comment/CommentList";
 
 interface QuestionDetailTemplateProps {

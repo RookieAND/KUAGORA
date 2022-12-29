@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { NavItemProps } from "./NavItem";
+import type { NavItemProps } from "./NavItem";
 
 export const Wrapper = styled.li<Partial<NavItemProps>>`
   ${({ theme, isFocused }) => {
@@ -8,9 +8,7 @@ export const Wrapper = styled.li<Partial<NavItemProps>>`
       height: 24px;
 
       svg {
-        fill: ${isFocused
-          ? theme.colors.main.opacity60
-          : theme.colors.mono.black};
+        fill: ${isFocused ? theme.colors.main.opacity60 : theme.colors.mono.black};
       }
     `;
   }}

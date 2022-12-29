@@ -1,7 +1,7 @@
 import * as style from "./LoginTemplate.style";
 import BackgroundImg from "@/assets/images/Headline.jpg";
 import LoginBox from "@/components/main/Login/LoginBox";
-import { VerifyState } from "@/constants/social";
+import type { VerifyState } from "@/constants/social";
 
 interface LoginTemplateProps {
   verifyState: VerifyState;

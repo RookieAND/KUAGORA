@@ -1,5 +1,4 @@
 import * as style from "@/components/main/Home/HeadLine/HeadLine.style";
-import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
 import HeadLineImg from "@/assets/images/Headline.jpg";

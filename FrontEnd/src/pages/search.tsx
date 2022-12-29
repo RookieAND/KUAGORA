@@ -4,7 +4,8 @@ import { useInfiniteQuery } from "react-query";
 import { useRef } from "react";
 import { useRouter } from "next/router";
 
-import { QuestionAnsweredType, QuestionSortType, QuestionSearchType, getQuestionsByQueryAsync } from "@/apis/question";
+import type { QuestionAnsweredType, QuestionSortType, QuestionSearchType } from "@/apis/question";
+import { getQuestionsByQueryAsync } from "@/apis/question";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
 import SearchTemplate from "@/components/template/SearchTemplate";

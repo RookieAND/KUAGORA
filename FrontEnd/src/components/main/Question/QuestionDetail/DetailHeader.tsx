@@ -1,4 +1,4 @@
-import { LikeDataType } from "@/apis/question";
+import type { LikeDataType } from "@/apis/question";
 import { formatISODate } from "@/utils/formatISODate";
 
 import * as style from "./DetailHeader.style";

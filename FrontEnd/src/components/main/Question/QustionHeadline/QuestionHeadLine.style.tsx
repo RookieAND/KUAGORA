@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import styled, { css } from "styled-components";
 
 interface StyledHeadlineWrapperProps {

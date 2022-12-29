@@ -1,4 +1,3 @@
-import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 export interface IUserData {
@@ -8,8 +7,8 @@ export interface IUserData {
 }
 
 export interface ITokenData {
-  access_token: IAccessToken;
-  refresh_token: IAccessToken;
+  accessToken: IAccessToken;
+  refreshToken: IAccessToken;
 }
 
 export type IAccessToken = string | null;
@@ -21,6 +20,6 @@ export const userDataAtom = atomWithStorage<IUserData>("user_data", {
 });
 
 export const jwtTokenAtom = atomWithStorage<ITokenData>("jwt_token", {
-  access_token: null,
-  refresh_token: null
+  accessToken: null,
+  refreshToken: null
 });

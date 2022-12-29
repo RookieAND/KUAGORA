@@ -4,7 +4,7 @@
     "node": true,
     "es6": true
   },
-  "extends": ["airbnb-typescript", "plugin:prettier/recommended", "plugin:@next/next/recommended"],
+  "extends": ["airbnb-typescript", "prettier", "next"],
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -15,7 +15,7 @@
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
   "rules": {
     "react/self-closing-comp": "error",
     "react/no-unescaped-entities": "off",

@@ -65,7 +65,7 @@ export const IconWrap = styled.div`
 
 export const CommentInputBox = styled.div`
   ${({ theme }) => {
-    const { colors, fonts } = theme;
+    const { colors } = theme;
     return css`
       width: 836px;
       margin: 0px auto;

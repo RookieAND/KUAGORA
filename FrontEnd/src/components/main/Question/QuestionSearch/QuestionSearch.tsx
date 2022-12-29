@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { SelectType } from "@/constants/search";
+import type { SelectType } from "@/constants/search";
 
 import * as style from "./QuestionSearch.style";
 import SearchSvg from "@/assets/icons/Search.svg";

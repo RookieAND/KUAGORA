@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 
 import * as style from "./QuestionCard.style";
 
-import { KeywordDataType } from "@/apis/question";
+import type { KeywordDataType } from "@/apis/question";
 import { omitTitleText } from "@/utils/omitTitleText";
 
 import CommentSvg from "@/assets/icons/Comment.svg";

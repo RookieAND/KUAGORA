@@ -1,7 +1,7 @@
 import * as style from "./QuestionList.style";
 
 import QuestionContext from "@/components/main/Question/QuestionList/QuestionContext";
-import { QuestionPostType } from "@/apis/question";
+import type { QuestionPostType } from "@/apis/question";
 
 interface QuestionListProps {
   questions: QuestionPostType[] | undefined;

@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { theme } from "@/constants/styles/theme";
+import type { theme } from "@/constants/styles/theme";
 
 interface StyledSocialButtonWrapperProps {
   backgroundColor: string;

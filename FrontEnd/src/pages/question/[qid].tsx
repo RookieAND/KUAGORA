@@ -2,16 +2,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { useMutation } from "react-query";
 
-import {
-  getQuestionAsync,
-  QuestionDetailType,
-  LikeDataType,
-  getLikesAsync,
-  addLikesAsync,
-  deleteLikesAsync
-} from "@/apis/question";
+import type { QuestionDetailType, LikeDataType } from "@/apis/question";
+import { getQuestionAsync, addLikesAsync, deleteLikesAsync } from "@/apis/question";
 import QuestionsDetailTemplate from "@/components/template/QuestionDetailTemplate";
 import { setUserDataAtom, accessTokenAtom } from "@/stores/actions";
 

@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { accessTokenAtom } from "@/stores/actions";
-import { QuestionPostType } from "@/apis/question";
+import type { QuestionPostType } from "@/apis/question";
 
 import TitleBox from "@/components/common/TitleBox";
 import Navbar from "@/components/common/Navbar";
