@@ -253,15 +253,15 @@ export const postCreateQuestion = async (
   return addQuestionId;
 };
 
-export const removeQuestion = async (questionId: number, uuid: string) => {
-  const removeQuestiontResult = await getRepository(Question)
+export const deleteQuestion = async (questionId: number, uuid: string) => {
+  const deleteQuestiontResult = await getRepository(Question)
     .createQueryBuilder('question')
     .softDelete()
-    .where('question.user_uuid =: uuid', { uuid })
-    .andWhere('question.id =: questionId', { questionId })
+    .where('question.user_uuid = :uuid', { uuid })
+    .andWhere('question.id = :questionId', { questionId })
     .execute();
 
-  if (removeQuestiontResult.affected === -1) {
+  if (deleteQuestiontResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 질문글을 지우려 했거나, 자신이 지우지 않은 글을 지우려 했습니다.',
     );

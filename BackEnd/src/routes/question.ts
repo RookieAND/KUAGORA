@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import {
   getQuestionList,
   getQuestionById,
-  removeQuestion,
+  deleteQuestion,
   addComment,
   getComments,
   removeComment,
@@ -79,7 +79,7 @@ questionRouter.delete(
   checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const qid = Number(req.params.qid);
-    const uuid = req.uuid;
+    const uuid = req.uuid!;
 
     if (!qid) {
       throw new BadRequestError(
@@ -87,13 +87,7 @@ questionRouter.delete(
       );
     }
 
-    if (!uuid) {
-      throw new UnauthorizedError(
-        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
-      );
-    }
-
-    await removeQuestion(qid, uuid);
+    await deleteQuestion(qid, uuid);
     return res.end();
   }),
 );
