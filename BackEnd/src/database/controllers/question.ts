@@ -112,7 +112,9 @@ export const getQuestionById = async (
     .where('like.question_id =:questionId', { questionId })
     .getOne());
 
-  return { isLike, ...questionData };
+  const isWriter = uuid === questionData.user.uuid;
+
+  return { isLike, isWriter, ...questionData };
 };
 
 /**
