@@ -4,10 +4,11 @@ import type { KeywordDataType } from "@/apis/question";
 interface QuestionDetailProps {
   content: string;
   keywords: KeywordDataType[];
+  isWriter: boolean;
   state: "progressed" | "completed";
 }
 
-const QuestionDetail = ({ content, keywords, state }: QuestionDetailProps) => {
+const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailProps) => {
   return (
     <style.Wrapper>
       <style.KeywordBox>
@@ -17,6 +18,12 @@ const QuestionDetail = ({ content, keywords, state }: QuestionDetailProps) => {
             <style.Keyword state={state} key={keyword.id}>{`#${keyword.content}`}</style.Keyword>
           ))}
       </style.KeywordBox>
+      {isWriter && (
+        <style.ModifyBox>
+          <style.ModifyText>{`수정`}</style.ModifyText>
+          <style.ModifyText>{`삭제`}</style.ModifyText>
+        </style.ModifyBox>
+      )}
       <style.Content>{content}</style.Content>
     </style.Wrapper>
   );
