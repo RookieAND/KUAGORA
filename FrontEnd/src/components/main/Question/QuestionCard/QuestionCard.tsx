@@ -7,6 +7,7 @@ import { omitTitleText } from "@/utils/omitTitleText";
 
 import CommentSvg from "@/assets/icons/Comment.svg";
 import LikeSvg from "@/assets/icons/Like.svg";
+import QuestionKeyword from "@/components/main/Question/QuestionKeyword";
 
 interface QuestionCardProps {
   title: string;
@@ -25,12 +26,7 @@ const QuestionCard = ({ title, likeCount, commentCount, id, keywords, state }: Q
     <style.Wrapper onClick={moveToQuestionPost}>
       <style.TopSection>
         <style.Title>{omitTitleText(title, 30, "...")}</style.Title>
-        <style.KeywordBox>
-          {keywords.length > 0 &&
-            keywords.map((keyword: KeywordDataType) => (
-              <style.Keyword key={keyword.id} state={state}>{`#${keyword.content}`}</style.Keyword>
-            ))}
-        </style.KeywordBox>
+        <QuestionKeyword state={state} keywords={keywords} />
       </style.TopSection>
       <style.BottomSection state={state}>
         <style.StateText state={state}>{state == "completed" ? "해결된 질문" : "미해결된 질문"}</style.StateText>
