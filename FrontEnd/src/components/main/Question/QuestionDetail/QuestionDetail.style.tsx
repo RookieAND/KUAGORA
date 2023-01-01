@@ -1,5 +1,10 @@
 import styled, { css } from "styled-components";
 
+interface StyledQuestionStateProps {
+  theme: any;
+  state: "progressed" | "completed";
+}
+
 export const Wrapper = styled.div`
   width: 100%;
   padding: 16px 32px;
@@ -17,16 +22,16 @@ export const KeywordBox = styled.div`
   gap: 8px;
 `;
 
-export const Keyword = styled.span`
-  ${({ theme }) => {
+export const Keyword = styled.span<StyledQuestionStateProps>`
+  ${({ theme, state }) => {
     const { colors, fonts } = theme;
     return css`
       padding: 4px 12px;
       margin: 0px;
 
-      background-color: ${colors.main.opacity30};
+      background-color: ${state == "completed" ? colors.main.opacity30 : colors.mono.gray2};
 
-      color: ${colors.main.pressed};
+      color: ${state == "completed" ? colors.main.pressed : colors.mono.gray6};
       font-size: ${fonts.size.lg};
       font-weight: ${fonts.weight.normal};
     `;
