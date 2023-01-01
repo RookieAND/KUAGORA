@@ -20,6 +20,7 @@ export interface InfQueryType<T> {
 
 export interface QuestionDetailType extends QuestionPostType {
   isLike: boolean;
+  isWriter: boolean;
   user: UserDataType;
   content: string;
   comments: CommentDataType[];
@@ -138,8 +139,10 @@ export const getQuestionsAsync = async (
  * @param questionId 정보를 가져올 질문글의 ID
  * @returns 질문글 내에 담긴 정보
  */
-export const getQuestionAsync = async (questionId: number) => {
-  const response = await getAsync<QuestionDetailType, any>(`/question/${questionId}`);
+export const getQuestionAsync = async (questionId: number, token: string) => {
+  const response = await getAsync<QuestionDetailType, any>(`/question/${questionId}`, {
+    headers: { authorization: token }
+  });
   return response;
 };
 

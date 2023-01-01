@@ -6,13 +6,12 @@ import { useEffect, useState } from "react";
 import type { QuestionDetailType, LikeDataType } from "@/apis/question";
 import { getQuestionAsync, addLikesAsync, deleteLikesAsync } from "@/apis/question";
 import QuestionsDetailTemplate from "@/components/template/QuestionDetailTemplate";
-import { setUserDataAtom, accessTokenAtom } from "@/stores/actions";
+import { accessTokenAtom } from "@/stores/actions";
 
 const QuestionDetail = () => {
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
-  const [userData] = useAtom(setUserDataAtom);
   const [accessToken] = useAtom(accessTokenAtom);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [detailContent, setDetailContent] = useState<QuestionDetailType | undefined>(undefined);
@@ -28,11 +27,11 @@ const QuestionDetail = () => {
 
     const initializeData = async () => {
       // 질문글 컨텐츠 업데이트
-      const initDataResult = await getQuestionAsync(questionId);
+      const initDataResult = await getQuestionAsync(questionId, accessToken || "");
 
       // 질문글 관련 정보 로드 실패 시, 이전으로 되돌아감.
       if (!initDataResult.isSuccess) {
-        router.back();
+        router.replace("/questions");
       }
       setDetailContent(prev => (initDataResult.isSuccess ? initDataResult.result : prev));
 
@@ -48,10 +47,7 @@ const QuestionDetail = () => {
     };
 
     initializeData();
-  }, [router.isReady, questionId, userData, isAnswered]);
-
-  const isWriter = userData.uuid === detailContent?.user.uuid;
-  console.log(userData.uuid, detailContent?.user.uuid);
+  }, [router.isReady, questionId, isAnswered]);
 
   const changeQuestionState = () => {
     setIsAnswered(true);
@@ -80,6 +76,8 @@ const QuestionDetail = () => {
   if (detailContent == undefined) {
     return <span>Loading...</span>;
   }
+
+  const isWriter = detailContent.isWriter;
 
   return (
     <>
