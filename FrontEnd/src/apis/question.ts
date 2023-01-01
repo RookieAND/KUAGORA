@@ -167,6 +167,17 @@ export const addQuestionAsync = async (title: string, content: string, keywords:
 };
 
 /**
+ * 자신이 작성한 질문글을 삭제하는 함수
+ * @param questionId 삭제하려는 질문글의 id
+ * @param token 작성자의 엑세스 토큰
+ * @returns 삭제 성공 / 실패 여부
+ */
+export const deleteQuestionAsync = async (questionId: number, token: string) => {
+  const response = await deleteAsync<null, unknown>(`/question/${questionId}`, { headers: { authorization: token } });
+  return response;
+};
+
+/**
  * 질문글의 상태를 해결됨으로 변경하고, 채택된 댓글의 상태도 변경하는 함수.
  * @param title 질문글 제목
  * @param content 질문글 내용
