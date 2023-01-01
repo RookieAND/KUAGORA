@@ -190,7 +190,7 @@ export const getQuestionListByUser = async (
  * @param keywords 키워드 목록
  * @returns
  */
-export const addQuestion = async (
+export const postCreateQuestion = async (
   title: string,
   content: string,
   keywords: string[],
@@ -220,6 +220,7 @@ export const addQuestion = async (
     keywords.map(async (keyword) => {
       const newKeyword = new Keyword();
       newKeyword.content = keyword;
+      newKeyword.question = newQuestion;
 
       await getRepository(Keyword)
         .createQueryBuilder()
