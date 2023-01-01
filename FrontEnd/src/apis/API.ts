@@ -1,6 +1,44 @@
 import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+
 import { apiURL } from "@/constants/api";
+import { verifyRefreshTokenAsync } from "./auth";
+
+const API = axios.create({ baseURL: apiURL });
+
+/**
+ * Axios Intercepter 관련 설정
+ * request의 경우, localStorage 접근 시 발생하는 에러로 인해 헤더는 상황에 맞춰 토큰을 담는 것으로 조정.
+ * response : 토큰 만료 관련 오류 발생 시, 자동으로 리프레시 토큰을 보냄, 이후 리프레시 토큰이 갱신되었다면 기존의 요청 재전송.
+ */
+
+API.interceptors.response.use(
+  (res: AxiosResponse) => res,
+  async (err: AxiosError) => {
+    // 토큰 만료 에러인지를 확인하고, 만약 맞다면 저장된 리프레시 토큰을 재전송
+    if (err.response && err.response.status === 460) {
+      const jwtToken = JSON.parse(localStorage.getItem("jwt_token") || "");
+      if (jwtToken) {
+        const oldRefreshToken = jwtToken.refreshToken;
+        const verifyResponse = await verifyRefreshTokenAsync(oldRefreshToken);
+        // 리프레시 토큰을 성공적으로 인계 받았다면, 기존의 요청을 재전송함.
+        if (verifyResponse.isSuccess) {
+          const { accessToken, refreshToken } = verifyResponse.result;
+          localStorage.setItem("jwt_token", JSON.stringify({ accessToken, refreshToken }));
+          // 새롭게 갱신 받은 엑세스 토큰을 헤더에 삽입한 후 재요청 진행
+          return axios.request({
+            ...err.config,
+            headers: { ...err.config.headers, authorization: `${accessToken}` }
+          });
+        }
+        // 리프레시 토큰도 만료되었다면, 로그아웃을 진행시킴.
+        localStorage.removeItem("jwt_token");
+        localStorage.removeItem("user_data");
+        return Promise.reject(err);
+      }
+    }
+  }
+);
 
 /**
  * API 호출 함수의 반환 타입 (비동기 결과 Promise)
@@ -30,6 +68,7 @@ export interface APIError {
  */
 function preProcessError(err: unknown): APIError {
   // axios 통신 과정에서 발생한 오류인지를 먼저 판별.
+  console.log(err);
   if (axios.isAxiosError(err)) {
     // 응답까지 정상적으로 들어왔을 경우.
     if (err.response) {
@@ -64,8 +103,7 @@ function preProcessError(err: unknown): APIError {
  */
 export async function getAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
-    const response = await axios.get<T, AxiosResponse<T, D>, D>(url, {
-      baseURL: apiURL,
+    const response = await API.get<T, AxiosResponse<T, D>, D>(url, {
       responseType: "json",
       ...config
     });
@@ -87,7 +125,7 @@ export async function getAsync<T, D>(url: string, config?: AxiosRequestConfig): 
  */
 export async function postAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
-    const response = await axios.post<T, AxiosResponse<T, D>, D>(url, data, {
+    const response = await API.post<T, AxiosResponse<T, D>, D>(url, data, {
       baseURL: apiURL,
       responseType: "json",
       ...config
@@ -109,7 +147,7 @@ export async function postAsync<T, D>(url: string, data: D, config?: AxiosReques
  */
 export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
-    const response = await axios.delete<T, AxiosResponse<T, D>, D>(url, {
+    const response = await API.delete<T, AxiosResponse<T, D>, D>(url, {
       baseURL: apiURL,
       responseType: "json",
       ...config
@@ -132,7 +170,7 @@ export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig
  */
 export async function patchAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
-    const response = await axios.patch<T, AxiosResponse<T, D>, D>(url, data, {
+    const response = await API.patch<T, AxiosResponse<T, D>, D>(url, data, {
       baseURL: apiURL,
       responseType: "json",
       ...config

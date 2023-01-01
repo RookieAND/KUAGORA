@@ -1,8 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-
-import { SortOptionType, AnsweredOptionType } from '@/constants/question';
 import {
-  addQuestion,
   getQuestionList,
   getQuestionById,
   removeQuestion,
@@ -15,9 +12,10 @@ import {
   getKeyword,
   removeKeyword,
   patchQuestionState,
+  postCreateQuestion,
 } from '@/database/controllers/question';
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
-import { checkLoggedIn } from '@/routes/jwt';
+import { checkLoggedIn, getUserUUID } from '@/routes/jwt';
 import { wrapAsync } from '@/utils/wrapAsync';
 
 const questionRouter = express.Router();
@@ -71,7 +69,7 @@ questionRouter.post(
       throw new UnauthorizedError('요청의 헤더에 엑세스 토큰이 없습니다.');
     }
 
-    const questionId = await addQuestion(title, content, keywords, uuid);
+    const questionId = await postCreateQuestion(title, content, keywords, uuid);
     return res.status(200).json({ questionId });
   }),
 );
@@ -102,6 +100,7 @@ questionRouter.delete(
 
 questionRouter.get(
   `/:qid`,
+  getUserUUID,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const questionId = Number(req.params.qid);
     const uuid = req.uuid;

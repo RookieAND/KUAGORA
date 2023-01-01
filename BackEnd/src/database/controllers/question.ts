@@ -12,7 +12,7 @@ import {
   SortOptionType,
   AnsweredOptionType,
 } from '@/constants/question';
-import { BadRequestError } from '@/errors/definedErrors';
+import { BadRequestError, InternalServerError } from '@/errors/definedErrors';
 
 /**
  * 주어진 조건에 맞춰 질문글 목록을 보여주는 함수 getQuestionList
@@ -70,6 +70,7 @@ export const getQuestionList = async (
     .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
+  console.log(questionDatas);
   return questionDatas;
 };
 
@@ -111,7 +112,9 @@ export const getQuestionById = async (
     .where('like.question_id =:questionId', { questionId })
     .getOne());
 
-  return { isLike, ...questionData };
+  const isWriter = uuid === questionData.user.uuid;
+
+  return { isLike, isWriter, ...questionData };
 };
 
 /**
@@ -190,7 +193,7 @@ export const getQuestionListByUser = async (
  * @param keywords 키워드 목록
  * @returns
  */
-export const addQuestion = async (
+export const postCreateQuestion = async (
   title: string,
   content: string,
   keywords: string[],
@@ -213,25 +216,41 @@ export const addQuestion = async (
     .execute();
 
   // InsertResult.raw 를 통해 SQL Query 결과를 가져올 수 있음.
-  const newQuestionId = addQuestionResult.raw.insertId;
+  const addQuestionId = addQuestionResult.raw.insertId;
+  if (!addQuestionId) {
+    throw new InternalServerError(
+      '정상적으로 질문글 데이터가 DB에 추가되지 않았습니다.',
+    );
+  }
+  // 새롭게 생성된 질문글 데이터를 불러와 Keyword에 적용시킴.
+  const createdQuestion = new Question();
+  createdQuestion.id = addQuestionId;
 
   // 키워드가 있다면, 이 또한 DB에 적용해야 함.
   if (keywords.length > 0) {
-    keywords.map(async (keyword) => {
+    keywords.forEach(async (newContent) => {
       const newKeyword = new Keyword();
-      newKeyword.content = keyword;
+      newKeyword.content = newContent;
+      newKeyword.question = createdQuestion;
 
-      await getRepository(Keyword)
+      const addKeyword = await getRepository(Keyword)
         .createQueryBuilder()
         .insert()
         .into('keyword')
         .values(newKeyword)
         .updateEntity(false)
         .execute();
+
+      const addKeywordId = addKeyword.raw.insertId;
+      if (!addKeywordId) {
+        throw new InternalServerError(
+          '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
+        );
+      }
     });
   }
 
-  return newQuestionId;
+  return addQuestionId;
 };
 
 export const removeQuestion = async (questionId: number, uuid: string) => {

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-import { UnauthorizedError } from '@/errors/definedErrors';
+import { ExpireTokenError } from '@/errors/definedErrors';
 import User from '@/database/entity/user';
 
 dotenv.config();
@@ -14,7 +14,7 @@ dotenv.config();
  */
 export const createJWT = (uuid: string) => {
   const token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
-    expiresIn: '1h',
+    expiresIn: '10s',
   });
   return token;
 };
@@ -46,6 +46,8 @@ export const verifyJWT = async (token: string) => {
     ) as User;
     return decoded_token.uuid;
   } catch (err) {
-    throw new UnauthorizedError('유효하지 않은 JWT 입니다.');
+    throw new ExpireTokenError(
+      '유효하지 않은 JWT입니다. 리프레시 토큰을 보내주세요.',
+    );
   }
 };

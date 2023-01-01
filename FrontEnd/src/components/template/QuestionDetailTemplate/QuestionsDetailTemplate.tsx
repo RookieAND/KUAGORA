@@ -30,7 +30,12 @@ const QuestionDetailTemplate = ({
         likesData={likesData}
         toggleLikeState={toggleLikeState}
       />
-      <QuestionDetail content={detailContent.content} keywords={detailContent.keywords} />
+      <QuestionDetail
+        content={detailContent.content}
+        keywords={detailContent.keywords}
+        isWriter={isWriter}
+        state={detailContent.state}
+      />
       <CommentList isWriter={isWriter} state={detailContent.state} changeQuestionState={changeQuestionState} />
       <Footer />
     </>

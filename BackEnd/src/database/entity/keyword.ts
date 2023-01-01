@@ -1,18 +1,27 @@
-import questionRouter from '@/routes/question';
-import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
 
-import BasicEntity from '@/database/entity/basic';
 import Question from '@/database/entity/question';
 import { Length } from 'class-validator';
 
 @Entity()
-class Keyword extends BasicEntity {
-  @Length(1, 15)
+class Keyword {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Length(2, 10)
   @Column('varchar')
   content!: string;
 
   // [Relation] Keyword : Question = N : 1
-  @ManyToOne(() => Question, (question) => question.comments)
+  @ManyToOne(() => Question, (question) => question.keywords, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'question_id',
   })

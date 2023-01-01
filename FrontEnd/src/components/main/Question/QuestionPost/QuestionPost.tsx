@@ -6,7 +6,7 @@ import QuestionCard from "@/components/main/Question/QuestionCard";
 
 interface QuestionPostProps {
   questions: QuestionPostType[] | undefined;
-  questionRef: RefObject<HTMLDivElement>;
+  questionRef: RefObject<HTMLDivElement> | null;
 }
 
 const QuestionPost = ({ questions, questionRef }: QuestionPostProps) => {

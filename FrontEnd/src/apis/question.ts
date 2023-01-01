@@ -12,14 +12,15 @@ export interface QuestionPostType {
   keywords: KeywordDataType[];
 }
 
-export interface QuestionInfQueryType {
-  content: QuestionPostType[];
+export interface InfQueryType<T> {
+  content: T[];
   isLast: boolean;
   nextPage: number;
 }
 
 export interface QuestionDetailType extends QuestionPostType {
   isLike: boolean;
+  isWriter: boolean;
   user: UserDataType;
   content: string;
   comments: CommentDataType[];
@@ -82,7 +83,7 @@ export const getQuestionsByQueryAsync = async (
   sortOption: QuestionSortType,
   searchOption: QuestionSearchType,
   answeredOption: QuestionAnsweredType
-) => {
+): APIResult<InfQueryType<QuestionPostType>> => {
   const response = await getAsync<QuestionPostType[], any>(`/search/${searchOption}`, {
     params: { page, amount, query, sortOption, answeredOption }
   });
@@ -114,7 +115,7 @@ export const getQuestionsAsync = async (
   amount: number,
   sortOption: QuestionSortType,
   answeredOption: QuestionAnsweredType
-): APIResult<QuestionInfQueryType> => {
+): APIResult<InfQueryType<QuestionPostType>> => {
   const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
     params: { page, amount, sortOption, answeredOption }
   });
@@ -138,8 +139,10 @@ export const getQuestionsAsync = async (
  * @param questionId 정보를 가져올 질문글의 ID
  * @returns 질문글 내에 담긴 정보
  */
-export const getQuestionAsync = async (questionId: number) => {
-  const response = await getAsync<QuestionDetailType, any>(`/question/${questionId}`);
+export const getQuestionAsync = async (questionId: number, token: string) => {
+  const response = await getAsync<QuestionDetailType, any>(`/question/${questionId}`, {
+    headers: { authorization: token }
+  });
   return response;
 };
 
