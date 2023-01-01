@@ -1,5 +1,12 @@
-import * as style from "./QuestionDetail.style";
+import { useRouter } from "next/router";
+import { useAtom } from "jotai";
+import { QueryClient } from "react-query";
+
 import type { KeywordDataType } from "@/apis/question";
+import { deleteQuestionAsync } from "@/apis/question";
+import { accessTokenAtom } from "@/stores/actions";
+
+import * as style from "./QuestionDetail.style";
 
 interface QuestionDetailProps {
   content: string;
@@ -9,6 +16,21 @@ interface QuestionDetailProps {
 }
 
 const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailProps) => {
+  const router = useRouter();
+  const queryClient = new QueryClient();
+  const [accessToken] = useAtom(accessTokenAtom);
+  const questionId = Number(router.query.qid);
+
+  const deleteQuestion = async () => {
+    const response = await deleteQuestionAsync(questionId, accessToken || "");
+    // 글을 성공적으로 삭제했다면, 기존에 캐싱된 질문글 데이터를 말소시킴
+    // 현재 질문글 목록 컴포넌트가 unmount 상태이기에 refetchInactive 옵션을 켜줌.
+    if (response.isSuccess) {
+      queryClient.invalidateQueries(["question"], { refetchInactive: true });
+      router.replace("/questions");
+    }
+  };
+
   return (
     <style.Wrapper>
       <style.KeywordBox>
@@ -21,7 +43,7 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
       {isWriter && (
         <style.ModifyBox>
           <style.ModifyText>{`수정`}</style.ModifyText>
-          <style.ModifyText>{`삭제`}</style.ModifyText>
+          <style.ModifyText onClick={deleteQuestion}>{`삭제`}</style.ModifyText>
         </style.ModifyBox>
       )}
       <style.Content>{content}</style.Content>
