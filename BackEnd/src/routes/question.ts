@@ -15,7 +15,7 @@ import {
   postCreateQuestion,
 } from '@/database/controllers/question';
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
-import { checkLoggedIn } from '@/routes/jwt';
+import { checkLoggedIn, getUserUUID } from '@/routes/jwt';
 import { wrapAsync } from '@/utils/wrapAsync';
 
 const questionRouter = express.Router();
@@ -100,6 +100,7 @@ questionRouter.delete(
 
 questionRouter.get(
   `/:qid`,
+  getUserUUID,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const questionId = Number(req.params.qid);
     const uuid = req.uuid;
