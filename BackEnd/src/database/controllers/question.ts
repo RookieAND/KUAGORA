@@ -215,13 +215,21 @@ export const postCreateQuestion = async (
 
   // InsertResult.raw 를 통해 SQL Query 결과를 가져올 수 있음.
   const addQuestionId = addQuestionResult.raw.insertId;
+  if (!addQuestionId) {
+    throw new InternalServerError(
+      '정상적으로 질문글 데이터가 DB에 추가되지 않았습니다.',
+    );
+  }
+  // 새롭게 생성된 질문글 데이터를 불러와 Keyword에 적용시킴.
+  const createdQuestion = new Question();
+  createdQuestion.id = addQuestionId;
 
   // 키워드가 있다면, 이 또한 DB에 적용해야 함.
   if (keywords.length > 0) {
     keywords.forEach(async (newContent) => {
       const newKeyword = new Keyword();
       newKeyword.content = newContent;
-      newKeyword.question = newQuestion;
+      newKeyword.question = createdQuestion;
 
       const addKeyword = await getRepository(Keyword)
         .createQueryBuilder()
@@ -231,10 +239,10 @@ export const postCreateQuestion = async (
         .updateEntity(false)
         .execute();
 
-      let addKeywordId = addKeyword.raw.insertId;
-      if (!addQuestionId || !addKeywordId) {
+      const addKeywordId = addKeyword.raw.insertId;
+      if (!addKeywordId) {
         throw new InternalServerError(
-          '정상적으로 데이터가 DB에 추가되지 않았습니다.',
+          '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
         );
       }
     });

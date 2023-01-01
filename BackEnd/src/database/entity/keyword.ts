@@ -14,7 +14,7 @@ class Keyword {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Length(2, 15)
+  @Length(2, 10)
   @Column('varchar')
   content!: string;
 
