@@ -12,7 +12,7 @@ import {
   SortOptionType,
   AnsweredOptionType,
 } from '@/constants/question';
-import { BadRequestError } from '@/errors/definedErrors';
+import { BadRequestError, InternalServerError } from '@/errors/definedErrors';
 
 /**
  * 주어진 조건에 맞춰 질문글 목록을 보여주는 함수 getQuestionList
@@ -70,6 +70,7 @@ export const getQuestionList = async (
     .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
+  console.log(questionDatas);
   return questionDatas;
 };
 
@@ -213,26 +214,33 @@ export const postCreateQuestion = async (
     .execute();
 
   // InsertResult.raw 를 통해 SQL Query 결과를 가져올 수 있음.
-  const newQuestionId = addQuestionResult.raw.insertId;
+  const addQuestionId = addQuestionResult.raw.insertId;
 
   // 키워드가 있다면, 이 또한 DB에 적용해야 함.
   if (keywords.length > 0) {
-    keywords.map(async (keyword) => {
+    keywords.forEach(async (newContent) => {
       const newKeyword = new Keyword();
-      newKeyword.content = keyword;
+      newKeyword.content = newContent;
       newKeyword.question = newQuestion;
 
-      await getRepository(Keyword)
+      const addKeyword = await getRepository(Keyword)
         .createQueryBuilder()
         .insert()
         .into('keyword')
         .values(newKeyword)
         .updateEntity(false)
         .execute();
+
+      let addKeywordId = addKeyword.raw.insertId;
+      if (!addQuestionId || !addKeywordId) {
+        throw new InternalServerError(
+          '정상적으로 데이터가 DB에 추가되지 않았습니다.',
+        );
+      }
     });
   }
 
-  return newQuestionId;
+  return addQuestionId;
 };
 
 export const removeQuestion = async (questionId: number, uuid: string) => {
