@@ -31,9 +31,9 @@ const QuestionDetailTemplate = ({
         toggleLikeState={toggleLikeState}
       />
       <QuestionDetail
-        isWriter={isWriter}
         content={detailContent.content}
         keywords={detailContent.keywords}
+        isWriter={isWriter}
         state={detailContent.state}
       />
       <CommentList isWriter={isWriter} state={detailContent.state} changeQuestionState={changeQuestionState} />
