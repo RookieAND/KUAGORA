@@ -15,7 +15,9 @@ export const Wrapper = styled.div`
 `;
 
 export const KeywordBox = styled.div`
+  width: 90%;
   margin: 0px 0px 32px 0px;
+
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -34,6 +36,33 @@ export const Keyword = styled.span<StyledQuestionStateProps>`
       color: ${state == "completed" ? colors.main.pressed : colors.mono.gray6};
       font-size: ${fonts.size.lg};
       font-weight: ${fonts.weight.normal};
+    `;
+  }}
+`;
+
+export const ModifyBox = styled.div`
+  width: 10%;
+  margin: 0px 0px 32px 0px;
+
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ModifyText = styled.span`
+  ${({ theme }) => {
+    const { colors, fonts } = theme;
+    return css`
+      padding: 4px 8px;
+      margin: 0px;
+
+      color: ${colors.mono.gray5};
+      font-size: ${fonts.size.lg};
+      font-weight: ${fonts.weight.normal};
+
+      &:hover {
+        color: ${colors.mono.gray7};
+        cursor: pointer;
+      }
     `;
   }}
 `;
