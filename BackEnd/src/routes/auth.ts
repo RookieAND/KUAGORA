@@ -78,7 +78,7 @@ authRouter.delete(
 authRouter.post(
   `/check-token`,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken = req.body.refresh_token as string;
+    const refreshToken = req.body.refreshToken as string;
     if (refreshToken) {
       // 1. 클라이언트로부터 인계받은 리프레시 토큰이 유효한지를 조사.
       const uuid = await verifyJWT(refreshToken);
@@ -90,7 +90,7 @@ authRouter.post(
       // 2. Redis 에 저장된 토큰이 전달받은 리프레시 토큰과 동일한지 조사
       const storedRefreshToken = await getRefreshToken(uuid);
       if (storedRefreshToken != refreshToken) {
-        throw new BadRequestError(
+        throw new ForbiddenError(
           '리프레시 토큰이 유효하지 않습니다. 재로그인이 필요합니다.',
         );
       }
@@ -99,8 +99,8 @@ authRouter.post(
       const newRefreshToken = createRefreshJWT(uuid);
       await setRefreshToken(uuid, newRefreshToken);
       return res.status(200).json({
-        access_token: newAccessToken,
-        refresh_token: newRefreshToken,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
       });
     }
     // 리프레시 토큰이 없을 경우, 401 에러 리턴
