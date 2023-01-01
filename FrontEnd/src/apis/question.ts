@@ -82,7 +82,7 @@ export const getQuestionsByQueryAsync = async (
   sortOption: QuestionSortType,
   searchOption: QuestionSearchType,
   answeredOption: QuestionAnsweredType
-) => {
+): APIResult<InfQueryType<QuestionPostType>> => {
   const response = await getAsync<QuestionPostType[], any>(`/search/${searchOption}`, {
     params: { page, amount, query, sortOption, answeredOption }
   });
