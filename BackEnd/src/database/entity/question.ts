@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  DeleteDateColumn,
+  JoinColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
 import { Length } from 'class-validator';
 
 import BasicEntity from '@/database/entity/basic';
@@ -37,6 +44,10 @@ class Question extends BasicEntity {
   // [Relation] Question : Keyword = 1 : N
   @OneToMany(() => Keyword, (keyword) => keyword.question)
   keywords!: Keyword[];
+
+  // MissingDeleteDateColumnError 에러 해결을 위해 추가
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
+  deletedDate!: Date;
 }
 
 export default Question;
