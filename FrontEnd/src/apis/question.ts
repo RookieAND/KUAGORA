@@ -12,8 +12,8 @@ export interface QuestionPostType {
   keywords: KeywordDataType[];
 }
 
-export interface QuestionInfQueryType {
-  content: QuestionPostType[];
+export interface InfQueryType<T> {
+  content: T[];
   isLast: boolean;
   nextPage: number;
 }
@@ -82,7 +82,7 @@ export const getQuestionsByQueryAsync = async (
   sortOption: QuestionSortType,
   searchOption: QuestionSearchType,
   answeredOption: QuestionAnsweredType
-) => {
+): APIResult<InfQueryType<QuestionPostType>> => {
   const response = await getAsync<QuestionPostType[], any>(`/search/${searchOption}`, {
     params: { page, amount, query, sortOption, answeredOption }
   });
@@ -114,7 +114,7 @@ export const getQuestionsAsync = async (
   amount: number,
   sortOption: QuestionSortType,
   answeredOption: QuestionAnsweredType
-): APIResult<QuestionInfQueryType> => {
+): APIResult<InfQueryType<QuestionPostType>> => {
   const response = await getAsync<QuestionPostType[], unknown>(`/question`, {
     params: { page, amount, sortOption, answeredOption }
   });

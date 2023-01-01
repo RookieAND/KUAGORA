@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
-      gap: 8px;
+      gap: 0px 8px;
 
       background-color: ${colors.mono.gray1};
     `;
@@ -22,9 +22,8 @@ export const KeywordInput = styled.input`
   ${({ theme }) => {
     const { colors, fonts } = theme;
     return css`
-      width: 27.5%;
-      height: 36px;
-      margin: auto 4px;
+      width: 32.5%;
+      height: 100%;
 
       background-color: transparent;
       border: none;
