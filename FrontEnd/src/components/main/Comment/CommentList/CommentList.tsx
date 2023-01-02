@@ -30,12 +30,11 @@ const CommentList = ({ isWriter, state, changeQuestionState }: CommentListProps)
 
   // 새로운 댓글을 추가하는 함수
   const addNewComment = async () => {
+    if (!accessToken) {
+      router.push("/login");
+      return;
+    }
     if (commentValue.length > 0) {
-      if (!accessToken) {
-        router.push("/login");
-        return;
-      }
-
       await addNewCommentAsync(questionId, accessToken, commentValue);
       setCommentValue("");
       await refetch();

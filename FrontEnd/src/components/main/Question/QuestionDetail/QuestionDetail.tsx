@@ -26,7 +26,7 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
     // 글을 성공적으로 삭제했다면, 기존에 캐싱된 질문글 데이터를 말소시킴
     // 현재 질문글 목록 컴포넌트가 unmount 상태이기에 refetchInactive 옵션을 켜줌.
     if (response.isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
+      await queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
       router.replace("/questions");
     }
   };

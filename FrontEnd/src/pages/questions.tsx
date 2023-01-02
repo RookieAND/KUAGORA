@@ -24,9 +24,7 @@ const Questions = () => {
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
      */
-    ({ pageParam = 1 }) => {
-      return getQuestionsAsync(pageParam, amount, sortOption, answeredOption);
-    },
+    ({ pageParam = 1 }) => getQuestionsAsync(pageParam, amount, sortOption, answeredOption),
     {
       /**
        * getNextPageParam : 다음 API를 요청할 때 사용될 pageParam의 값을 지정 (만약 마지막 페이지일 경우, undefined)
@@ -37,7 +35,9 @@ const Questions = () => {
           return undefined;
         }
         return lastPage.result.nextPage;
-      }
+      },
+      // staleTime은 5분으로 설정하고, 만약 stale 상태일 경우 자동으로 refetch 되도록 refetchOnMount 옵션을 ON
+      staleTime: 30000
     }
   );
 

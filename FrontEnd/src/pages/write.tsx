@@ -25,7 +25,7 @@ const PostQuestion = () => {
       const response = await addQuestionAsync(postTitle, postContent, postKeywords, accessToken);
       // 새로운 질문글을 작성할 경우, 질문글 캐싱 데이터를 무효화시켜 refetch 유도
       if (response.isSuccess) {
-        queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
+        await queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
         router.replace(`/question/${response.result.questionId}`);
       }
     }
