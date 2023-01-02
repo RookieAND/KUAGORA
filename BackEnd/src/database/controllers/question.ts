@@ -258,15 +258,17 @@ export const postCreateQuestion = async (
  * @param title 질문글 제목
  * @param uuid 작성자 uuid
  * @param content 질문글 내용
- * @param keywords 키워드 목록
+ * @param addKeywords 추가된 키워드 목록
+ * @param delKeywords 삭제된 키워드 목록
  * @returns
  */
 export const patchEditQuestion = async (
   questionId: number,
+  uuid: string,
   title: string,
   content: string,
-  keywords: string[],
-  uuid: string,
+  addKeywords: string[],
+  delKeywords: string[],
 ) => {
   // 질문글 제목과 내용을 우선 UPDATE 하여 새로운 데이터 적용
   const updateQuestionResult = await getRepository(Question)
@@ -286,36 +288,47 @@ export const patchEditQuestion = async (
   const updatedQuestion = new Question();
   updatedQuestion.id = questionId;
 
-  if (keywords.length > 0) {
-    keywords.forEach(async (newContent) => {
-      const existedKeyword = await getRepository(Keyword)
-        .createQueryBuilder('keyword')
-        .where('keyword.content = :newContent', { newContent })
-        .select()
-        .getOne();
+  if (addKeywords.length > 0) {
+    addKeywords.forEach(async (newContent) => {
+      const newKeyword = new Keyword();
+      newKeyword.content = newContent;
+      newKeyword.question = updatedQuestion;
 
-      if (!existedKeyword) {
-        const newKeyword = new Keyword();
-        newKeyword.content = newContent;
-        newKeyword.question = updatedQuestion;
+      const insertedKeywordResult = await getRepository(Keyword)
+        .createQueryBuilder()
+        .insert()
+        .into('keyword')
+        .values(newKeyword)
+        .updateEntity(false)
+        .execute();
 
-        const addKeyword = await getRepository(Keyword)
-          .createQueryBuilder()
-          .insert()
-          .into('keyword')
-          .values(newKeyword)
-          .updateEntity(false)
-          .execute();
-
-        const addKeywordId = addKeyword.raw.insertId;
-        if (!addKeywordId) {
-          throw new InternalServerError(
-            '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
-          );
-        }
+      const insertedKeywordId = insertedKeywordResult.raw.insertId;
+      if (!insertedKeywordId) {
+        throw new InternalServerError(
+          '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
+        );
       }
     });
   }
+
+  if (delKeywords.length > 0) {
+    delKeywords.forEach(async (delContent) => {
+      const deletedKeywordResult = await getRepository(Keyword)
+        .createQueryBuilder('keyword')
+        .delete()
+        .where('keyword.content = :delContent', { delContent })
+        .andWhere('keyword.question_id = :questionId', { questionId })
+        .execute();
+
+      if (deletedKeywordResult.affected !== 1) {
+        throw new InternalServerError(
+          '정상적으로 키워드 데이터가 DB에서 삭제되지 않았습니다.',
+        );
+      }
+    });
+  }
+
+  return updateQuestionResult.affected;
 };
 
 export const deleteQuestion = async (questionId: number, uuid: string) => {

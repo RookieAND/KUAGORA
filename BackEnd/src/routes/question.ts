@@ -17,6 +17,7 @@ import {
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
 import { checkLoggedIn, getUserUUID } from '@/routes/jwt';
 import { wrapAsync } from '@/utils/wrapAsync';
+import { patchEditQuestion } from '../database/controllers/question';
 
 const questionRouter = express.Router();
 
@@ -79,10 +80,10 @@ questionRouter.patch(
   checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const qid = Number(req.params.qid);
-    const { title, content, keywords } = req.body;
+    const { title, content, addKeywords, delKeywords } = req.body;
     const uuid = req.uuid!;
 
-    if (!title || !content || !keywords) {
+    if (!title || !content || !addKeywords || !delKeywords) {
       throw new BadRequestError(
         '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
       );
@@ -92,7 +93,14 @@ questionRouter.patch(
       throw new UnauthorizedError('요청의 헤더에 엑세스 토큰이 없습니다.');
     }
 
-    await deleteQuestion(qid, uuid);
+    await patchEditQuestion(
+      qid,
+      uuid,
+      title,
+      content,
+      addKeywords,
+      delKeywords,
+    );
     return res.end();
   }),
 );
