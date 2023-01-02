@@ -74,6 +74,29 @@ questionRouter.post(
   }),
 );
 
+questionRouter.patch(
+  `/:qid`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const qid = Number(req.params.qid);
+    const { title, content, keywords } = req.body;
+    const uuid = req.uuid!;
+
+    if (!title || !content || !keywords) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError('요청의 헤더에 엑세스 토큰이 없습니다.');
+    }
+
+    await deleteQuestion(qid, uuid);
+    return res.end();
+  }),
+);
+
 questionRouter.delete(
   `/:qid`,
   checkLoggedIn,

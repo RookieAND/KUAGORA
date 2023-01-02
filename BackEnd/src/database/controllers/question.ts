@@ -253,6 +253,71 @@ export const postCreateQuestion = async (
   return addQuestionId;
 };
 
+/**
+ * 기존의 질문글을 수정하는 함수
+ * @param title 질문글 제목
+ * @param uuid 작성자 uuid
+ * @param content 질문글 내용
+ * @param keywords 키워드 목록
+ * @returns
+ */
+export const patchEditQuestion = async (
+  questionId: number,
+  title: string,
+  content: string,
+  keywords: string[],
+  uuid: string,
+) => {
+  // 질문글 제목과 내용을 우선 UPDATE 하여 새로운 데이터 적용
+  const updateQuestionResult = await getRepository(Question)
+    .createQueryBuilder()
+    .update()
+    .set({ title, content })
+    .where('question.id = :questionId', { questionId })
+    .andWhere('question.user_uuid = :uuid', { uuid })
+    .execute();
+
+  if (updateQuestionResult.affected !== 1) {
+    throw new InternalServerError(
+      '정상적으로 질문글 데이터가 DB에 수정되지 않았습니다.',
+    );
+  }
+
+  const updatedQuestion = new Question();
+  updatedQuestion.id = questionId;
+
+  if (keywords.length > 0) {
+    keywords.forEach(async (newContent) => {
+      const existedKeyword = await getRepository(Keyword)
+        .createQueryBuilder('keyword')
+        .where('keyword.content = :newContent', { newContent })
+        .select()
+        .getOne();
+
+      if (!existedKeyword) {
+        const newKeyword = new Keyword();
+        newKeyword.content = newContent;
+        newKeyword.question = updatedQuestion;
+
+        const addKeyword = await getRepository(Keyword)
+          .createQueryBuilder()
+          .insert()
+          .into('keyword')
+          .values(newKeyword)
+          .updateEntity(false)
+          .execute();
+
+        const addKeywordId = addKeyword.raw.insertId;
+        if (!addKeywordId) {
+          throw new InternalServerError(
+            '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
+          );
+        }
+      }
+    });
+  }
+};
+
 export const deleteQuestion = async (questionId: number, uuid: string) => {
   const deleteQuestiontResult = await getRepository(Question)
     .createQueryBuilder('question')
