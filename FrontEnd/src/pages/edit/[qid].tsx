@@ -10,6 +10,11 @@ import { accessTokenAtom } from "@/stores/actions";
 
 import PostQuestionTemplate from "@/components/template/PostQuestionTemplate";
 
+interface IModifiedKeywords {
+  addKeywords: string[];
+  delKeywords: string[];
+}
+
 const EditQuestion = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -18,6 +23,10 @@ const EditQuestion = () => {
   const [accessToken] = useAtom(accessTokenAtom);
   const [detailContent, setDetailContent] = useState<QuestionDetailType | undefined>(undefined);
   const [postKeywords, setPostKeywords] = useState<string[]>([]);
+  const [modifiedKeywords, setModifiedKeywords] = useState<IModifiedKeywords>({
+    addKeywords: [],
+    delKeywords: []
+  });
   const [postContent, setPostContent] = useState<string>("");
   const [postTitle, setPostTitle] = useState<string>("");
 
