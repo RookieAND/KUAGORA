@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { QueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import PostQuestionTemplate from "@/components/template/PostQuestionTemplate";
 import { addQuestionAsync } from "@/apis/question";
@@ -14,7 +14,7 @@ const PostQuestion = () => {
   const [postContent, setPostContent] = useState<string>("");
   const [postTitle, setPostTitle] = useState<string>("");
   const router = useRouter();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const submitNewPost = async () => {
     if (!accessToken) {
@@ -25,7 +25,7 @@ const PostQuestion = () => {
       const response = await addQuestionAsync(postTitle, postContent, postKeywords, accessToken);
       // 새로운 질문글을 작성할 경우, 질문글 캐싱 데이터를 무효화시켜 refetch 유도
       if (response.isSuccess) {
-        queryClient.invalidateQueries(["question"]);
+        queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
         router.replace(`/question/${response.result.questionId}`);
       }
     }

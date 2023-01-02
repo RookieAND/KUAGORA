@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAtom } from "jotai";
@@ -21,8 +21,8 @@ const CommentList = ({ isWriter, state, changeQuestionState }: CommentListProps)
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
-  const { data, refetch } = useQuery(["comments", { questionId }], () => getCommentsAsync(questionId, 1, 12), {
-    staleTime: 300000
+  const { data, refetch } = useQuery(["comments", questionId], () => getCommentsAsync(questionId, 1, 12), {
+    staleTime: 30000
   });
   const [commentValue, setCommentValue] = useState("");
   const [accessToken] = useAtom(accessTokenAtom);

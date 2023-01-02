@@ -1,7 +1,8 @@
 import type { AppProps } from "next/app";
 import { useState } from "react";
 import { Provider } from "jotai";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "@/constants/styles/globalStyle";
@@ -10,18 +11,20 @@ import "@/assets/fonts/font.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
-    new QueryClient({
-      defaultOptions: {
-        queries: {
-          refetchOnMount: false,
-          refetchOnReconnect: false,
-          refetchOnWindowFocus: false
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false
+          }
         }
-      }
-    })
+      })
   );
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <Provider>
         <GlobalStyle />
         <ThemeProvider theme={theme}>

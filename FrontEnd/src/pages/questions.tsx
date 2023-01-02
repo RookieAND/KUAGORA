@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useRouter } from "next/router";
 
