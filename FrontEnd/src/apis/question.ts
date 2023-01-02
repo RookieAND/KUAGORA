@@ -167,6 +167,48 @@ export const addQuestionAsync = async (title: string, content: string, keywords:
 };
 
 /**
+ * 자신이 작성한 질문글을 삭제하는 함수
+ * @param questionId 삭제하려는 질문글의 id
+ * @param token 작성자의 엑세스 토큰
+ * @returns 삭제 성공 / 실패 여부
+ */
+export const deleteQuestionAsync = async (questionId: number, token: string) => {
+  const response = await deleteAsync<null, unknown>(`/question/${questionId}`, { headers: { authorization: token } });
+  return response;
+};
+
+/**
+ * 자신이 작성한 작성글을 수정하는 함수
+ * @param questionId 수정하려는 질문글의 id
+ * @param title 수정된 질문글의 title
+ * @param content 수정된 질문글의 content
+ * @param addKeywords 새로이 추가된 keyword 목록
+ * @param delKeywords 삭제된 질문글의 keyword 목록
+ * @param token 작성자의 액세스 토큰
+ * @returns 수정 관련 성공 / 실패 여부
+ */
+export const patchQuestionAsync = async (
+  questionId: number,
+  token: string,
+  title: string,
+  content: string,
+  addKeywords: string[],
+  delKeywords: string[]
+) => {
+  const response = await patchAsync<null, any>(
+    `/question/${questionId}`,
+    {
+      title,
+      content,
+      addKeywords,
+      delKeywords
+    },
+    { headers: { authorization: token } }
+  );
+  return response;
+};
+
+/**
  * 질문글의 상태를 해결됨으로 변경하고, 채택된 댓글의 상태도 변경하는 함수.
  * @param title 질문글 제목
  * @param content 질문글 내용

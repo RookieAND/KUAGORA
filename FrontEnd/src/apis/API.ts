@@ -63,18 +63,25 @@ export interface APIError {
   errMessage: string;
 }
 
+/**
+ * Axios 에러 발생 시, 서버에서 받은 에러 메세지를 담은 data 타입
+ */
+interface AxiosErrorResponse {
+  errorMessage: string;
+}
+
 /** API 호출에서 발생한 에러를 클라이언트의 형식으로 가공하는 함수
  * @param err 형식을 처리할 에러
  */
 function preProcessError(err: unknown): APIError {
   // axios 통신 과정에서 발생한 오류인지를 먼저 판별.
-  console.log(err);
   if (axios.isAxiosError(err)) {
     // 응답까지 정상적으로 들어왔을 경우.
     if (err.response) {
+      const errorResponse = err.response as AxiosResponse<AxiosErrorResponse, any>;
       return {
-        statusCode: err.response.status,
-        errMessage: err.response.statusText
+        statusCode: errorResponse.status,
+        errMessage: errorResponse.data.errorMessage || "알 수 없는 오류입니다"
       };
     }
     // 요청은 들어갔으나 응답이 안된 경우.

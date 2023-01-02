@@ -12,7 +12,7 @@ interface PostQuestionTemplateProps {
   changeContentInput: (k: string) => void;
   postTitle: string;
   changeTitleInput: (k: string) => void;
-  submitNewPost: () => any;
+  submitPost: () => any;
 }
 
 const PostQuestionTemplate = ({
@@ -23,12 +23,12 @@ const PostQuestionTemplate = ({
   changeContentInput,
   postTitle,
   changeTitleInput,
-  submitNewPost
+  submitPost
 }: PostQuestionTemplateProps) => {
   return (
     <>
       <Navbar />
-      <PostHeader postTitle={postTitle} changeTitleInput={changeTitleInput} submitNewPost={submitNewPost} />
+      <PostHeader postTitle={postTitle} changeTitleInput={changeTitleInput} submitPost={submitPost} />
       <PostKeyword postKeywords={postKeywords} addNewKeyword={addNewKeyword} removeKeyword={removeKeyword} />
       <PostContent postContent={postContent} changeContentInput={changeContentInput} />
       <Footer />

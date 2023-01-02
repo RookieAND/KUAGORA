@@ -8,16 +8,16 @@ import { logoutAsync } from "@/apis/auth";
 import { PATH_INFO } from "@/constants/url";
 import NavItem from "@/components/common/Navbar/NavItem";
 import type { NavItemKey } from "@/components/common/Navbar/NavItem";
-import { accessTokenAtom, setJWTAtom } from "@/stores/actions";
+import { setJWTAtom } from "@/stores/actions";
 
 const Navbar = () => {
   const [loginState, setLoginState] = useState<boolean>(false);
-  const [accessToken] = useAtom(accessTokenAtom);
-  const [, setJWTToken] = useAtom(setJWTAtom);
+  const [jwtToken, setJWTToken] = useAtom(setJWTAtom);
 
   const router = useRouter();
   const navList = Object.keys(PATH_INFO) as [NavItemKey];
   const currentPath = router.pathname;
+  const accessToken = jwtToken.accessToken;
 
   useEffect(() => {
     setLoginState(accessToken != null);

@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useRouter } from "next/router";
 
@@ -27,9 +27,8 @@ const Search = () => {
      * useInfiniteQuery 쿼리에 할당된 콜백 함수
      * pageParam : 현재 useInfiniteQuery가 어떤 페이지에 있는지를 체크하는 파라미터 (기본 1 지정)
      */
-    ({ pageParam = 1 }) => {
-      return getQuestionsByQueryAsync(pageParam, amount, searchedQuery, sortOption, searchOption, answeredOption);
-    },
+    ({ pageParam = 1 }) =>
+      getQuestionsByQueryAsync(pageParam, amount, searchedQuery, sortOption, searchOption, answeredOption),
     {
       /**
        * getNextPageParam : 다음 API를 요청할 때 사용될 pageParam의 값을 지정 (만약 마지막 페이지일 경우, undefined)
