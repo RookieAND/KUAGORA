@@ -109,7 +109,7 @@ export const getQuestionById = async (
   const isLike = !!(await getRepository(Like)
     .createQueryBuilder('like')
     .where('like.user_uuid = :uuid', { uuid })
-    .where('like.question_id =:questionId', { questionId })
+    .andWhere('like.question_id = :questionId', { questionId })
     .getOne());
 
   const isWriter = uuid === questionData.user.uuid;
