@@ -10,23 +10,14 @@ import { accessTokenAtom } from "@/stores/actions";
 
 import PostQuestionTemplate from "@/components/template/PostQuestionTemplate";
 
-interface IModifiedKeywords {
-  addKeywords: string[];
-  delKeywords: string[];
-}
-
 const EditQuestion = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const questionId = Number(router.query.qid);
 
   const [accessToken] = useAtom(accessTokenAtom);
-  const [detailContent, setDetailContent] = useState<QuestionDetailType | undefined>(undefined);
+  const [prevContent, setPrevContent] = useState<QuestionDetailType | undefined>(undefined);
   const [postKeywords, setPostKeywords] = useState<string[]>([]);
-  const [modifiedKeywords, setModifiedKeywords] = useState<IModifiedKeywords>({
-    addKeywords: [],
-    delKeywords: []
-  });
   const [postContent, setPostContent] = useState<string>("");
   const [postTitle, setPostTitle] = useState<string>("");
 
@@ -44,7 +35,7 @@ const EditQuestion = () => {
         router.replace("/questions");
       }
 
-      setDetailContent(prev => (initDataResult.isSuccess ? initDataResult.result : prev));
+      setPrevContent(prev => (initDataResult.isSuccess ? initDataResult.result : prev));
       setPostKeywords(prev =>
         initDataResult.isSuccess ? [...initDataResult.result.keywords.map(({ content }) => content)] : prev
       );
@@ -55,13 +46,29 @@ const EditQuestion = () => {
     initializeData();
   }, [router.isReady, questionId]);
 
+  // 타입 가드 (데이터 fetching 전 로드)
+  if (prevContent === undefined) {
+    return <span>Loading...</span>;
+  }
+
   const editCurrentPost = async () => {
     if (!accessToken) {
       router.push("/login");
       return;
     }
     if (postTitle.length > 0 && postContent.length > 0) {
-      const response = await patchQuestionAsync(questionId, accessToken, postTitle, postContent, postKeywords);
+      // 기존의 키워드 목록과 변경된 키워드 목록을 대조하여, 추가 / 삭제된 키워드 목록을 추출함.
+      const prevKeywords = prevContent.keywords.map(({ content: prevKeywordContent }) => prevKeywordContent);
+      const addKeywords = postKeywords.filter(content => !prevKeywords.includes(content));
+      const delKeywords = prevKeywords.filter(content => !postKeywords.includes(content));
+      const response = await patchQuestionAsync(
+        questionId,
+        accessToken,
+        postTitle,
+        postContent,
+        addKeywords,
+        delKeywords
+      );
       // 새로운 질문글을 작성할 경우, 질문글 캐싱 데이터를 무효화시켜 refetch 유도
       if (response.isSuccess) {
         await queryClient.invalidateQueries({ queryKey: ["question"], refetchType: "active" });
@@ -89,11 +96,6 @@ const EditQuestion = () => {
   const changeTitleInput = (title: string) => {
     setPostTitle(title);
   };
-
-  // 타입 가드 (데이터 fetching 전 로드)
-  if (detailContent == undefined) {
-    return <span>Loading...</span>;
-  }
 
   return (
     <>

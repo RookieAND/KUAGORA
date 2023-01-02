@@ -182,23 +182,26 @@ export const deleteQuestionAsync = async (questionId: number, token: string) => 
  * @param questionId 수정하려는 질문글의 id
  * @param title 수정된 질문글의 title
  * @param content 수정된 질문글의 content
- * @param keywords 수정된 질문글의 keyword
+ * @param addKeywords 새로이 추가된 keyword 목록
+ * @param delKeywords 삭제된 질문글의 keyword 목록
  * @param token 작성자의 액세스 토큰
  * @returns 수정 관련 성공 / 실패 여부
  */
 export const patchQuestionAsync = async (
   questionId: number,
   token: string,
-  title?: string,
-  content?: string,
-  keywords?: string[]
+  title: string,
+  content: string,
+  addKeywords: string[],
+  delKeywords: string[]
 ) => {
   const response = await patchAsync<null, any>(
     `/question/${questionId}`,
     {
       title,
       content,
-      keywords
+      addKeywords,
+      delKeywords
     },
     { headers: { authorization: token } }
   );
