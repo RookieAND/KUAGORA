@@ -31,6 +31,10 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
     }
   };
 
+  const editQuestion = async () => {
+    router.push(`/edit/${questionId}`);
+  };
+
   return (
     <style.Wrapper>
       <style.KeywordBox>
@@ -42,7 +46,7 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
       </style.KeywordBox>
       {isWriter && (
         <style.ModifyBox>
-          <style.ModifyText>{`수정`}</style.ModifyText>
+          <style.ModifyText onClick={editQuestion}>{`수정`}</style.ModifyText>
           <style.ModifyText onClick={deleteQuestion}>{`삭제`}</style.ModifyText>
         </style.ModifyBox>
       )}

@@ -16,7 +16,7 @@ const PostQuestion = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const submitNewPost = async () => {
+  const submitPost = async () => {
     if (!accessToken) {
       router.push("/login");
       return;
@@ -68,7 +68,7 @@ const PostQuestion = () => {
         changeContentInput={changeContentInput}
         postTitle={postTitle}
         changeTitleInput={changeTitleInput}
-        submitNewPost={submitNewPost}
+        submitPost={submitPost}
       />
     </>
   );
