@@ -86,7 +86,7 @@ export const LikeBox = styled.div<StyledIsLikeProps>`
       display: flex;
       justify-content: space-between;
 
-      background-color: ${isLike ? colors.red.rose : colors.main.opacity30};
+      background-color: ${isLike ? colors.main.pressed : colors.main.opacity30};
       color: ${isLike ? colors.mono.white : colors.main.normal};
       border-radius: 8px;
       cursor: pointer;
