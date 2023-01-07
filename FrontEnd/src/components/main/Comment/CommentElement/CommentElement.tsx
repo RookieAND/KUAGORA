@@ -3,8 +3,11 @@ import { setUserDataAtom } from "@/stores/actions";
 
 import * as style from "./CommentElement.style";
 
+import useModal from "@/hooks/useModal";
 import type { UserDataType } from "@/apis/question";
 import { formatISODate } from "@/utils/formatISODate";
+
+import CommentDeleteModal from "@/components/main/Comment/CommentDeleteModal";
 
 interface CommentElementProps {
   id: number;
@@ -25,6 +28,7 @@ const CommentElement = ({
   removeComment,
   selectAnswerComment
 }: CommentElementProps) => {
+  const { openModal } = useModal();
   const [userData] = useAtom(setUserDataAtom);
   const { uuid } = userData;
 
@@ -47,7 +51,9 @@ const CommentElement = ({
         <style.InfoText>{user.nickname}</style.InfoText>
         <style.TimeText>{formatISODate(createdAt)}</style.TimeText>
         {uuid === user.uuid ? (
-          <style.EditText onClick={() => removeComment(id)}>| 삭제</style.EditText>
+          <style.EditText onClick={() => openModal(<CommentDeleteModal id={id} removeComment={removeComment} />)}>
+            | 삭제
+          </style.EditText>
         ) : (
           <style.EditText>| 신고</style.EditText>
         )}
