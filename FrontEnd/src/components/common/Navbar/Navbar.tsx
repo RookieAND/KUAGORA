@@ -4,20 +4,22 @@ import { useState, useEffect } from "react";
 
 import * as style from "@/components/common/Navbar/Navbar.style";
 
-import { logoutAsync } from "@/apis/auth";
 import { PATH_INFO } from "@/constants/url";
+import { accessTokenAtom } from "@/stores/actions";
+import useModal from "@/hooks/useModal";
+
+import LogoutModal from "@/components/main/Login/LogoutModal";
 import NavItem from "@/components/common/Navbar/NavItem";
 import type { NavItemKey } from "@/components/common/Navbar/NavItem";
-import { setJWTAtom } from "@/stores/actions";
 
 const Navbar = () => {
   const [loginState, setLoginState] = useState<boolean>(false);
-  const [jwtToken, setJWTToken] = useAtom(setJWTAtom);
+  const [accessToken] = useAtom(accessTokenAtom);
+  const { openModal } = useModal();
 
   const router = useRouter();
   const navList = Object.keys(PATH_INFO) as [NavItemKey];
   const currentPath = router.pathname;
-  const accessToken = jwtToken.accessToken;
 
   useEffect(() => {
     setLoginState(accessToken != null);
@@ -26,16 +28,6 @@ const Navbar = () => {
   // 네비게이션 아이콘 일부를 필터링 할때 사용하는 함수
   const ignoreIcon = (navType: NavItemKey) =>
     (loginState && navType == "login") || (!loginState && navType == "write") || (!loginState && navType == "logout");
-
-  // 유저의 로그아웃을 진행하는 함수
-  const logout = async () => {
-    const isLogout = await logoutAsync(accessToken as string);
-    if (isLogout) {
-      setJWTToken({ accessToken: null, refreshToken: null });
-      setLoginState(false);
-      router.replace("/");
-    }
-  };
 
   return (
     <style.Wrapper>
@@ -46,7 +38,9 @@ const Navbar = () => {
             !ignoreIcon(navType) && (
               <NavItem
                 icon={navType}
-                clickFunc={navType != "logout" ? () => router.push(PATH_INFO[navType]) : logout}
+                clickFunc={
+                  navType != "logout" ? () => router.push(PATH_INFO[navType]) : () => openModal(<LogoutModal />)
+                }
                 isFocused={currentPath == PATH_INFO[navType]}
                 key={navType}
               />
