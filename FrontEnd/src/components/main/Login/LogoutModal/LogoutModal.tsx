@@ -14,7 +14,7 @@ const LogoutModalModal = () => {
 
   const logout = async () => {
     const isLogout = await logoutAsync(jwtToken.accessToken || "");
-    if (isLogout) {
+    if (isLogout.isSuccess) {
       setJWTToken({ accessToken: null, refreshToken: null });
       router.replace("/");
       closeModal();
