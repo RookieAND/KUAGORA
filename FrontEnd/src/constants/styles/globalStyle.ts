@@ -47,6 +47,10 @@ export const GlobalStyle = createGlobalStyle`
         top: 0;
         left: 0;
 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
         overflow-y: scroll;
         z-index: 99;
         background-color: rgba(0, 0, 0, 0.5);
