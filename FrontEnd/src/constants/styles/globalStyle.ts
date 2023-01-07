@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { modalBgShow } from "./animation";
 
 export const GlobalStyle = createGlobalStyle`
     html,
@@ -53,7 +54,8 @@ export const GlobalStyle = createGlobalStyle`
 
         overflow-y: scroll;
         z-index: 99;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.4);
+        animation: 0.25s ${modalBgShow};
     }
 
 `;
