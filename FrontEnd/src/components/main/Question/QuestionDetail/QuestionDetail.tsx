@@ -5,8 +5,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { KeywordDataType } from "@/apis/question";
 import { deleteQuestionAsync } from "@/apis/question";
 import { accessTokenAtom } from "@/stores/actions";
+import useModal from "@/hooks/useModal";
 
 import * as style from "./QuestionDetail.style";
+import QuestionDeleteModal from "@/components/main/Question/QuestionDeleteModal";
 
 interface QuestionDetailProps {
   content: string;
@@ -19,6 +21,8 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
   const router = useRouter();
   const queryClient = useQueryClient();
   const [accessToken] = useAtom(accessTokenAtom);
+  const { openModal } = useModal();
+
   const questionId = Number(router.query.qid);
 
   const deleteQuestion = async () => {
@@ -47,7 +51,9 @@ const QuestionDetail = ({ content, keywords, isWriter, state }: QuestionDetailPr
       {isWriter && (
         <style.ModifyBox>
           <style.ModifyText onClick={editQuestion}>{`수정`}</style.ModifyText>
-          <style.ModifyText onClick={deleteQuestion}>{`삭제`}</style.ModifyText>
+          <style.ModifyText
+            onClick={() => openModal(<QuestionDeleteModal deleteQuestion={deleteQuestion} />)}
+          >{`삭제`}</style.ModifyText>
         </style.ModifyBox>
       )}
       <style.Content>{content}</style.Content>
