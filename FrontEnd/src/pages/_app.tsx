@@ -5,6 +5,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { ThemeProvider } from "styled-components";
+import ModalProvider from "@/stores/ModalProvider";
 import { GlobalStyle } from "@/constants/styles/globalStyle";
 import { theme } from "@/constants/styles/theme";
 import "@/assets/fonts/font.css";
@@ -27,7 +28,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider>
         <GlobalStyle />
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <ModalProvider>
+            <Component {...pageProps} />
+          </ModalProvider>
         </ThemeProvider>
       </Provider>
     </QueryClientProvider>
