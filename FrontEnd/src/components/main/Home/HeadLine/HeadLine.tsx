@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import useModal from "@/hooks/useModal";
 
 import * as style from "@/components/main/Home/HeadLine/HeadLine.style";
-import NotLoginModal from "@/components/main/Login/NotLoginModal";
+import ModalTemplate from "@/components/common/Modal/ModalTemplate";
 import HeadLineImg from "@/assets/images/Headline.jpg";
 
 interface HeadlineProps {
@@ -11,10 +11,24 @@ interface HeadlineProps {
 
 const Headline = ({ isLogin }: HeadlineProps) => {
   const router = useRouter();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   const moveToWritePage = () => {
-    !isLogin ? openModal(<NotLoginModal />) : router.push("/write");
+    !isLogin
+      ? openModal(
+          <ModalTemplate
+            title={"로그인이 필요한 기능입니다."}
+            subtitle={"하단의 버튼을 클릭하여 로그인을 진행하세요."}
+            buttonText={"로그인 하기"}
+            submitFunc={moveToLoginPage}
+          />
+        )
+      : router.push("/write");
+  };
+
+  const moveToLoginPage = async () => {
+    router.replace("/login");
+    closeModal();
   };
 
   return (
