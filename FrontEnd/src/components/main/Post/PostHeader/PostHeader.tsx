@@ -3,10 +3,10 @@ import * as style from "./PostHeader.style";
 interface PostHeaderProps {
   postTitle: string;
   changeTitleInput: (k: string) => void;
-  submitNewPost: () => any;
+  submitPost: () => any;
 }
 
-const PostHeader = ({ postTitle, changeTitleInput, submitNewPost }: PostHeaderProps) => {
+const PostHeader = ({ postTitle, changeTitleInput, submitPost }: PostHeaderProps) => {
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeTitleInput(e.target.value);
   };
@@ -24,7 +24,7 @@ const PostHeader = ({ postTitle, changeTitleInput, submitNewPost }: PostHeaderPr
         />
       </style.TitleBox>
       <style.SubmitBox>
-        <style.SubmitBtn onClick={submitNewPost}>질문글 등록</style.SubmitBtn>
+        <style.SubmitBtn onClick={submitPost}>질문글 등록</style.SubmitBtn>
       </style.SubmitBox>
     </style.Wrapper>
   );

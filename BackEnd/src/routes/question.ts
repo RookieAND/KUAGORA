@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import {
   getQuestionList,
   getQuestionById,
-  removeQuestion,
+  deleteQuestion,
   addComment,
   getComments,
   removeComment,
@@ -17,6 +17,7 @@ import {
 import { BadRequestError, UnauthorizedError } from '@/errors/definedErrors';
 import { checkLoggedIn, getUserUUID } from '@/routes/jwt';
 import { wrapAsync } from '@/utils/wrapAsync';
+import { patchEditQuestion } from '../database/controllers/question';
 
 const questionRouter = express.Router();
 
@@ -74,12 +75,42 @@ questionRouter.post(
   }),
 );
 
+questionRouter.patch(
+  `/:qid`,
+  checkLoggedIn,
+  wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const qid = Number(req.params.qid);
+    const { title, content, addKeywords, delKeywords } = req.body;
+    const uuid = req.uuid!;
+
+    if (!title || !content || !addKeywords || !delKeywords) {
+      throw new BadRequestError(
+        '잘못된 쿼리 요청입니다. 양식에 맞춰 재전송 해주세요.',
+      );
+    }
+
+    if (!uuid) {
+      throw new UnauthorizedError('요청의 헤더에 엑세스 토큰이 없습니다.');
+    }
+
+    await patchEditQuestion(
+      qid,
+      uuid,
+      title,
+      content,
+      addKeywords,
+      delKeywords,
+    );
+    return res.end();
+  }),
+);
+
 questionRouter.delete(
   `/:qid`,
   checkLoggedIn,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
     const qid = Number(req.params.qid);
-    const uuid = req.uuid;
+    const uuid = req.uuid!;
 
     if (!qid) {
       throw new BadRequestError(
@@ -87,13 +118,7 @@ questionRouter.delete(
       );
     }
 
-    if (!uuid) {
-      throw new UnauthorizedError(
-        '요청에 담긴 엑세스 토큰이 없거나 유효하지 않습니다.',
-      );
-    }
-
-    await removeQuestion(qid, uuid);
+    await deleteQuestion(qid, uuid);
     return res.end();
   }),
 );

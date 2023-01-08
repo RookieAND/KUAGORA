@@ -109,7 +109,7 @@ export const getQuestionById = async (
   const isLike = !!(await getRepository(Like)
     .createQueryBuilder('like')
     .where('like.user_uuid = :uuid', { uuid })
-    .where('like.question_id =:questionId', { questionId })
+    .andWhere('like.question_id = :questionId', { questionId })
     .getOne());
 
   const isWriter = uuid === questionData.user.uuid;
@@ -253,15 +253,93 @@ export const postCreateQuestion = async (
   return addQuestionId;
 };
 
-export const removeQuestion = async (questionId: number, uuid: string) => {
-  const removeQuestiontResult = await getRepository(Question)
-    .createQueryBuilder('question')
-    .softDelete()
-    .where('question.user_uuid =: uuid', { uuid })
-    .andWhere('question.id =: questionId', { questionId })
+/**
+ * 기존의 질문글을 수정하는 함수
+ * @param title 질문글 제목
+ * @param uuid 작성자 uuid
+ * @param content 질문글 내용
+ * @param addKeywords 추가된 키워드 목록
+ * @param delKeywords 삭제된 키워드 목록
+ * @returns
+ */
+export const patchEditQuestion = async (
+  questionId: number,
+  uuid: string,
+  title: string,
+  content: string,
+  addKeywords: string[],
+  delKeywords: string[],
+) => {
+  // 질문글 제목과 내용을 우선 UPDATE 하여 새로운 데이터 적용
+  const updateQuestionResult = await getRepository(Question)
+    .createQueryBuilder()
+    .update()
+    .set({ title, content })
+    .where('question.id = :questionId', { questionId })
+    .andWhere('question.user_uuid = :uuid', { uuid })
     .execute();
 
-  if (removeQuestiontResult.affected === -1) {
+  if (updateQuestionResult.affected !== 1) {
+    throw new InternalServerError(
+      '정상적으로 질문글 데이터가 DB에 수정되지 않았습니다.',
+    );
+  }
+
+  const updatedQuestion = new Question();
+  updatedQuestion.id = questionId;
+
+  if (addKeywords.length > 0) {
+    addKeywords.forEach(async (newContent) => {
+      const newKeyword = new Keyword();
+      newKeyword.content = newContent;
+      newKeyword.question = updatedQuestion;
+
+      const insertedKeywordResult = await getRepository(Keyword)
+        .createQueryBuilder()
+        .insert()
+        .into('keyword')
+        .values(newKeyword)
+        .updateEntity(false)
+        .execute();
+
+      const insertedKeywordId = insertedKeywordResult.raw.insertId;
+      if (!insertedKeywordId) {
+        throw new InternalServerError(
+          '정상적으로 키워드 데이터가 DB에 추가되지 않았습니다.',
+        );
+      }
+    });
+  }
+
+  if (delKeywords.length > 0) {
+    delKeywords.forEach(async (delContent) => {
+      const deletedKeywordResult = await getRepository(Keyword)
+        .createQueryBuilder('keyword')
+        .delete()
+        .where('keyword.content = :delContent', { delContent })
+        .andWhere('keyword.question_id = :questionId', { questionId })
+        .execute();
+
+      if (deletedKeywordResult.affected !== 1) {
+        throw new InternalServerError(
+          '정상적으로 키워드 데이터가 DB에서 삭제되지 않았습니다.',
+        );
+      }
+    });
+  }
+
+  return updateQuestionResult.affected;
+};
+
+export const deleteQuestion = async (questionId: number, uuid: string) => {
+  const deleteQuestiontResult = await getRepository(Question)
+    .createQueryBuilder('question')
+    .softDelete()
+    .where('question.user_uuid = :uuid', { uuid })
+    .andWhere('question.id = :questionId', { questionId })
+    .execute();
+
+  if (deleteQuestiontResult.affected === -1) {
     throw new BadRequestError(
       '존재하지 않는 질문글을 지우려 했거나, 자신이 지우지 않은 글을 지우려 했습니다.',
     );

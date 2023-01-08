@@ -20,7 +20,7 @@ export interface VerifyAsyncResult {
 export async function loginAsync(social: SocialPlatform, token: string): APIResult<LoginResultType> {
   const result = await postAsync<LoginResultType, null>(`/auth/login/${social}`, null, {
     headers: {
-      Authorization: token
+      authorization: token
     }
   });
 
@@ -34,10 +34,10 @@ export async function loginAsync(social: SocialPlatform, token: string): APIResu
 export async function logoutAsync(token: string) {
   const response = await deleteAsync<null, null>(`/auth/logout`, {
     headers: {
-      Authorization: token
+      authorization: token
     }
   });
-  return response.isSuccess;
+  return response;
 }
 
 /**

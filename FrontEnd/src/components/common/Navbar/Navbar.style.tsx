@@ -15,6 +15,7 @@ export const Wrapper = styled.div`
 
       position: sticky;
       top: 0px;
+      z-index: 99;
 
       background-color: ${colors.mono.white};
     `;
