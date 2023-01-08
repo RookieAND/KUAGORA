@@ -14,6 +14,7 @@ interface CommentElementProps {
   createdAt: string;
   content: string;
   user: UserDataType;
+  writerUUID: string;
   isAnswered: boolean;
   removeComment: (id: number) => Promise<void>;
   selectAnswerComment: (id: number, writedId: string) => Promise<void>;
@@ -24,6 +25,7 @@ const CommentElement = ({
   createdAt,
   content,
   user,
+  writerUUID,
   isAnswered,
   removeComment,
   selectAnswerComment
@@ -58,9 +60,9 @@ const CommentElement = ({
   return (
     <style.Wrapper>
       <style.TopSection>
-        <style.InfoText>{user.nickname}</style.InfoText>
+        <style.InfoText>{writerUUID === user.uuid ? `${user.nickname} (작성자)` : `${user.nickname}`}</style.InfoText>
         <style.TimeText>{formatISODate(createdAt)}</style.TimeText>
-        {uuid === user.uuid ? (
+        {uuid === user.uuid && (
           <style.EditText
             onClick={() =>
               openModal(
@@ -75,7 +77,8 @@ const CommentElement = ({
           >
             | 삭제
           </style.EditText>
-        ) : (
+        )}
+        {writerUUID === uuid && user.uuid !== uuid && (
           <style.EditText
             onClick={() =>
               openModal(
