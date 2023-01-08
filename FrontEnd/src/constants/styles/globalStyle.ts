@@ -53,7 +53,7 @@ export const GlobalStyle = createGlobalStyle`
         justify-content: center;
 
         overflow-y: scroll;
-        z-index: 99;
+        z-index: 999;
         background-color: rgba(0, 0, 0, 0.4);
         animation: 0.25s ${modalBgShow};
     }
