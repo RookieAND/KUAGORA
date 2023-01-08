@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import type { IUserData, IAccessToken, ITokenData } from "./atoms";
-import { userDataAtom, jwtTokenAtom } from "./atoms";
+import type { IUserData, IAccessToken, ITokenData, ModalStateType } from "./atoms";
+import { userDataAtom, jwtTokenAtom, modalStateAtom } from "./atoms";
 
 export const accessTokenAtom = atom(
   get => {
@@ -35,5 +35,12 @@ export const setUserDataAtom = atom(
   get => get(userDataAtom),
   (get, set, newUserData: IUserData) => {
     set(userDataAtom, newUserData);
+  }
+);
+
+export const handleModalAtom = atom(
+  get => get(modalStateAtom),
+  (get, set, newModalState: ModalStateType) => {
+    set(modalStateAtom, newModalState);
   }
 );
