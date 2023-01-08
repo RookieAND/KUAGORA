@@ -1,6 +1,8 @@
-import * as style from "@/components/main/Home/HeadLine/HeadLine.style";
 import { useRouter } from "next/router";
+import useModal from "@/hooks/useModal";
 
+import * as style from "@/components/main/Home/HeadLine/HeadLine.style";
+import NotLoginModal from "@/components/main/Login/NotLoginModal";
 import HeadLineImg from "@/assets/images/Headline.jpg";
 
 interface HeadlineProps {
@@ -9,9 +11,10 @@ interface HeadlineProps {
 
 const Headline = ({ isLogin }: HeadlineProps) => {
   const router = useRouter();
+  const { openModal } = useModal();
 
-  const clickSubmitBtn = () => {
-    router.push(isLogin ? "/write" : "/login");
+  const moveToWritePage = () => {
+    !isLogin ? openModal(<NotLoginModal />) : router.push("/write");
   };
 
   return (
@@ -20,7 +23,7 @@ const Headline = ({ isLogin }: HeadlineProps) => {
         <style.MainText>지식의 요람, KU : AGORA</style.MainText>
         <style.SubText>겹겹이 쌓인 질문 속에서 해답을 찾아보세요.</style.SubText>
       </style.TextBox>
-      <style.SubmitButton onClick={clickSubmitBtn}>지금 질문하기</style.SubmitButton>
+      <style.SubmitButton onClick={moveToWritePage}>지금 질문하기</style.SubmitButton>
     </style.Wrapper>
   );
 };
