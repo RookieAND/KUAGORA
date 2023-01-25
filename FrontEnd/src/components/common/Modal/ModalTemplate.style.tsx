@@ -6,8 +6,6 @@ export const Wrapper = styled.div`
     const { colors } = theme;
     return css`
       width: 500px;
-      height: 256px;
-
       padding: 64px;
       margin: auto;
 
@@ -19,6 +17,12 @@ export const Wrapper = styled.div`
       animation: 0.3s ${modalShow};
     `;
   }}
+`;
+
+export const IconWrap = styled.div`
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 32px auto;
 `;
 
 export const Title = styled.h5`
