@@ -34,8 +34,9 @@ API.interceptors.response.use(
         // 리프레시 토큰도 만료되었다면, 로그아웃을 진행시킴.
         localStorage.removeItem("jwt_token");
         localStorage.removeItem("user_data");
-        return Promise.reject(err);
+        window.location.href = "/login";
       }
+      return Promise.reject(err);
     }
   }
 );
