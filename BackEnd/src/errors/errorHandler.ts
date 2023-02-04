@@ -5,6 +5,7 @@ import {
   ForbiddenError,
   NotFoundError,
   ExpireTokenError,
+  ExpireRefreshTokenError,
 } from './definedErrors';
 
 /**
@@ -36,6 +37,10 @@ const errorHandler = (
   if (err instanceof ExpireTokenError) {
     next(err);
     return res.status(460).json({ errorMessage: err.message });
+  }
+  if (err instanceof ExpireRefreshTokenError) {
+    next(err);
+    return res.status(470).json({ errorMessage: err.message });
   }
 
   // 나머지 경우는 500 : Internal Server Error로 처리해야 함.
