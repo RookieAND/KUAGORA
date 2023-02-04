@@ -49,6 +49,7 @@ export async function verifyRefreshTokenAsync(token: string) {
   const response = await postAsync<Pick<VerifyAsyncResult, "accessToken" | "refreshToken">, any>(`/auth/check-token`, {
     refreshToken: token
   });
+  console.log(response);
   return response;
 }
 

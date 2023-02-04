@@ -133,7 +133,6 @@ export async function getAsync<T, D>(url: string, config?: AxiosRequestConfig): 
 export async function postAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.post<T, AxiosResponse<T, D>, D>(url, data, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });
@@ -155,7 +154,6 @@ export async function postAsync<T, D>(url: string, data: D, config?: AxiosReques
 export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.delete<T, AxiosResponse<T, D>, D>(url, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });
@@ -178,7 +176,6 @@ export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig
 export async function patchAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.patch<T, AxiosResponse<T, D>, D>(url, data, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });
