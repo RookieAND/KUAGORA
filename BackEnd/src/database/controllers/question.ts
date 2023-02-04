@@ -70,7 +70,6 @@ export const getQuestionList = async (
     .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
-  console.log(questionDatas);
   return questionDatas;
 };
 
