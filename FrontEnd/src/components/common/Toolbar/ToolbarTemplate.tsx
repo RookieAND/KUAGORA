@@ -5,13 +5,14 @@ import useToolbar from "@/hooks/useToolbar";
 interface ToolbarTemplateProps {
   title: string;
   subtitle: string;
+  showTime: string;
 }
 
-const ToolbarTemplate = ({ title, subtitle }: ToolbarTemplateProps) => {
+const ToolbarTemplate = ({ title, subtitle, showTime }: ToolbarTemplateProps) => {
   const { cancelToolbar } = useToolbar();
 
   return (
-    <style.Wrapper onClick={cancelToolbar}>
+    <style.Wrapper onClick={cancelToolbar} showTime={showTime}>
       <style.SideDecoration />
       <style.TextBox>
         <style.Title>{title}</style.Title>

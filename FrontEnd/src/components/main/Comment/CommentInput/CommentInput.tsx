@@ -49,6 +49,7 @@ const CommentInput = ({ commentValue, changeCommentInput, addNewComment }: Comme
         <ToolbarTemplate
           title={"성공적으로 댓글을 추가했습니다!"}
           subtitle={"질문자가 답변을 채택할 때까지 기다려주세요!"}
+          showTime="0.25s"
         />,
         3000
       );

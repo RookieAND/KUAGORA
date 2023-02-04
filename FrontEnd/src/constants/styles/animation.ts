@@ -25,25 +25,18 @@ export const toolbarShow = keyframes`
     opacity: 0.25;
     transform: translate3d(20%, 0, 0);
   }
-  80% {
+  40% {
     transform: translate3d(-10%, 0, 0);
   }
-  90% {
+  50% {
     transform: translate3d(5%, 0, 0);
   }
-  to {
+  60% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
-`;
-
-export const toolbarFinish = keyframes`
-  from {
-    opacity: 0.25;
-    transform: translate3d(0%, 0, 0);
-  }
   to {
-    opacity: 1;
+    opacity: 0;
     transform: translate3d(20%, 0, 0);
   }
 `;

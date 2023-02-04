@@ -1,8 +1,13 @@
 import styled, { css } from "styled-components";
-import { toolbarShow, toolbarFinish } from "@/constants/styles/animation";
+import { toolbarShow } from "@/constants/styles/animation";
 
-export const Wrapper = styled.div`
-  ${({ theme }) => {
+interface StyledToolbarTempWrapper {
+  theme: any;
+  showTime: string;
+}
+
+export const Wrapper = styled.div<StyledToolbarTempWrapper>`
+  ${({ theme, showTime }) => {
     const { colors } = theme;
     return css`
       width: 412px;
@@ -21,11 +26,7 @@ export const Wrapper = styled.div`
 
       cursor: pointer;
       z-index: 1000;
-      animation: 0.3s ${toolbarShow};
-
-      &.finished {
-        animation: 0.1s ${toolbarFinish};
-      }
+      animation: ${showTime} ${toolbarShow};
     `;
   }}
 `;
