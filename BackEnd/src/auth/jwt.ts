@@ -27,7 +27,7 @@ export const createJWT = (uuid: string) => {
  */
 export const createRefreshJWT = (uuid: string) => {
   const refresh_token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
-    expiresIn: '7d',
+    expiresIn: '20s',
   });
   return refresh_token;
 };
@@ -49,5 +49,23 @@ export const verifyJWT = async (token: string) => {
     throw new ExpireTokenError(
       '유효하지 않은 JWT입니다. 리프레시 토큰을 보내주세요.',
     );
+  }
+};
+
+/**
+ * 리프레시 토큰을 디코딩하여 유저의 UUID를 반환하는 함수
+ *
+ * @param token 디코딩을 진행할 리프레시 토큰
+ * @returns JWT를 디코딩하여 나온 유저의 UUID, 실패 시 undefined
+ */
+export const verifyRefreshJWT = async (token: string) => {
+  try {
+    const decoded_token = jwt.verify(
+      token,
+      process.env.JWT_SECRET_KEY!,
+    ) as User;
+    return decoded_token.uuid;
+  } catch (err) {
+    return undefined;
   }
 };
