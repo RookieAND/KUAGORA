@@ -14,7 +14,7 @@ dotenv.config();
  */
 export const createJWT = (uuid: string) => {
   const token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
-    expiresIn: '10s',
+    expiresIn: '1h',
   });
   return token;
 };
@@ -27,7 +27,7 @@ export const createJWT = (uuid: string) => {
  */
 export const createRefreshJWT = (uuid: string) => {
   const refresh_token = jwt.sign({ uuid }, process.env.JWT_SECRET_KEY!, {
-    expiresIn: '20s',
+    expiresIn: '7d',
   });
   return refresh_token;
 };
