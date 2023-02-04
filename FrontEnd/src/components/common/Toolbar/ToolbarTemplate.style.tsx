@@ -3,7 +3,7 @@ import { toolbarShow } from "@/constants/styles/animation";
 
 interface StyledToolbarTempWrapper {
   theme: any;
-  showTime: string;
+  showTime: number;
 }
 
 export const Wrapper = styled.div<StyledToolbarTempWrapper>`
@@ -26,7 +26,8 @@ export const Wrapper = styled.div<StyledToolbarTempWrapper>`
 
       cursor: pointer;
       z-index: 1000;
-      animation: ${showTime} ${toolbarShow};
+      animation: ${showTime}s ${toolbarShow};
+      animation-fill-mode: forwards;
     `;
   }}
 `;

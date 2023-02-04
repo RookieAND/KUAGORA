@@ -5,7 +5,7 @@ import useToolbar from "@/hooks/useToolbar";
 interface ToolbarTemplateProps {
   title: string;
   subtitle: string;
-  showTime: string;
+  showTime: number;
 }
 
 const ToolbarTemplate = ({ title, subtitle, showTime }: ToolbarTemplateProps) => {
