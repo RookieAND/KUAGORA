@@ -36,9 +36,12 @@ const CommentList = ({ isWriter, writerUUID, state, changeQuestionState }: Comme
       return;
     }
     if (commentValue.length > 0) {
-      await addNewCommentAsync(questionId, accessToken, commentValue);
-      setCommentValue("");
-      await refetch();
+      const response = await addNewCommentAsync(questionId, accessToken, commentValue);
+      if (response.isSuccess) {
+        setCommentValue("");
+        await refetch();
+      }
+      return response.isSuccess;
     }
   };
 

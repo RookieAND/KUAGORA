@@ -14,7 +14,7 @@ import CommentSvg from "@/assets/icons/Comment.svg";
 interface CommentInputProps {
   commentValue: string;
   changeCommentInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  addNewComment: () => void;
+  addNewComment: () => Promise<boolean | undefined>;
 }
 
 const CommentInput = ({ commentValue, changeCommentInput, addNewComment }: CommentInputProps) => {
@@ -31,7 +31,7 @@ const CommentInput = ({ commentValue, changeCommentInput, addNewComment }: Comme
   };
 
   // 로그인 여부에 따라 댓글을 추가할지, 아니면 로그인 페이지로 이동시킬지를 결정하는 함수
-  const submitComment = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const submitComment = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter") {
       if (!accessToken) {
         openModal(
@@ -44,15 +44,17 @@ const CommentInput = ({ commentValue, changeCommentInput, addNewComment }: Comme
         );
         return;
       }
-      addNewComment();
-      playToolbar(
-        <ToolbarTemplate
-          title={"성공적으로 댓글을 추가했습니다!"}
-          subtitle={"질문자가 답변을 채택할 때까지 기다려주세요!"}
-          showTime="0.25s"
-        />,
-        3000
-      );
+      const isSuccess = await addNewComment();
+      if (isSuccess) {
+        playToolbar(
+          <ToolbarTemplate
+            title={"성공적으로 댓글을 추가했습니다!"}
+            subtitle={"질문자가 답변을 채택할 때까지 기다려주세요!"}
+            showTime="0.25s"
+          />,
+          3000
+        );
+      }
     }
   };
 

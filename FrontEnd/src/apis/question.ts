@@ -242,13 +242,14 @@ export const getCommentsAsync = async (questionId: number, page: number, amount:
  * @param content 유저가 작성한 댓글 내용
  */
 export const addNewCommentAsync = async (questionId: number, token: string, content: string) => {
-  await postAsync<null, any>(
+  const response = await postAsync<null, any>(
     `question/${questionId}/comment`,
     { content },
     {
       headers: { authorization: token }
     }
   );
+  return response;
 };
 
 /**
