@@ -37,7 +37,7 @@ export async function logoutAsync(token: string) {
       authorization: token
     }
   });
-  return response.isSuccess;
+  return response;
 }
 
 /**

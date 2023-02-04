@@ -49,6 +49,13 @@ const QuestionDetail = () => {
     initializeData();
   }, [router.isReady, questionId, isAnswered]);
 
+  // 타입 가드 (데이터 fetching 전 로드)
+  if (detailContent == undefined) {
+    return <span>Loading...</span>;
+  }
+
+  const isWriter = detailContent.isWriter;
+
   const changeQuestionState = () => {
     setIsAnswered(true);
   };
@@ -71,13 +78,6 @@ const QuestionDetail = () => {
       return;
     }
   };
-
-  // 타입 가드 (데이터 fetching 전 로드)
-  if (detailContent == undefined) {
-    return <span>Loading...</span>;
-  }
-
-  const isWriter = detailContent.isWriter;
 
   return (
     <>

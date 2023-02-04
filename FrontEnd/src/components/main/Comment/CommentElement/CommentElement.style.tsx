@@ -9,11 +9,6 @@ export const Wrapper = styled.div`
   justify-content: space-between;
 
   border-radius: 24px;
-  cursor: pointer;
-
-  &.answered {
-    cursor: default;
-  }
 `;
 
 export const TopSection = styled.div`

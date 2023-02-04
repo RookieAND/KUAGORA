@@ -36,7 +36,12 @@ const QuestionDetailTemplate = ({
         isWriter={isWriter}
         state={detailContent.state}
       />
-      <CommentList isWriter={isWriter} state={detailContent.state} changeQuestionState={changeQuestionState} />
+      <CommentList
+        isWriter={isWriter}
+        writerUUID={detailContent.user.uuid}
+        state={detailContent.state}
+        changeQuestionState={changeQuestionState}
+      />
       <Footer />
     </>
   );

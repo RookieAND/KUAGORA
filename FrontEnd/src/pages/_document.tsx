@@ -33,6 +33,7 @@ class MyDocument extends Document {
       <Html>
         <Head />
         <body>
+          <div id="modal" />
           <Main />
           <NextScript />
         </body>

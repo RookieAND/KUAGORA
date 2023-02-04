@@ -13,11 +13,12 @@ import CommentElement from "@/components/main/Comment/CommentElement";
 
 interface CommentListProps {
   isWriter: boolean;
+  writerUUID: string;
   state: "progressed" | "completed";
   changeQuestionState: () => void;
 }
 
-const CommentList = ({ isWriter, state, changeQuestionState }: CommentListProps) => {
+const CommentList = ({ isWriter, writerUUID, state, changeQuestionState }: CommentListProps) => {
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
@@ -93,6 +94,7 @@ const CommentList = ({ isWriter, state, changeQuestionState }: CommentListProps)
               content={comment.content}
               user={comment.user}
               isAnswered={comment.isAnswered}
+              writerUUID={writerUUID}
               removeComment={removeComment}
               selectAnswerComment={selectAnswerComment}
             />
