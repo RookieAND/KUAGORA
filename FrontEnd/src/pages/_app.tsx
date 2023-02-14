@@ -4,8 +4,10 @@ import { Provider } from "jotai";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { ThemeProvider } from "styled-components";
 import ModalPortal from "@/components/common/Modal/ModalPortal";
+import ToolbarPortal from "@/components/common/Toolbar/ToolbarPortal";
+
+import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "@/constants/styles/globalStyle";
 import { theme } from "@/constants/styles/theme";
 import "@/assets/fonts/font.css";
@@ -29,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <GlobalStyle />
         <ThemeProvider theme={theme}>
           <ModalPortal />
+          <ToolbarPortal />
           <Component {...pageProps} />
         </ThemeProvider>
       </Provider>

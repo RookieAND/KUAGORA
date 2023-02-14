@@ -7,7 +7,6 @@ import CommentList from "@/components/main/Comment/CommentList";
 interface QuestionDetailTemplateProps {
   detailContent: QuestionDetailType;
   likesData: LikeDataType;
-  isWriter: boolean;
   changeQuestionState: () => void;
   toggleLikeState: () => void;
 }
@@ -15,7 +14,6 @@ interface QuestionDetailTemplateProps {
 const QuestionDetailTemplate = ({
   detailContent,
   likesData,
-  isWriter,
   changeQuestionState,
   toggleLikeState
 }: QuestionDetailTemplateProps) => {
@@ -33,12 +31,12 @@ const QuestionDetailTemplate = ({
       <QuestionDetail
         content={detailContent.content}
         keywords={detailContent.keywords}
-        isWriter={isWriter}
+        isWriter={detailContent.isWriter}
         state={detailContent.state}
       />
       <CommentList
-        isWriter={isWriter}
-        writerUUID={detailContent.user.uuid}
+        isPostWriter={detailContent.isWriter}
+        postWriter={detailContent.user}
         state={detailContent.state}
         changeQuestionState={changeQuestionState}
       />
