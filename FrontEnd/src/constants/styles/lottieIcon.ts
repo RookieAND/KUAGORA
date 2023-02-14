@@ -1,8 +1,8 @@
-import { CircleCheck } from "@/assets/lottie";
+import { CircleCheckLottie, LogoutLottie } from "@/assets/lottie";
 
 const LOTTIE_ICON = {
-  confirm: CircleCheck,
-  fail: CircleCheck
+  confirm: CircleCheckLottie,
+  logout: LogoutLottie
 };
 
 export default LOTTIE_ICON;

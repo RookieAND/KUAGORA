@@ -59,6 +59,7 @@ const Navbar = () => {
                             title={"정말 로그아웃 하시겠습니까?"}
                             subtitle={"하단의 버튼을 클릭할 시 로그아웃을 진행합니다."}
                             buttonText={"로그아웃 하기"}
+                            iconType={"logout"}
                             submitFunc={logout}
                           />
                         )
