@@ -34,8 +34,9 @@ API.interceptors.response.use(
         // 리프레시 토큰도 만료되었다면, 로그아웃을 진행시킴.
         localStorage.removeItem("jwt_token");
         localStorage.removeItem("user_data");
-        return Promise.reject(err);
+        window.location.href = "/login";
       }
+      return Promise.reject(err);
     }
   }
 );
@@ -133,7 +134,6 @@ export async function getAsync<T, D>(url: string, config?: AxiosRequestConfig): 
 export async function postAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.post<T, AxiosResponse<T, D>, D>(url, data, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });
@@ -155,7 +155,6 @@ export async function postAsync<T, D>(url: string, data: D, config?: AxiosReques
 export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.delete<T, AxiosResponse<T, D>, D>(url, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });
@@ -178,7 +177,6 @@ export async function deleteAsync<T, D>(url: string, config?: AxiosRequestConfig
 export async function patchAsync<T, D>(url: string, data: D, config?: AxiosRequestConfig): APIResult<T> {
   try {
     const response = await API.patch<T, AxiosResponse<T, D>, D>(url, data, {
-      baseURL: apiURL,
       responseType: "json",
       ...config
     });

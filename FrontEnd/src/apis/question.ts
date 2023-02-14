@@ -216,9 +216,10 @@ export const patchQuestionAsync = async (
  * @returns
  */
 export const patchQuestionStateAsync = async (questionId: number, commentId: number, token: string) => {
-  await patchAsync<null, null>(`question/${questionId}/${commentId}/comment`, null, {
+  const response = await patchAsync<null, null>(`question/${questionId}/${commentId}/comment`, null, {
     headers: { authorization: token }
   });
+  return response;
 };
 
 /**
@@ -242,13 +243,14 @@ export const getCommentsAsync = async (questionId: number, page: number, amount:
  * @param content 유저가 작성한 댓글 내용
  */
 export const addNewCommentAsync = async (questionId: number, token: string, content: string) => {
-  await postAsync<null, any>(
+  const response = await postAsync<null, any>(
     `question/${questionId}/comment`,
     { content },
     {
       headers: { authorization: token }
     }
   );
+  return response;
 };
 
 /**

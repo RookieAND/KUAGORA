@@ -54,14 +54,12 @@ const QuestionDetail = () => {
     return <span>Loading...</span>;
   }
 
-  const isWriter = detailContent.isWriter;
-
   const changeQuestionState = () => {
     setIsAnswered(true);
   };
 
   const toggleLikeState = async () => {
-    if (!accessToken || isWriter) {
+    if (!accessToken || detailContent.isWriter) {
       return;
     }
     // 좋아요 정보에 대한 optimistic update 우선 진행.
@@ -91,7 +89,6 @@ const QuestionDetail = () => {
       <QuestionsDetailTemplate
         detailContent={detailContent}
         likesData={likesData}
-        isWriter={isWriter}
         changeQuestionState={changeQuestionState}
         toggleLikeState={toggleLikeState}
       />
