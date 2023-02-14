@@ -70,7 +70,6 @@ export const getQuestionList = async (
     .orderBy(SORT_TYPE[sortOption].query, 'DESC')
     .getMany();
 
-  console.log(questionDatas);
   return questionDatas;
 };
 
@@ -468,7 +467,7 @@ export const patchQuestionState = async (
     .where('comment.id = :commentId', { commentId })
     .execute();
 
-  if (editCommentStateResult.affected === 1) {
+  if (editCommentStateResult.affected !== 1) {
     throw new BadRequestError('존재하지 않는 댓글에 대한 요청입니다.');
   }
 };

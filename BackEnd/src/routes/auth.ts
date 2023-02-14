@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import {
   BadRequestError,
   ForbiddenError,
+  ExpireRefreshTokenError,
   InternalServerError,
   UnauthorizedError,
 } from '@/errors/definedErrors';
@@ -13,7 +14,7 @@ import {
 
 import { wrapAsync } from '@/utils/wrapAsync';
 import { checkLoggedIn } from '@/routes/jwt';
-import { createJWT, createRefreshJWT, verifyJWT } from '@/auth/jwt';
+import { createJWT, createRefreshJWT, verifyRefreshJWT } from '@/auth/jwt';
 import { verifyKakao, verifyNaver, verifyGoogle } from '@/auth/platform';
 const authRouter = express.Router();
 
@@ -78,12 +79,13 @@ authRouter.delete(
 authRouter.post(
   `/check-token`,
   wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken = req.body.refreshToken as string;
+    const { refreshToken } = req.body;
+    console.log(req.body);
     if (refreshToken) {
       // 1. 클라이언트로부터 인계받은 리프레시 토큰이 유효한지를 조사.
-      const uuid = await verifyJWT(refreshToken);
+      const uuid = await verifyRefreshJWT(refreshToken);
       if (!uuid) {
-        throw new ForbiddenError(
+        throw new ExpireRefreshTokenError(
           '토큰이 만료되었습니다. 재로그인이 필요합니다.',
         );
       }
@@ -97,6 +99,7 @@ authRouter.post(
       // 3. 리프레시 토큰이 유효할 경우, 새롭게 토큰을 발급하여 전달
       const newAccessToken = createJWT(uuid);
       const newRefreshToken = createRefreshJWT(uuid);
+      0;
       await setRefreshToken(uuid, newRefreshToken);
       return res.status(200).json({
         accessToken: newAccessToken,

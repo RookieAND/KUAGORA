@@ -73,6 +73,21 @@ class ExpireTokenError extends Error {
   }
   statusCode = 460;
 }
+
+/**
+ * 470 Expire Refresh Token Error (리프레시 토큰 만료)
+ * @param 서버에서 일어난 에러 발생 사유 message
+ */
+class ExpireRefreshTokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ExpireRefreshTokenError';
+    this.message = message;
+    Object.setPrototypeOf(this, ExpireRefreshTokenError.prototype);
+  }
+  statusCode = 470;
+}
+
 /**
  * 500 Unauthorized Error (서버 오류)
  * @param 서버에서 일어난 에러 발생 사유 message
@@ -93,5 +108,6 @@ export {
   ForbiddenError,
   NotFoundError,
   ExpireTokenError,
+  ExpireRefreshTokenError,
   InternalServerError,
 };

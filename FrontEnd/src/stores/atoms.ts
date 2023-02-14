@@ -18,6 +18,12 @@ export interface ModalStateType {
   content: ReactNode | null;
 }
 
+export interface ToolbarStateType {
+  isOpen: boolean;
+  timeOut: NodeJS.Timeout | null;
+  content: ReactNode | null;
+}
+
 export type IAccessToken = string | null;
 
 export const userDataAtom = atomWithStorage<IUserData>("user_data", {
@@ -33,5 +39,11 @@ export const jwtTokenAtom = atomWithStorage<ITokenData>("jwt_token", {
 
 export const modalStateAtom = atom<ModalStateType>({
   isOpen: false,
+  content: null
+});
+
+export const toolbarStateAtom = atom<ToolbarStateType>({
+  isOpen: false,
+  timeOut: null,
   content: null
 });

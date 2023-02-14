@@ -4,6 +4,8 @@ import { useAtom } from "jotai";
 import useModal from "@/hooks/useModal";
 import { modalStateAtom } from "@/stores/atoms";
 
+import * as style from "./ModalPortal.style";
+
 const ModalPortal = () => {
   // modal의 Open 상태와 Conten t의 정보를 담은 atom 호출
   const [{ isOpen, content }] = useAtom(modalStateAtom);
@@ -27,9 +29,9 @@ const ModalPortal = () => {
     // tabIndex를 부여함으로서 div 요소에도 초점을 맞출 수 있도록 설정하고, KeyboardEvent를 적용하도록 함.
     return modalRoot && content
       ? createPortal(
-          <div id="modal_overlay" onClick={closeModalByClick}>
+          <style.Wrapper id="modal_overlay" onClick={closeModalByClick}>
             {content}
-          </div>,
+          </style.Wrapper>,
           modalRoot
         )
       : null;
