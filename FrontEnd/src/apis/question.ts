@@ -216,9 +216,10 @@ export const patchQuestionAsync = async (
  * @returns
  */
 export const patchQuestionStateAsync = async (questionId: number, commentId: number, token: string) => {
-  await patchAsync<null, null>(`question/${questionId}/${commentId}/comment`, null, {
+  const response = await patchAsync<null, null>(`question/${questionId}/${commentId}/comment`, null, {
     headers: { authorization: token }
   });
+  return response;
 };
 
 /**

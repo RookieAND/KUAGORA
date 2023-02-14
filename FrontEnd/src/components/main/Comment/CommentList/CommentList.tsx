@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 
 import { accessTokenAtom, setUserDataAtom } from "@/stores/actions";
 import { addNewCommentAsync, getCommentsAsync, patchQuestionStateAsync, removeCommentAsync } from "@/apis/question";
+import type { UserDataType } from "@/apis/question";
 import type { CommentDataType } from "@/apis/question";
 
 import * as style from "./CommentList.style";
@@ -12,13 +13,13 @@ import CommentInput from "@/components/main/Comment/CommentInput";
 import CommentElement from "@/components/main/Comment/CommentElement";
 
 interface CommentListProps {
-  isWriter: boolean;
-  writerUUID: string;
+  isPostWriter: boolean;
+  postWriter: UserDataType;
   state: "progressed" | "completed";
   changeQuestionState: () => void;
 }
 
-const CommentList = ({ isWriter, writerUUID, state, changeQuestionState }: CommentListProps) => {
+const CommentList = ({ isPostWriter, postWriter, state, changeQuestionState }: CommentListProps) => {
   const router = useRouter();
   const questionId = Number(router.query.qid);
 
@@ -64,15 +65,19 @@ const CommentList = ({ isWriter, writerUUID, state, changeQuestionState }: Comme
   const selectAnswerComment = async (commentId: number, commentWriterId: string) => {
     if (!accessToken) {
       router.push("/login");
-      return;
+      return false;
     }
 
     // 글이 미해결 상태이며, 질문글 작성자가 타인의 댓글을 채택했는지 확인
-    if (state === "progressed" && isWriter && commentWriterId !== userData.uuid) {
-      await patchQuestionStateAsync(questionId, commentId, accessToken);
-      await refetch();
-      changeQuestionState();
+    if (state === "progressed" && isPostWriter && commentWriterId !== userData.uuid) {
+      const response = await patchQuestionStateAsync(questionId, commentId, accessToken);
+      if (response.isSuccess) {
+        await refetch();
+        changeQuestionState();
+        return true;
+      }
     }
+    return false;
   };
 
   const comments = data?.isSuccess ? data.result : [];
@@ -95,9 +100,9 @@ const CommentList = ({ isWriter, writerUUID, state, changeQuestionState }: Comme
               id={comment.id}
               createdAt={comment.createdAt}
               content={comment.content}
-              user={comment.user}
+              commentWriter={comment.user}
               isAnswered={comment.isAnswered}
-              writerUUID={writerUUID}
+              postWriter={postWriter}
               removeComment={removeComment}
               selectAnswerComment={selectAnswerComment}
             />
